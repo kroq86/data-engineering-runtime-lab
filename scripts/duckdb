@@ -1,0 +1,9 @@
+#!/bin/sh
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
+WORKSPACE_DIR="$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)"
+
+if [ -x "$WORKSPACE_DIR/.venv/bin/python" ]; then
+  exec "$WORKSPACE_DIR/.venv/bin/python" "$SCRIPT_DIR/duckdb_wrapper.py" "$@"
+fi
+
+exec python3 "$SCRIPT_DIR/duckdb_wrapper.py" "$@"

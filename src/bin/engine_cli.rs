@@ -1,5 +1,7 @@
 use mini_data_systems::common::Row;
 use mini_data_systems::product::{ConcurrentEngine, PersistentEngine};
+use serde::Serialize;
+use std::io::{self, BufRead, Write};
 use std::env;
 
 fn parse_i32(s: &str, name: &str) -> Result<i32, String> {
@@ -23,6 +25,164 @@ fn print_usage() {
     println!("  cargo run --bin engine_cli -- tx-recovery-list <root_dir> <table>");
     println!("  cargo run --bin engine_cli -- tx-recovery-commit <root_dir> <table> <tx_id>");
     println!("  cargo run --bin engine_cli -- tx-recovery-rollback <root_dir> <table> <tx_id>");
+    println!("  cargo run --bin engine_cli -- serve <root_dir> <table>");
+}
+
+#[derive(Serialize)]
+struct ServeResponse {
+    ok: bool,
+    returncode: i32,
+    stdout: String,
+    stderr: String,
+    command: String,
+    elapsed_ms: f64,
+}
+
+fn print_serve_response(resp: ServeResponse) {
+    let line = serde_json::to_string(&resp).expect("serialize serve response");
+    println!("{line}");
+    io::stdout().flush().expect("flush serve response");
+}
+
+fn serve_ok(command: String, stdout: String, elapsed_ms: f64) {
+    print_serve_response(ServeResponse {
+        ok: true,
+        returncode: 0,
+        stdout,
+        stderr: String::new(),
+        command,
+        elapsed_ms,
+    });
+}
+
+fn serve_err(command: String, stderr: String, elapsed_ms: f64) {
+    print_serve_response(ServeResponse {
+        ok: false,
+        returncode: 1,
+        stdout: String::new(),
+        stderr,
+        command,
+        elapsed_ms,
+    });
+}
+
+fn run_serve(root: &str, table: &str) -> Result<(), String> {
+    let mut engine = PersistentEngine::load_with_replay(root, table)?;
+    let stdin = io::stdin();
+    for line in stdin.lock().lines() {
+        let line = line.map_err(|e| format!("serve read failed: {e}"))?;
+        let trimmed = line.trim();
+        if trimmed.is_empty() {
+            continue;
+        }
+        if trimmed == "quit" {
+            break;
+        }
+
+        let parts: Vec<&str> = trimmed.split_whitespace().collect();
+        let command = parts[0].to_string();
+        let started = std::time::Instant::now();
+
+        match parts[0] {
+            "insert" | "upsert" => {
+                if parts.len() != 4 {
+                    serve_err(
+                        command,
+                        "usage: insert|upsert <order_id> <customer_id> <amount>"
+                            .to_string(),
+                        started.elapsed().as_secs_f64() * 1000.0,
+                    );
+                    continue;
+                }
+                let parse_result = (|| -> Result<Row, String> {
+                    Ok(Row {
+                        order_id: parse_i32(parts[1], "order_id")?,
+                        customer_id: parse_i32(parts[2], "customer_id")?,
+                        amount: parse_i32(parts[3], "amount")?,
+                        amount_with_tax: None,
+                    })
+                })();
+                match parse_result {
+                    Ok(row) => {
+                        let result = if parts[0] == "insert" {
+                            engine.insert(row)
+                        } else {
+                            engine.upsert_by_order_id(row)
+                        };
+                        match result {
+                            Ok(_) => serve_ok(
+                                command,
+                                if parts[0] == "insert" {
+                                    format!("inserted row into '{table}'")
+                                } else {
+                                    format!("upserted row in '{table}'")
+                                },
+                                started.elapsed().as_secs_f64() * 1000.0,
+                            ),
+                            Err(err) => serve_err(
+                                command,
+                                err,
+                                started.elapsed().as_secs_f64() * 1000.0,
+                            ),
+                        }
+                    }
+                    Err(err) => serve_err(
+                        command,
+                        err,
+                        started.elapsed().as_secs_f64() * 1000.0,
+                    ),
+                }
+            }
+            "index" => {
+                engine.create_customer_index(64);
+                serve_ok(
+                    command,
+                    format!("created customer_id index on '{table}'"),
+                    started.elapsed().as_secs_f64() * 1000.0,
+                );
+            }
+            "explain" => {
+                if parts.len() != 2 {
+                    serve_err(
+                        command,
+                        "usage: explain <customer_id>".to_string(),
+                        started.elapsed().as_secs_f64() * 1000.0,
+                    );
+                    continue;
+                }
+                match parse_i32(parts[1], "customer_id") {
+                    Ok(customer_id) => serve_ok(
+                        command,
+                        engine.explain_eq_customer(customer_id),
+                        started.elapsed().as_secs_f64() * 1000.0,
+                    ),
+                    Err(err) => serve_err(
+                        command,
+                        err,
+                        started.elapsed().as_secs_f64() * 1000.0,
+                    ),
+                }
+            }
+            "checkpoint" => match engine.checkpoint() {
+                Ok(_) => serve_ok(
+                    command,
+                    format!("checkpointed '{table}' and truncated WAL"),
+                    started.elapsed().as_secs_f64() * 1000.0,
+                ),
+                Err(err) => serve_err(
+                    command,
+                    err,
+                    started.elapsed().as_secs_f64() * 1000.0,
+                ),
+            },
+            _ => serve_err(
+                command,
+                format!("unsupported serve command: {}", parts[0]),
+                started.elapsed().as_secs_f64() * 1000.0,
+            ),
+        }
+    }
+    Ok(())
 }
 
 fn main() -> Result<(), String> {
@@ -175,6 +335,13 @@ fn main() -> Result<(), String> {
                 concurrent.rollback(tx_id)?;
                 println!("recovery rollback applied for tx_id={tx_id}");
             }
+        }
+        "serve" => {
+            if args.len() != 4 {
+                print_usage();
+                return Ok(());
+            }
+            run_serve(&args[2], &args[3])?;
         }
         _ => {
             print_usage();

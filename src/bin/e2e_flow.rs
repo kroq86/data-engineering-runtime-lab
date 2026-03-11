@@ -1,13 +1,19 @@
 use mini_data_systems::common::{PlannerCosts, Row};
 use mini_data_systems::pg::MiniPostgresLikeDb;
 use mini_data_systems::product::PersistentEngine;
+use std::env;
 use std::path::PathBuf;
 use std::process::Command;
 
 fn main() -> Result<(), String> {
     println!("E2E Flow: MiniPG + MiniDatabricks + DuckDB\n");
 
-    let root = PathBuf::from("./tests/artifacts/e2e/data");
+    let args: Vec<String> = env::args().collect();
+    let root = if args.len() > 1 {
+        PathBuf::from(&args[1])
+    } else {
+        PathBuf::from("./tests/artifacts/e2e/data")
+    };
     let table = "orders";
 
     // 1) MiniPG-like persistent write path (WAL + checkpoint).

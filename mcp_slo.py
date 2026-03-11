@@ -143,7 +143,7 @@ def scenario_load_test_impl(
     upsert_row: Callable[..., dict[str, Any]],
     explain_customer: Callable[..., dict[str, Any]],
     reindex_project: Callable[..., dict[str, Any]],
-    run_e2e_flow: Callable[[], dict[str, Any]],
+    run_e2e_flow: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
     if iterations < 1:
         iterations = 1
@@ -192,7 +192,10 @@ def scenario_load_test_impl(
             reindex_res = reindex_project(root_dir=root_dir, table=table)
             ops.append(("reindex", reindex_res))
         if i % 5 == 0:
-            ops.append(("e2e", run_e2e_flow()))
+            ops.append((
+                "e2e",
+                run_e2e_flow(root_dir=f"{root_dir}/e2e_run_{i}"),
+            ))
 
         for op_name, result in ops:
             ok = bool(result.get("ok", False))
@@ -258,6 +261,9 @@ def scenario_load_test_impl(
             "overall_p95": round(p95, 2),
         },
         "failure_breakdown": dict(failures),
+        "failed_steps": [
+            s for s in step_results if not s["ok"]
+        ],
         "per_operation_stats": op_stats,
         "slo": {
             "passed": len(violations) == 0,
