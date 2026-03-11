@@ -4,8 +4,9 @@ import os
 import subprocess
 import time
 from collections import defaultdict
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 
 from mcp.server.fastmcp import FastMCP
 
@@ -26,44 +27,159 @@ E2E_BIN = BIN_DIR / "e2e_flow"
 mcp = FastMCP("mini-data-engine")
 
 
-def _run(cmd: list[str]) -> dict[str, Any]:
-    started = time.perf_counter()
-    proc = subprocess.run(
-        cmd,
-        cwd=str(WORKSPACE),
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    elapsed_ms = (time.perf_counter() - started) * 1000
-    return {
-        "ok": proc.returncode == 0,
-        "returncode": proc.returncode,
-        "stdout": proc.stdout.strip(),
-        "stderr": proc.stderr.strip(),
-        "command": " ".join(cmd),
-        "elapsed_ms": round(elapsed_ms, 2),
-    }
+class CommandRunner(Protocol):
+    def run(self, cmd: list[str], cwd: Path) -> dict[str, Any]:
+        ...
 
 
-def _ensure_bins_built() -> dict[str, Any]:
-    if ENGINE_BIN.exists() and E2E_BIN.exists():
-        return {"ok": True, "built": False}
-    return _run(["cargo", "build", "--bins"])
-
-
-def _run_engine_cli(args: list[str]) -> dict[str, Any]:
-    build = _ensure_bins_built()
-    if not build.get("ok", False):
+@dataclass(slots=True)
+class SubprocessRunner:
+    def run(self, cmd: list[str], cwd: Path) -> dict[str, Any]:
+        started = time.perf_counter()
+        proc = subprocess.run(
+            cmd,
+            cwd=str(cwd),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        elapsed_ms = (time.perf_counter() - started) * 1000
         return {
-            "ok": False,
-            "returncode": build.get("returncode", 1),
-            "stdout": build.get("stdout", ""),
-            "stderr": f"build failed\n{build.get('stderr', '')}",
-            "command": "cargo build --bins",
-            "elapsed_ms": build.get("elapsed_ms", 0.0),
+            "ok": proc.returncode == 0,
+            "returncode": proc.returncode,
+            "stdout": proc.stdout.strip(),
+            "stderr": proc.stderr.strip(),
+            "command": " ".join(cmd),
+            "elapsed_ms": round(elapsed_ms, 2),
         }
-    return _run([str(ENGINE_BIN), *args])
+
+
+class EngineOps(Protocol):
+    def init_engine(self, root_dir: str, table: str) -> dict[str, Any]:
+        ...
+
+    def insert_row(
+        self,
+        root_dir: str,
+        table: str,
+        order_id: int,
+        customer_id: int,
+        amount: int,
+    ) -> dict[str, Any]:
+        ...
+
+    def upsert_row(
+        self,
+        root_dir: str,
+        table: str,
+        order_id: int,
+        customer_id: int,
+        amount: int,
+    ) -> dict[str, Any]:
+        ...
+
+    def create_index(self, root_dir: str, table: str) -> dict[str, Any]:
+        ...
+
+    def explain_customer(
+        self, root_dir: str, table: str, customer_id: int
+    ) -> dict[str, Any]:
+        ...
+
+    def run_e2e_flow(self) -> dict[str, Any]:
+        ...
+
+
+@dataclass(slots=True)
+class EngineService:
+    workspace: Path
+    engine_bin: Path
+    e2e_bin: Path
+    runner: CommandRunner
+
+    def _run(self, cmd: list[str]) -> dict[str, Any]:
+        return self.runner.run(cmd=cmd, cwd=self.workspace)
+
+    def _ensure_bins_built(self) -> dict[str, Any]:
+        if self.engine_bin.exists() and self.e2e_bin.exists():
+            return {"ok": True, "built": False}
+        return self._run(["cargo", "build", "--bins"])
+
+    def _run_engine_cli(self, args: list[str]) -> dict[str, Any]:
+        build = self._ensure_bins_built()
+        if not build.get("ok", False):
+            return {
+                "ok": False,
+                "returncode": build.get("returncode", 1),
+                "stdout": build.get("stdout", ""),
+                "stderr": f"build failed\n{build.get('stderr', '')}",
+                "command": "cargo build --bins",
+                "elapsed_ms": build.get("elapsed_ms", 0.0),
+            }
+        return self._run([str(self.engine_bin), *args])
+
+    def init_engine(self, root_dir: str, table: str) -> dict[str, Any]:
+        return self._run_engine_cli(["init", root_dir, table])
+
+    def insert_row(
+        self,
+        root_dir: str,
+        table: str,
+        order_id: int,
+        customer_id: int,
+        amount: int,
+    ) -> dict[str, Any]:
+        args = [
+            "insert",
+            root_dir,
+            table,
+            str(order_id),
+            str(customer_id),
+            str(amount),
+        ]
+        return self._run_engine_cli(args)
+
+    def upsert_row(
+        self,
+        root_dir: str,
+        table: str,
+        order_id: int,
+        customer_id: int,
+        amount: int,
+    ) -> dict[str, Any]:
+        args = [
+            "upsert",
+            root_dir,
+            table,
+            str(order_id),
+            str(customer_id),
+            str(amount),
+        ]
+        return self._run_engine_cli(args)
+
+    def create_index(self, root_dir: str, table: str) -> dict[str, Any]:
+        return self._run_engine_cli(["index", root_dir, table])
+
+    def explain_customer(
+        self, root_dir: str, table: str, customer_id: int
+    ) -> dict[str, Any]:
+        return self._run_engine_cli(
+            ["explain", root_dir, table, str(customer_id)]
+        )
+
+    def run_e2e_flow(self) -> dict[str, Any]:
+        build = self._ensure_bins_built()
+        if not build.get("ok", False):
+            return build
+        return self._run([str(self.e2e_bin)])
+
+
+OPS: EngineOps = EngineService(
+    workspace=WORKSPACE,
+    engine_bin=ENGINE_BIN,
+    e2e_bin=E2E_BIN,
+    runner=SubprocessRunner(),
+)
 
 
 @mcp.tool()
@@ -71,7 +187,7 @@ def init_engine(
     root_dir: str = "./tests/artifacts/mcp/engine_data", table: str = "orders"
 ) -> dict[str, Any]:
     """Initialize persistent engine storage."""
-    return _run_engine_cli(["init", root_dir, table])
+    return OPS.init_engine(root_dir=root_dir, table=table)
 
 
 @mcp.tool()
@@ -83,15 +199,13 @@ def insert_row(
     amount: int = 10,
 ) -> dict[str, Any]:
     """Insert one row into the persistent engine."""
-    args = [
-        "insert",
-        root_dir,
-        table,
-        str(order_id),
-        str(customer_id),
-        str(amount),
-    ]
-    return _run_engine_cli(args)
+    return OPS.insert_row(
+        root_dir=root_dir,
+        table=table,
+        order_id=order_id,
+        customer_id=customer_id,
+        amount=amount,
+    )
 
 
 @mcp.tool()
@@ -103,15 +217,13 @@ def upsert_row(
     amount: int = 20,
 ) -> dict[str, Any]:
     """Upsert one row by order_id."""
-    args = [
-        "upsert",
-        root_dir,
-        table,
-        str(order_id),
-        str(customer_id),
-        str(amount),
-    ]
-    return _run_engine_cli(args)
+    return OPS.upsert_row(
+        root_dir=root_dir,
+        table=table,
+        order_id=order_id,
+        customer_id=customer_id,
+        amount=amount,
+    )
 
 
 @mcp.tool()
@@ -119,7 +231,7 @@ def create_index(
     root_dir: str = "./tests/artifacts/mcp/engine_data", table: str = "orders"
 ) -> dict[str, Any]:
     """Create customer index for engine table."""
-    return _run_engine_cli(["index", root_dir, table])
+    return OPS.create_index(root_dir=root_dir, table=table)
 
 
 @mcp.tool()
@@ -129,7 +241,9 @@ def explain_customer(
     customer_id: int = 4242,
 ) -> dict[str, Any]:
     """Run EXPLAIN ANALYZE style output by customer filter."""
-    return _run_engine_cli(["explain", root_dir, table, str(customer_id)])
+    return OPS.explain_customer(
+        root_dir=root_dir, table=table, customer_id=customer_id
+    )
 
 
 @mcp.tool()
@@ -143,10 +257,7 @@ def reindex_project(
 @mcp.tool()
 def run_e2e_flow() -> dict[str, Any]:
     """Execute full MiniPG + MiniDatabricks + DuckDB end-to-end flow."""
-    build = _ensure_bins_built()
-    if not build.get("ok", False):
-        return build
-    return _run([str(E2E_BIN)])
+    return OPS.run_e2e_flow()
 
 
 @mcp.tool()
@@ -184,12 +295,23 @@ def benchmark_calls(
     iterations: int = 5,
     root_dir: str = "./tests/artifacts/mcp/bench",
     table: str = "orders",
+    min_success_rate: float = 0.99,
+    max_p95_ms: float = 100.0,
 ) -> dict[str, Any]:
-    """Benchmark average latency for key MCP operations."""
+    """Benchmark MCP operations with SLO-style summary metrics."""
     if iterations < 1:
         iterations = 1
-    init_engine(root_dir=root_dir, table=table)
+
+    init_res = init_engine(root_dir=root_dir, table=table)
+    if not init_res.get("ok", False):
+        return {"ok": False, "phase": "init", "result": init_res}
+
     samples: list[float] = []
+    op_latencies: dict[str, list[float]] = defaultdict(list)
+    failures = defaultdict(int)
+    total_ops = 0
+    success_ops = 0
+
     for i in range(iterations):
         result = insert_row(
             root_dir=root_dir,
@@ -198,17 +320,78 @@ def benchmark_calls(
             customer_id=4242,
             amount=10 + i,
         )
-        samples.append(float(result.get("elapsed_ms", 0.0)))
+        elapsed = float(result.get("elapsed_ms", 0.0))
+        samples.append(elapsed)
+        op_latencies["insert"].append(elapsed)
+        total_ops += 1
+        if result.get("ok", False):
+            success_ops += 1
+        else:
+            failures["insert"] += 1
+
     idx = reindex_project(root_dir=root_dir, table=table)
     exp = explain_customer(root_dir=root_dir, table=table, customer_id=4242)
+    for op_name, result in [("reindex", idx), ("explain", exp)]:
+        elapsed = float(result.get("elapsed_ms", 0.0))
+        op_latencies[op_name].append(elapsed)
+        total_ops += 1
+        if result.get("ok", False):
+            success_ops += 1
+        else:
+            failures[op_name] += 1
+
+    sorted_samples = sorted(samples)
+    insert_p50 = _percentile(sorted_samples, 0.50)
+    insert_p95 = _percentile(sorted_samples, 0.95)
+    success_rate = (success_ops / total_ops) if total_ops else 0.0
+    violations: list[str] = []
+    if success_rate < min_success_rate:
+        violations.append(
+            f"success_rate {success_rate:.4f} < {min_success_rate:.4f}"
+        )
+    if insert_p95 > max_p95_ms:
+        violations.append(
+            f"insert_p95 {insert_p95:.2f}ms > {max_p95_ms:.2f}ms"
+        )
+
     return {
         "ok": True,
         "iterations": iterations,
-        "insert_avg_ms": round(sum(samples) / len(samples), 2),
-        "insert_min_ms": round(min(samples), 2),
-        "insert_max_ms": round(max(samples), 2),
+        "total_operations": total_ops,
+        "successful_operations": success_ops,
+        "success_rate": round(success_rate, 4),
+        "insert_avg_ms": (
+            round(sum(samples) / len(samples), 2) if samples else 0.0
+        ),
+        "insert_min_ms": round(min(samples), 2) if samples else 0.0,
+        "insert_p50_ms": round(insert_p50, 2) if samples else 0.0,
+        "insert_p95_ms": round(insert_p95, 2) if samples else 0.0,
+        "insert_max_ms": round(max(samples), 2) if samples else 0.0,
         "reindex_ms": idx.get("elapsed_ms", 0.0),
         "explain_ms": exp.get("elapsed_ms", 0.0),
+        "failure_breakdown": dict(failures),
+        "per_operation_stats": {
+            op: {
+                "count": len(vals),
+                "avg_ms": round(sum(vals) / len(vals), 2) if vals else 0.0,
+                "p50_ms": (
+                    round(_percentile(sorted(vals), 0.50), 2) if vals else 0.0
+                ),
+                "p95_ms": (
+                    round(_percentile(sorted(vals), 0.95), 2) if vals else 0.0
+                ),
+                "max_ms": round(max(vals), 2) if vals else 0.0,
+            }
+            for op, vals in op_latencies.items()
+        },
+        "slo": {
+            "passed": len(violations) == 0,
+            "thresholds": {
+                "min_success_rate": min_success_rate,
+                "max_p95_ms": max_p95_ms,
+            },
+            "violations": violations,
+        },
     }
 
 
