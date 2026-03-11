@@ -1,5 +1,5 @@
 title: Mini Data Engine Lab
-description: End-to-end mini data platform with MiniPG, MiniDatabricks, DuckDB, and MCP tools.
+description: MCP Reliability and Observability Runtime with replayable tool operations, SLO gates, incident similarity, and migration decision guardrails.
 theme: minima
 markdown: kramdown
 

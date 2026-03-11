@@ -1,19 +1,37 @@
 ---
 layout: default
 title: Mini Data Engine Lab
-description: End-to-end mini data platform with MiniPG, MiniDatabricks flow, DuckDB validation, and MCP adapter tools.
-keywords: mini data engine, mcp server, duckdb, rust data engineering, wal replay, transaction journal
+description: MCP Reliability and Observability Runtime with replayable tool operations, SLO gates, incident similarity, and migration decision guardrails.
+keywords: mcp reliability, mcp observability, incident similarity, slo gates, replayable tool operations, decision gate, ai agent runtime
 ---
 
 # Mini Data Engine Lab
 
-`Mini Data Engine Lab` is a compact end-to-end project for data engineering system design and implementation:
+`Mini Data Engine Lab` is an **MCP Reliability & Observability Runtime**:
 
-- **MiniPG-style core**: cost-based scan decisions, indexing, and explain output.
-- **MiniDatabricks-style flow**: bronze/silver transform simulation.
-- **DuckDB integration**: analytical validation over persisted snapshots.
-- **MCP tools**: operational control through an MCP server (`mini-data-engine`).
-- **Transactional safety**: checkpointing, WAL replay, tx scopes, conflict detection, and rollback journals.
+- replayable tool operations and trace capture,
+- measurable SLO gates for runtime health,
+- semantic incident similarity for faster triage,
+- migration decision guardrails based on real trigger criteria.
+
+## Who This Is For
+
+- Platform/SRE teams running MCP tools and needing reliability controls.
+- Teams building agent workflows that need observability, replay, and regression checks.
+- Engineers who want a local-first runtime lab before production cloud rollout.
+
+## Top 3 Production Pains Solved
+
+- **Non-reproducible MCP failures**: trace capture + replayable operations reduce guesswork.
+- **No objective quality gate**: SLO-based checks (`success_rate`, p50/p95, failure breakdown) make pass/fail explicit.
+- **Hard migration decisions**: `decision_gate` converts architecture discussion into measurable triggers.
+
+## What Success Looks Like In 2 Weeks
+
+- Baseline snapshot captured and tracked in CI.
+- Incident triage uses `similar_incidents` for at least one real debugging flow.
+- Decision gate reports trigger status from trace + baseline + drift bug counter.
+- No regressions in `health_check`, `benchmark_calls`, and `scenario_load_test`.
 
 ## GitHub
 
@@ -41,6 +59,13 @@ The project exposes tools via `mcp_engine_server.py`:
 - `health_check`
 - `benchmark_calls`
 - `scenario_load_test`
+- `record_tool_trace`
+- `similar_incidents`
+- `refresh_trace_path`
+- `refresh_docs_path`
+- `capture_roi_baseline`
+- `report_drift_bug`
+- `decision_gate`
 
 ## Why this project
 

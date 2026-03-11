@@ -1,5 +1,26 @@
 # Mini Data Systems Demos
 
+MCP Reliability & Observability Runtime: replayable tool operations, SLO gates, incident similarity, and migration decision guardrails.
+
+## Who This Is For
+
+- Platform/SRE engineers running MCP tools in real workflows.
+- Teams building agent pipelines that need objective reliability checks.
+- Developers who need local-first incident observability before cloud rollout.
+
+## Top 3 Production Pains Solved
+
+- Non-reproducible MCP failures and weak incident memory.
+- No hard pass/fail runtime quality gate before changes ship.
+- Architecture decisions (Python vs Rust split) made without objective triggers.
+
+## What Success Looks Like In 2 Weeks
+
+- Baseline KPI snapshot captured and versioned.
+- Similar incident retrieval used in at least one real debugging flow.
+- Decision gate reports migration trigger status from live traces.
+- CI catches regressions on push/PR for Python and Rust paths.
+
 This folder contains educational Python and Rust demos:
 
 - `mini_pg_like.py` - PostgreSQL-like toy engine (heap table, B-tree index, cost-based planner, EXPLAIN ANALYZE style output).
@@ -77,6 +98,13 @@ Tools exposed by MCP:
 - `health_check`
 - `benchmark_calls`
 - `scenario_load_test`
+- `record_tool_trace`
+- `similar_incidents`
+- `refresh_trace_path`
+- `refresh_docs_path`
+- `capture_roi_baseline`
+- `report_drift_bug`
+- `decision_gate`
 
 If Cursor MCP auto-discovery is enabled, restart Cursor and connect `mini-data-engine`.
 Default MCP runtime data paths are under `tests/artifacts/mcp/*`.
