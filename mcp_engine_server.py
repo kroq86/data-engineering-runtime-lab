@@ -7,7 +7,24 @@ from typing import Any
 from mcp.server.fastmcp import FastMCP
 from mcp_project_contract_tools import (
     configure_project_contract_tools,
+    project_capabilities,
+    project_capture_baseline,
+    project_compare_baseline,
+    project_manifest,
+    project_run_regression,
     register_project_contract_tools,
+)
+from mcp_generic_project_state_tools import (
+    configure_generic_project_state_tools,
+    project_append_event,
+    project_delete_entity,
+    project_explain_run,
+    project_export_state,
+    project_get_entity,
+    project_ingest_trace,
+    project_list_entities,
+    project_upsert_entity,
+    register_generic_project_state_tools,
 )
 from mcp_engine_runtime import EngineOps, EngineService, SubprocessRunner
 from mcp_engine_tools import register_engine_tools
@@ -72,6 +89,7 @@ BASELINE_SNAPSHOT_DEFAULT = Path(
 DRIFT_BUG_COUNTER_DEFAULT = Path(
     "./tests/artifacts/mcp/baseline/drift_bug_counter.json"
 )
+PROJECT_STATE_ROOT_DEFAULT = Path("./tests/artifacts/mcp/project_state")
 
 
 OPS: EngineOps = EngineService(
@@ -142,10 +160,17 @@ configure_project_contract_tools(
     scenario_load_test=scenario_load_test,
     explain_run=explain_run,
 )
+configure_generic_project_state_tools(
+    workspace=WORKSPACE,
+    state_root_default=PROJECT_STATE_ROOT_DEFAULT,
+    trace_store_factory=_trace_store,
+    explain_run=explain_run,
+)
 register_explainability_tools(mcp)
 register_trace_tools(mcp)
 register_slo_tools(mcp)
 register_project_contract_tools(mcp)
+register_generic_project_state_tools(mcp)
 
 
 if __name__ == "__main__":

@@ -13,6 +13,8 @@ except ModuleNotFoundError:  # pragma: no cover - local import fallback outside 
 
 ToolFn = Callable[..., dict[str, Any]]
 
+from mcp_generic_project_state_tools import declared_entities
+
 
 TRACE_SCHEMA_V1 = {
     "version": "trace.v1",
@@ -159,6 +161,7 @@ def project_manifest() -> dict[str, Any]:
             "trace_record",
             "baseline_snapshot",
             "regression_run",
+            *sorted(declared_entities().keys()),
         ],
         "operations": {
             "explain": ["explain_run"],
@@ -167,6 +170,16 @@ def project_manifest() -> dict[str, Any]:
                 "project_run_regression",
                 "project_capture_baseline",
                 "project_compare_baseline",
+            ],
+            "project_state": [
+                "project_list_entities",
+                "project_get_entity",
+                "project_upsert_entity",
+                "project_delete_entity",
+                "project_append_event",
+                "project_ingest_trace",
+                "project_explain_run",
+                "project_export_state",
             ],
             "state": [
                 "init_engine",
@@ -204,11 +217,21 @@ def project_capabilities() -> dict[str, Any]:
                 "capture_baseline": True,
                 "compare_baseline": True,
             },
+            "generic_project_state": {
+                "list_entities": True,
+                "get_entity": True,
+                "upsert_entity": True,
+                "delete_entity": True,
+                "append_event": True,
+                "ingest_trace": True,
+                "export_state": True,
+            },
             "explainability": {
                 "explain_run": CONTEXT.explain_run is not None,
                 "expected_failure_controls": True,
                 "run_level_summary": True,
             },
+            "declared_entities": declared_entities(),
             "baseline_paths": {
                 "trace_store": str(trace_db_default),
                 "baseline_snapshot": str(baseline_snapshot_default),
