@@ -1,27 +1,37 @@
+{% assign meta_title = page.title | default: site.title | default: "Mini Data Engine Lab" %}
+{% assign meta_description = page.description | default: site.description | default: "Interactive Data Systems Lab with runnable PostgreSQL-like and Databricks-like internals in Python and Rust." %}
+{% assign meta_keywords = page.keywords | default: "interactive data systems lab, postgres internals, databricks internals, mcp, runtime explainability, rust, python" %}
+{% assign canonical_url = page.url | absolute_url %}
+{% assign og_type = page.seo_type | default: "website" %}
 <meta name="robots" content="index,follow,max-image-preview:large" />
 <meta name="author" content="Kirill Ostapenko" />
-<meta property="og:type" content="website" />
+<meta name="keywords" content="{{ meta_keywords }}" />
+<link rel="canonical" href="{{ canonical_url }}" />
+<meta property="og:type" content="{{ og_type }}" />
 <meta property="og:site_name" content="Mini Data Engine Lab" />
-<meta property="og:title" content="Mini Data Engine Lab" />
-<meta
-  property="og:description"
-  content="Interactive Data Systems Lab with runnable PostgreSQL-like and Databricks-like internals in Python and Rust."
-/>
-<meta property="og:url" content="https://kroq86.github.io/data-engineering-runtime-lab/" />
+<meta property="og:title" content="{{ meta_title }}" />
+<meta property="og:description" content="{{ meta_description }}" />
+<meta property="og:url" content="{{ canonical_url }}" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Mini Data Engine Lab" />
-<meta
-  name="twitter:description"
-  content="Runnable PostgreSQL-like and Databricks-like internals with Python, Rust, and an MCP access layer."
-/>
+<meta name="twitter:title" content="{{ meta_title }}" />
+<meta name="twitter:description" content="{{ meta_description }}" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "SoftwareSourceCode",
-  "name": "Mini Data Engine Lab",
+  "@type": "{{ page.schema_type | default: 'SoftwareSourceCode' }}",
+  "name": {{ meta_title | jsonify }},
   "codeRepository": "https://github.com/kroq86/data-engineering-runtime-lab",
   "programmingLanguage": ["Rust", "Python"],
   "license": "https://opensource.org/licenses/MIT",
-  "description": "Interactive Data Systems Lab with runnable PostgreSQL-like and Databricks-like internals in Python and Rust."
+  "description": {{ meta_description | jsonify }},
+  "url": {{ canonical_url | jsonify }},
+  "author": {
+    "@type": "Person",
+    "name": "Kirill Ostapenko"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Kirill Ostapenko"
+  }
 }
 </script>

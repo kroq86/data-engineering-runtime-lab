@@ -85,6 +85,8 @@ Quick MCP demo:
 Product note:
 - [Runtime Explainability Product Note](./product-note.html)
   Short note describing the incident explanation use case, the signals to store, and the `explain_run` MVP.
+- [Explain-First Regression Suite Feasibility](./explain-regression-suite-feasibility.html)
+  Article describing what the repository validated about traced regression bundles, expected-failure controls, and current denominator limits.
 
 ## Why This Project
 

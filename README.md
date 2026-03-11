@@ -219,6 +219,8 @@ The MCP layer is an access interface, not the core product idea. The core of the
 Product note:
 - [`PRODUCT_NOTE_RUNTIME_EXPLAINABILITY.md`](/Users/ll/Documents/data-engineering-runtime-lab/PRODUCT_NOTE_RUNTIME_EXPLAINABILITY.md)
   Short note describing the runtime explainability use case, the required signals, and the `explain_run` MVP.
+- [`EXPLAIN_REGRESSION_SUITE_FEASIBILITY.md`](/Users/ll/Documents/data-engineering-runtime-lab/EXPLAIN_REGRESSION_SUITE_FEASIBILITY.md)
+  Short article describing what this repository validated about explain-first regression suites and where the current denominator still stays narrow.
 
 Run persistent engine CLI (productization path):
 
