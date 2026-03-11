@@ -118,3 +118,36 @@ cargo run --bin engine_cli -- tx-recovery-rollback ./tests/artifacts/engine/data
 - In `engine_cli tx-demo`: explicit transaction scopes, snapshot reads, per-table write lock, and concurrent upsert conflict detection.
 - In `engine_cli tx-recovery-*`: staged transaction operations survive process restarts via per-transaction journal files and can be committed or rolled back explicitly.
 - In `e2e_flow`: one command runs write path, checkpoint, bronze->silver transform, planner explain, and DuckDB SQL validation on persisted data.
+
+## Docker package (pull and run on another Mac)
+
+Image is published to GHCR:
+
+- `ghcr.io/kroq86/data-engineering-runtime-lab:latest`
+
+Pull:
+
+```bash
+docker pull ghcr.io/kroq86/data-engineering-runtime-lab:latest
+```
+
+Use in Cursor MCP config (example):
+
+```json
+{
+  "mcpServers": {
+    "mini-data-engine": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-v",
+        "${workspaceFolder}/tests/artifacts:/app/tests/artifacts",
+        "ghcr.io/kroq86/data-engineering-runtime-lab:latest"
+      ]
+    }
+  }
+}
+```
+

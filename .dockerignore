@@ -1,0 +1,7 @@
+.git
+.github
+.venv
+target
+__pycache__
+tests/artifacts
+*.pyc

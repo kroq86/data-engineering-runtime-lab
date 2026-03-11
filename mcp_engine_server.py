@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import subprocess
 import time
 from collections import defaultdict
@@ -11,8 +12,17 @@ from mcp.server.fastmcp import FastMCP
 
 WORKSPACE = Path(__file__).resolve().parent
 TARGET_DIR = WORKSPACE / "target" / "debug"
-ENGINE_BIN = TARGET_DIR / "engine_cli"
-E2E_BIN = TARGET_DIR / "e2e_flow"
+BIN_DIR_ENV = os.getenv("MINI_DATA_ENGINE_BIN_DIR")
+if BIN_DIR_ENV:
+    bin_dir = Path(BIN_DIR_ENV)
+    if not bin_dir.is_absolute():
+        BIN_DIR = (WORKSPACE / bin_dir).resolve()
+    else:
+        BIN_DIR = bin_dir
+else:
+    BIN_DIR = TARGET_DIR
+ENGINE_BIN = BIN_DIR / "engine_cli"
+E2E_BIN = BIN_DIR / "e2e_flow"
 mcp = FastMCP("mini-data-engine")
 
 
@@ -73,7 +83,14 @@ def insert_row(
     amount: int = 10,
 ) -> dict[str, Any]:
     """Insert one row into the persistent engine."""
-    args = ["insert", root_dir, table, str(order_id), str(customer_id), str(amount)]
+    args = [
+        "insert",
+        root_dir,
+        table,
+        str(order_id),
+        str(customer_id),
+        str(amount),
+    ]
     return _run_engine_cli(args)
 
 
@@ -86,7 +103,14 @@ def upsert_row(
     amount: int = 20,
 ) -> dict[str, Any]:
     """Upsert one row by order_id."""
-    args = ["upsert", root_dir, table, str(order_id), str(customer_id), str(amount)]
+    args = [
+        "upsert",
+        root_dir,
+        table,
+        str(order_id),
+        str(customer_id),
+        str(amount),
+    ]
     return _run_engine_cli(args)
 
 
@@ -296,7 +320,10 @@ def scenario_load_test(
 
     violations: list[str] = []
     if success_rate < min_success_rate:
-        msg = f"success_rate {success_rate:.4f} < min_success_rate {min_success_rate:.4f}"
+        msg = (
+            f"success_rate {success_rate:.4f} < "
+            f"min_success_rate {min_success_rate:.4f}"
+        )
         violations.append(msg)
     if p95 > max_overall_p95_ms:
         msg = (
