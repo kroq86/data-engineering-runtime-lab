@@ -130,6 +130,8 @@ Tools exposed by MCP:
 - `benchmark_calls`
 - `scenario_load_test`
 - `record_tool_trace`
+- `explain_run`
+- `demo_explain_run`
 - `similar_incidents`
 - `refresh_trace_path`
 - `refresh_docs_path`
@@ -140,7 +142,31 @@ Tools exposed by MCP:
 If Cursor MCP auto-discovery is enabled, restart Cursor and connect `mini-data-engine`.
 Default MCP runtime data paths are under `tests/artifacts/mcp/*`.
 
+Fastest way to see the new explainability use case in action through MCP:
+
+```text
+demo_explain_run
+```
+
+That single tool call creates a traced run, records step-level events under one `run_id`,
+and returns an explanation with:
+
+- ordered timeline
+- tool path
+- total elapsed time
+- failure summary if anything breaks
+
+You can then replay the same explanation directly with:
+
+```text
+explain_run(run_id="...")
+```
+
 The MCP layer is an access interface, not the core product idea. The core of the repository is the runnable lab itself.
+
+Product note:
+- [`PRODUCT_NOTE_RUNTIME_EXPLAINABILITY.md`](/Users/ll/Documents/data-engineering-runtime-lab/PRODUCT_NOTE_RUNTIME_EXPLAINABILITY.md)
+  Short note describing the runtime explainability use case, the required signals, and the `explain_run` MVP.
 
 Run persistent engine CLI (productization path):
 

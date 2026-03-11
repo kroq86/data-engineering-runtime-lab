@@ -187,6 +187,96 @@ def find_similar_incidents(
     return scored[:top_k]
 
 
+def load_run_records(
+    store: TraceStore,
+    run_id: str,
+) -> list[dict[str, Any]]:
+    rows = store.query()
+    matched = [row for row in rows if str(row.get("run_id", "")) == run_id]
+    matched.sort(
+        key=lambda row: (
+            _parse_utc(str(row.get("timestamp_utc", ""))) or datetime.min.replace(
+                tzinfo=timezone.utc
+            ),
+            str(row.get("tool_name", "")),
+        )
+    )
+    return matched
+
+
+def explain_run(
+    store: TraceStore,
+    run_id: str,
+    max_timeline_events: int = 20,
+) -> dict[str, Any]:
+    rows = load_run_records(store=store, run_id=run_id)
+    if not rows:
+        return {"ok": False, "run_id": run_id, "reason": "run_id not found"}
+
+    statuses = [str(row.get("status", "unknown")) for row in rows]
+    failed = [row for row in rows if str(row.get("status", "")).lower() != "ok"]
+    started_at = str(rows[0].get("timestamp_utc", ""))
+    ended_at = str(rows[-1].get("timestamp_utc", ""))
+    started_dt = _parse_utc(started_at)
+    ended_dt = _parse_utc(ended_at)
+    window_ms = 0.0
+    if started_dt is not None and ended_dt is not None:
+        window_ms = max((ended_dt - started_dt).total_seconds() * 1000, 0.0)
+
+    total_elapsed_ms = sum(float(row.get("elapsed_ms", 0.0)) for row in rows)
+    tools = [str(row.get("tool_name", "")) for row in rows]
+    timeline = [
+        {
+            "timestamp_utc": str(row.get("timestamp_utc", "")),
+            "tool_name": str(row.get("tool_name", "")),
+            "status": str(row.get("status", "")),
+            "summary": str(row.get("summary", "")),
+            "error_text": str(row.get("error_text", "")),
+            "elapsed_ms": float(row.get("elapsed_ms", 0.0)),
+        }
+        for row in rows[:max_timeline_events]
+    ]
+
+    if failed:
+        first_failure = failed[0]
+        explanation = (
+            f"Run {run_id} failed after {len(rows)} steps. "
+            f"First failing tool was {first_failure.get('tool_name', 'unknown_tool')} "
+            f"with error: {str(first_failure.get('error_text', '')).strip() or 'unspecified error'}."
+        )
+    else:
+        explanation = (
+            f"Run {run_id} completed {len(rows)} steps successfully. "
+            f"Observed path: {', '.join(tools)}."
+        )
+
+    return {
+        "ok": True,
+        "run_id": run_id,
+        "status": "error" if failed else "ok",
+        "record_count": len(rows),
+        "started_at_utc": started_at,
+        "ended_at_utc": ended_at,
+        "window_ms": round(window_ms, 2),
+        "total_elapsed_ms": round(total_elapsed_ms, 2),
+        "tool_path": tools,
+        "status_counts": {
+            "ok": sum(1 for status in statuses if status.lower() == "ok"),
+            "error": sum(1 for status in statuses if status.lower() != "ok"),
+        },
+        "failed_tools": [
+            {
+                "tool_name": str(row.get("tool_name", "")),
+                "error_text": str(row.get("error_text", "")),
+                "summary": str(row.get("summary", "")),
+            }
+            for row in failed
+        ],
+        "timeline": timeline,
+        "summary": explanation,
+    }
+
+
 def refresh_trace_from_path(
     store: TraceStore,
     source_path: Path,

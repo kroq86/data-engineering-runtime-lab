@@ -7,7 +7,9 @@ from pathlib import Path
 
 from trace_observability import (
     TraceStore,
+    explain_run,
     find_similar_incidents,
+    load_run_records,
     refresh_docs_from_path,
     refresh_trace_from_path,
 )
@@ -205,6 +207,71 @@ class SemanticObservabilityTests(unittest.TestCase):
             self.assertEqual(rec["error_type"], "none")
             self.assertEqual(rec["environment"], "local")
             self.assertEqual(rec["source_kind"], "tool_trace")
+
+    def test_load_run_records_and_explain_run(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "traces.jsonl"
+            store = TraceStore(db_path)
+            store.append(
+                {
+                    "run_id": "run-1",
+                    "tool_name": "init_engine",
+                    "status": "ok",
+                    "summary": "engine initialized",
+                    "elapsed_ms": 1.0,
+                }
+            )
+            store.append(
+                {
+                    "run_id": "run-1",
+                    "tool_name": "insert_row",
+                    "status": "ok",
+                    "summary": "inserted order 1",
+                    "elapsed_ms": 2.5,
+                }
+            )
+            store.append(
+                {
+                    "run_id": "run-2",
+                    "tool_name": "insert_row",
+                    "status": "error",
+                    "summary": "conflict on insert",
+                    "error_text": "version mismatch",
+                    "elapsed_ms": 4.0,
+                }
+            )
+
+            run_rows = load_run_records(store=store, run_id="run-1")
+            self.assertEqual(len(run_rows), 2)
+            self.assertEqual(run_rows[0]["tool_name"], "init_engine")
+
+            explained = explain_run(store=store, run_id="run-1")
+            self.assertTrue(explained["ok"])
+            self.assertEqual(explained["status"], "ok")
+            self.assertEqual(explained["record_count"], 2)
+            self.assertEqual(explained["tool_path"], ["init_engine", "insert_row"])
+            self.assertIn("completed 2 steps successfully", explained["summary"])
+
+    def test_explain_run_surfaces_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "traces.jsonl"
+            store = TraceStore(db_path)
+            store.append(
+                {
+                    "run_id": "run-error",
+                    "tool_name": "run_e2e_flow",
+                    "status": "error",
+                    "summary": "duckdb validation failed",
+                    "error_text": "duckdb wrapper unavailable",
+                    "elapsed_ms": 12.0,
+                }
+            )
+
+            explained = explain_run(store=store, run_id="run-error")
+            self.assertTrue(explained["ok"])
+            self.assertEqual(explained["status"], "error")
+            self.assertEqual(explained["failed_tools"][0]["tool_name"], "run_e2e_flow")
+            self.assertIn("duckdb wrapper unavailable", explained["summary"])
 
     def test_refresh_docs_from_path_is_incremental(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

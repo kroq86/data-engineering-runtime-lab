@@ -67,6 +67,8 @@ The project also exposes tools via `mcp_engine_server.py`:
 - `benchmark_calls`
 - `scenario_load_test`
 - `record_tool_trace`
+- `explain_run`
+- `demo_explain_run`
 - `similar_incidents`
 - `refresh_trace_path`
 - `refresh_docs_path`
@@ -75,6 +77,14 @@ The project also exposes tools via `mcp_engine_server.py`:
 - `decision_gate`
 
 This MCP layer is a programmable interface to the lab, not the primary identity of the project.
+
+Quick MCP demo:
+- call `demo_explain_run`
+- it creates a traced engine run and immediately returns a structured explanation for that `run_id`
+
+Product note:
+- [Runtime Explainability Product Note](./product-note.html)
+  Short note describing the incident explanation use case, the signals to store, and the `explain_run` MVP.
 
 ## Why This Project
 

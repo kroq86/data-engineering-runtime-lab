@@ -10,18 +10,33 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from mcp.server.fastmcp import FastMCP
-from mcp_slo import (
-    benchmark_calls_impl,
-    capture_baseline_snapshot,
-    evaluate_decision_gate,
-    increment_drift_bug_counter,
-    scenario_load_test_impl,
+from mcp_explainability import (
+    configure_explainability_tools,
+    demo_explain_run,
+    demo_explain_run_failure,
+    explain_run,
+    register_explainability_tools,
+)
+from mcp_slo_tools import (
+    benchmark_calls,
+    capture_roi_baseline,
+    configure_slo_tools,
+    decision_gate,
+    health_check,
+    register_slo_tools,
+    report_drift_bug,
+    scenario_load_test,
+)
+from mcp_trace_tools import (
+    configure_trace_tools,
+    record_tool_trace,
+    refresh_docs_path,
+    refresh_trace_path,
+    register_trace_tools,
+    similar_incidents,
 )
 from trace_observability import (
     TraceStore,
-    find_similar_incidents,
-    refresh_docs_from_path,
-    refresh_trace_from_path,
 )
 
 
@@ -469,350 +484,34 @@ def run_e2e_flow(
     return OPS.run_e2e_flow(root_dir=root_dir)
 
 
-@mcp.tool()
-def record_tool_trace(
-    run_id: str,
-    tool_name: str,
-    status: str,
-    summary: str,
-    error_text: str = "",
-    elapsed_ms: float = 0.0,
-    scenario_id: str = "adhoc",
-    trace_db_path: str = "",
-) -> dict[str, Any]:
-    """Append one MCP tool trace record to local trace store."""
-    store = _trace_store(trace_db_path or None)
-    rec = store.append(
-        {
-            "run_id": run_id,
-            "tool_name": tool_name,
-            "status": status,
-            "summary": summary,
-            "error_text": error_text,
-            "elapsed_ms": float(elapsed_ms),
-            "scenario_id": scenario_id,
-        }
-    )
-    return {"ok": True, "trace_path": str(store.path), "record": rec}
-
-
-@mcp.tool()
-def similar_incidents(
-    query_text: str,
-    top_k: int = 5,
-    min_score: float = 0.0,
-    status: str = "error",
-    tool_name: str = "",
-    scenario_id: str = "",
-    start_time_utc: str = "",
-    end_time_utc: str = "",
-    trace_db_path: str = "",
-) -> dict[str, Any]:
-    """Find semantically similar historical incidents."""
-    store = _trace_store(trace_db_path or None)
-    results = find_similar_incidents(
-        store=store,
-        query_text=query_text,
-        top_k=top_k,
-        min_score=min_score,
-        status=status or None,
-        tool_name=tool_name or None,
-        scenario_id=scenario_id or None,
-        start_time_utc=start_time_utc or None,
-        end_time_utc=end_time_utc or None,
-    )
-    return {
-        "ok": True,
-        "query_text": query_text,
-        "count": len(results),
-        "results": results,
-    }
-
-
-@mcp.tool()
-def refresh_trace_path(
-    source_path: str,
-    trace_db_path: str = "",
-    refresh_state_path: str = "",
-    scenario_id: str = "refresh",
-) -> dict[str, Any]:
-    """Incrementally ingest new lines from source path into trace store."""
-    store = _trace_store(trace_db_path or None)
-    state_path = (
-        Path(refresh_state_path)
-        if refresh_state_path
-        else TRACE_REFRESH_STATE_DEFAULT
-    )
-    result = refresh_trace_from_path(
-        store=store,
-        source_path=Path(source_path),
-        state_path=state_path,
-        scenario_id=scenario_id,
-    )
-    return {
-        **result,
-        "trace_path": str(store.path),
-        "state_path": str(state_path),
-    }
-
-
-@mcp.tool()
-def refresh_docs_path(
-    source_dir: str = "./docs",
-    trace_db_path: str = "",
-    refresh_state_path: str = "",
-    scenario_id: str = "knowledge",
-    include_extensions: str = ".md,.py,.rs,.toml,.json,.yaml,.yml",
-    exclude_dir_names: str = ".git,.idea,.pytest_cache,.venv,__pycache__,node_modules,target",
-    exclude_path_parts: str = "tests/artifacts",
-    max_file_bytes: int = 200000,
-) -> dict[str, Any]:
-    """Incrementally ingest project docs, code, and config files."""
-    store = _trace_store(trace_db_path or None)
-    state_path = (
-        Path(refresh_state_path)
-        if refresh_state_path
-        else DOCS_REFRESH_STATE_DEFAULT
-    )
-    result = refresh_docs_from_path(
-        store=store,
-        source_dir=Path(source_dir),
-        state_path=state_path,
-        scenario_id=scenario_id,
-        include_extensions=_parse_csv_set(include_extensions),
-        exclude_dir_names=_parse_csv_set(exclude_dir_names),
-        exclude_path_parts=_parse_csv_set(exclude_path_parts),
-        max_file_bytes=max_file_bytes,
-    )
-    return {
-        **result,
-        "trace_path": str(store.path),
-        "state_path": str(state_path),
-    }
-
-
-@mcp.tool()
-def health_check(
-    root_dir: str = "./tests/artifacts/mcp/health", table: str = "orders"
-) -> dict[str, Any]:
-    """Run a quick MCP smoke flow and summarize status."""
-    steps = [
-        ("init_engine", init_engine(root_dir=root_dir, table=table)),
-        (
-            "insert_row",
-            insert_row(
-                root_dir=root_dir,
-                table=table,
-                order_id=1,
-                customer_id=4242,
-                amount=10,
-            ),
-        ),
-        ("reindex_project", reindex_project(root_dir=root_dir, table=table)),
-        (
-            "explain_customer",
-            explain_customer(root_dir=root_dir, table=table, customer_id=4242),
-        ),
-    ]
-    ok = all(result.get("ok", False) for _, result in steps)
-    out = {
-        "ok": ok,
-        "steps": [{name: result} for name, result in steps],
-    }
-    status = "ok" if ok else "error"
-    summary = "health_check finished"
-    error_text = "" if ok else "one or more health steps failed"
-    record_tool_trace(
-        run_id=f"health-{int(time.time() * 1000)}",
-        tool_name="health_check",
-        status=status,
-        summary=summary,
-        error_text=error_text,
-        elapsed_ms=0.0,
-        scenario_id="health",
-    )
-    return out
-
-
-@mcp.tool()
-def benchmark_calls(
-    iterations: int = 5,
-    root_dir: str = "./tests/artifacts/mcp/bench",
-    table: str = "orders",
-    min_success_rate: float = 0.99,
-    max_p95_ms: float = 100.0,
-) -> dict[str, Any]:
-    """Benchmark MCP operations with SLO-style summary metrics."""
-    out = benchmark_calls_impl(
-        iterations=iterations,
-        root_dir=root_dir,
-        table=table,
-        min_success_rate=min_success_rate,
-        max_p95_ms=max_p95_ms,
-        init_engine=init_engine,
-        insert_row=insert_row,
-        reindex_project=reindex_project,
-        explain_customer=explain_customer,
-    )
-    if not out.get("ok", False):
-        return out
-    status = "ok" if out["slo"]["passed"] else "error"
-    summary = (
-        f"benchmark_calls success_rate={out['success_rate']} "
-        f"p95={out['insert_p95_ms']}ms"
-    )
-    error_text = "; ".join(out["slo"]["violations"])
-    record_tool_trace(
-        run_id=f"benchmark-{int(time.time() * 1000)}",
-        tool_name="benchmark_calls",
-        status=status,
-        summary=summary,
-        error_text=error_text,
-        elapsed_ms=float(out["insert_avg_ms"]),
-        scenario_id="benchmark",
-    )
-    return out
-
-
-@mcp.tool()
-def scenario_load_test(
-    iterations: int = 10,
-    root_dir: str = "./tests/artifacts/mcp/scenario",
-    table: str = "orders",
-    min_success_rate: float = 0.99,
-    max_overall_p95_ms: float = 100.0,
-    max_e2e_p95_ms: float = 500.0,
-) -> dict[str, Any]:
-    """
-    Mixed workload load test:
-    insert/upsert/explain/reindex/e2e and summary metrics.
-    """
-    out = scenario_load_test_impl(
-        iterations=iterations,
-        root_dir=root_dir,
-        table=table,
-        min_success_rate=min_success_rate,
-        max_overall_p95_ms=max_overall_p95_ms,
-        max_e2e_p95_ms=max_e2e_p95_ms,
-        init_engine=init_engine,
-        insert_row=insert_row,
-        upsert_row=upsert_row,
-        explain_customer=explain_customer,
-        reindex_project=reindex_project,
-        run_e2e_flow=run_e2e_flow,
-    )
-    if not out.get("ok", False):
-        return out
-    status = "ok" if out["slo"]["passed"] else "error"
-    summary = (
-        f"scenario_load_test success_rate={out['success_rate']} "
-        f"overall_p95={out['latency_ms']['overall_p95']}ms"
-    )
-    error_text = "; ".join(out["slo"]["violations"])
-    record_tool_trace(
-        run_id=f"scenario-{int(time.time() * 1000)}",
-        tool_name="scenario_load_test",
-        status=status,
-        summary=summary,
-        error_text=error_text,
-        elapsed_ms=float(out["latency_ms"]["overall_p95"]),
-        scenario_id="scenario",
-    )
-    return out
-
-
-@mcp.tool()
-def capture_roi_baseline(
-    root_dir: str = "./tests/artifacts/mcp/baseline_runtime",
-    table: str = "orders",
-    benchmark_iterations: int = 5,
-    scenario_iterations: int = 5,
-    output_path: str = "",
-) -> dict[str, Any]:
-    """Capture baseline KPI snapshot for ROI Phase 0."""
-    bench = benchmark_calls(
-        iterations=benchmark_iterations,
-        root_dir=root_dir,
-        table=table,
-        min_success_rate=0.9,
-        max_p95_ms=2000.0,
-    )
-    scen = scenario_load_test(
-        iterations=scenario_iterations,
-        root_dir=root_dir,
-        table=table,
-        min_success_rate=0.9,
-        max_overall_p95_ms=3000.0,
-        max_e2e_p95_ms=6000.0,
-    )
-    snapshot_path = (
-        Path(output_path) if output_path else BASELINE_SNAPSHOT_DEFAULT
-    )
-    return capture_baseline_snapshot(
-        output_path=snapshot_path,
-        benchmark_result=bench,
-        scenario_result=scen,
-        kpi_targets={
-            "troubleshooting_time_reduction_pct": 30,
-            "retrieval_p95_ms_max": 300.0,
-            "first_attempt_recovery_usefulness_pct": 70,
-        },
-    )
-
-
-@mcp.tool()
-def report_drift_bug(note: str = "", counter_path: str = "") -> dict[str, Any]:
-    """Increment and persist split-logic drift bug counter."""
-    path = Path(counter_path) if counter_path else DRIFT_BUG_COUNTER_DEFAULT
-    return increment_drift_bug_counter(counter_path=path, note=note)
-
-
-@mcp.tool()
-def decision_gate(
-    trace_db_path: str = "",
-    baseline_path: str = "",
-    drift_counter_path: str = "",
-    need_rust_portfolio: bool = False,
-    volume_threshold_per_day: int = 100_000,
-    regression_threshold_pct: float = 30.0,
-    consecutive_regressions_required: int = 2,
-) -> dict[str, Any]:
-    """Evaluate migration triggers and return pass/fail gate."""
-    tpath = Path(trace_db_path) if trace_db_path else TRACE_DB_DEFAULT
-    bpath = Path(baseline_path) if baseline_path else BASELINE_SNAPSHOT_DEFAULT
-    dpath = (
-        Path(drift_counter_path)
-        if drift_counter_path
-        else DRIFT_BUG_COUNTER_DEFAULT
-    )
-
-    drift_count = 0
-    if dpath.exists():
-        try:
-            import json
-
-            payload = json.loads(dpath.read_text(encoding="utf-8"))
-            drift_count = int(payload.get("count", 0))
-        except (ValueError, json.JSONDecodeError):
-            drift_count = 0
-
-    result = evaluate_decision_gate(
-        trace_path=tpath,
-        baseline_path=bpath,
-        drift_bug_count=drift_count,
-        need_rust_portfolio=need_rust_portfolio,
-        volume_threshold_per_day=volume_threshold_per_day,
-        regression_threshold_pct=regression_threshold_pct,
-        consecutive_regressions_required=consecutive_regressions_required,
-    )
-    return {
-        **result,
-        "paths": {
-            "trace": str(tpath),
-            "baseline": str(bpath),
-            "drift_counter": str(dpath),
-        },
-    }
+configure_explainability_tools(
+    trace_store_factory=_trace_store,
+    init_engine=init_engine,
+    insert_row=insert_row,
+    create_index=create_index,
+    explain_customer=explain_customer,
+    run_e2e_flow=run_e2e_flow,
+)
+configure_trace_tools(
+    trace_store_factory=_trace_store,
+    trace_refresh_state_default=TRACE_REFRESH_STATE_DEFAULT,
+    docs_refresh_state_default=DOCS_REFRESH_STATE_DEFAULT,
+)
+configure_slo_tools(
+    record_tool_trace=record_tool_trace,
+    init_engine=init_engine,
+    insert_row=insert_row,
+    upsert_row=upsert_row,
+    reindex_project=reindex_project,
+    explain_customer=explain_customer,
+    run_e2e_flow=run_e2e_flow,
+    trace_db_default=TRACE_DB_DEFAULT,
+    baseline_snapshot_default=BASELINE_SNAPSHOT_DEFAULT,
+    drift_bug_counter_default=DRIFT_BUG_COUNTER_DEFAULT,
+)
+register_explainability_tools(mcp)
+register_trace_tools(mcp)
+register_slo_tools(mcp)
 
 
 if __name__ == "__main__":
