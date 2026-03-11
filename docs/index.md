@@ -15,6 +15,12 @@ keywords: mini data engine, mcp server, duckdb, rust data engineering, wal repla
 - **MCP tools**: operational control through an MCP server (`mini-data-engine`).
 - **Transactional safety**: checkpointing, WAL replay, tx scopes, conflict detection, and rollback journals.
 
+## GitHub
+
+- Repository: [github.com/kroq86/data-engineering-runtime-lab](https://github.com/kroq86/data-engineering-runtime-lab)
+- Owner: [@kroq86](https://github.com/kroq86)
+- If this project is useful, please give it a star: [Star the repository](https://github.com/kroq86/data-engineering-runtime-lab/stargazers)
+
 ## Quick Start
 
 ```bash
@@ -46,5 +52,7 @@ This repository is built to be a practical bridge between architecture interview
 
 ## Links
 
-- Source and setup details: see `README.md`
+- GitHub repository: [data-engineering-runtime-lab](https://github.com/kroq86/data-engineering-runtime-lab)
+- Open issues / feature requests: [Issues](https://github.com/kroq86/data-engineering-runtime-lab/issues)
+- Source and setup details: [README.md](https://github.com/kroq86/data-engineering-runtime-lab/blob/main/README.md)
 - License: MIT (`LICENSE`)
