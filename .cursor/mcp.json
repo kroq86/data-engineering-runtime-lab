@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "mini-data-engine": {
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": ["${workspaceFolder}/mcp_engine_server.py"]
+    }
+  }
+}

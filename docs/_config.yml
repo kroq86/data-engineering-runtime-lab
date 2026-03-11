@@ -1,0 +1,18 @@
+title: Mini Data Engine Lab
+description: End-to-end mini data platform with MiniPG, MiniDatabricks, DuckDB, and MCP tools.
+theme: minima
+markdown: kramdown
+
+# Replace with your actual GitHub username/repository
+url: "https://your-github-username.github.io"
+baseurl: "/mini-data-engine-lab"
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+seo:
+  type: WebSite
+  name: Mini Data Engine Lab
+  links:
+    - https://github.com/your-github-username/mini-data-engine-lab

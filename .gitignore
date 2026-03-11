@@ -1,0 +1,28 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Rust/Cargo
+target/
+
+# Local editor/runtime artifacts
+.DS_Store
+.cursor-lisp/
+
+# Runtime data artifacts (keep structure with .gitkeep files)
+tests/artifacts/**
+!tests/artifacts/
+!tests/artifacts/.gitkeep
+!tests/artifacts/mcp/
+!tests/artifacts/mcp/.gitkeep
+!tests/artifacts/engine/
+!tests/artifacts/engine/.gitkeep
+!tests/artifacts/e2e/
+!tests/artifacts/e2e/.gitkeep
+
+# Legacy local test folders (if present)
+engine_data/
+engine_data_tx/
+e2e_data/
+engine_data_mcp*/
