@@ -1,5 +1,5 @@
 title: Mini Data Engine Lab
-description: MCP Reliability and Observability Runtime with replayable tool operations, SLO gates, incident similarity, and migration decision guardrails.
+description: Interactive Data Systems Lab with runnable PostgreSQL-like and Databricks-like internals in Python and Rust.
 theme: minima
 markdown: kramdown
 

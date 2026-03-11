@@ -1,37 +1,33 @@
 ---
 layout: default
 title: Mini Data Engine Lab
-description: MCP Reliability and Observability Runtime with replayable tool operations, SLO gates, incident similarity, and migration decision guardrails.
-keywords: mcp reliability, mcp observability, incident similarity, slo gates, replayable tool operations, decision gate, ai agent runtime
+description: Interactive Data Systems Lab with runnable PostgreSQL-like and Databricks-like internals in Python and Rust.
+keywords: interactive data systems lab, postgres internals, databricks internals, b-tree index, query planner, delta lake concepts, event log, idempotency, rust, python
 ---
 
 # Mini Data Engine Lab
 
-`Mini Data Engine Lab` is an **MCP Reliability & Observability Runtime**:
+`Mini Data Engine Lab` is an **Interactive Data Systems Lab**:
 
-- replayable tool operations and trace capture,
-- measurable SLO gates for runtime health,
-- semantic incident similarity for faster triage,
-- migration decision guardrails based on real trigger criteria.
+- runnable PostgreSQL-like and Databricks-like demos,
+- compact Python and Rust implementations of storage and execution ideas,
+- a local-first sandbox for indexes, planners, checkpoints, workflows, and event logs,
+- an MCP access layer for automation and agent-driven exploration.
 
 ## Who This Is For
 
-- Platform/SRE teams running MCP tools and needing reliability controls.
-- Teams building agent workflows that need observability, replay, and regression checks.
-- Engineers who want a local-first runtime lab before production cloud rollout.
+- Data engineers learning how modern data systems behave under the hood.
+- Platform and infrastructure engineers teaching storage, execution, and write-path fundamentals.
+- Teams building onboarding labs, workshops, or demos around data platform architecture.
 
-## Top 3 Production Pains Solved
+## What You Can Explore
 
-- **Non-reproducible MCP failures**: trace capture + replayable operations reduce guesswork.
-- **No objective quality gate**: SLO-based checks (`success_rate`, p50/p95, failure breakdown) make pass/fail explicit.
-- **Hard migration decisions**: `decision_gate` converts architecture discussion into measurable triggers.
-
-## What Success Looks Like In 2 Weeks
-
-- Baseline snapshot captured and tracked in CI.
-- Incident triage uses `similar_incidents` for at least one real debugging flow.
-- Decision gate reports trigger status from trace + baseline + drift bug counter.
-- No regressions in `health_check`, `benchmark_calls`, and `scenario_load_test`.
+- Heap tables and B-tree indexes.
+- Planner decisions such as `Seq Scan` versus `Index Scan`.
+- WAL/checkpoint style persistence and replay.
+- Delta-style append and merge-upsert version history.
+- Workflow DAG execution and single-write-path architecture.
+- Canonical events, idempotency, retries, and deterministic transitions.
 
 ## GitHub
 
@@ -45,9 +41,20 @@ keywords: mcp reliability, mcp observability, incident similarity, slo gates, re
 cargo run --bin e2e_flow
 ```
 
-## MCP Tooling
+## Core Components
 
-The project exposes tools via `mcp_engine_server.py`:
+- `mini_pg_like.py` and `src/bin/mini_pg_like.rs`
+  PostgreSQL-like demos with heap storage, B-tree indexes, and planner output.
+- `mini_databricks_clone.py` and `src/bin/mini_databricks_clone.rs`
+  Databricks-like demos with Delta-style versioning, workflows, and event-driven write paths.
+- `engine_cli` and `e2e_flow`
+  Persistent engine operations, checkpointing, replay, and end-to-end validation.
+- `TECHNICAL_DESIGN_GENERIC.md`
+  The architecture backbone used to keep the lab deterministic and reviewable.
+
+## MCP Access Layer
+
+The project also exposes tools via `mcp_engine_server.py`:
 
 - `init_engine`
 - `insert_row`
@@ -67,13 +74,15 @@ The project exposes tools via `mcp_engine_server.py`:
 - `report_drift_bug`
 - `decision_gate`
 
-## Why this project
+This MCP layer is a programmable interface to the lab, not the primary identity of the project.
 
-This repository is built to be a practical bridge between architecture interviews and runnable systems code:
+## Why This Project
 
-- reason about write-path reliability and replay,
-- benchmark mixed workloads with measurable SLOs,
-- orchestrate the stack with an MCP adapter.
+This repository is built to bridge architecture diagrams and runnable systems code:
+
+- learn core data system mechanics without needing full PostgreSQL, Spark, or Databricks deployments,
+- compare Python and Rust implementations of the same ideas,
+- turn storage and execution concepts into something you can run, inspect, and automate.
 
 ## Links
 

@@ -1,25 +1,22 @@
-# Mini Data Systems Demos
+# Interactive Data Systems Lab
 
-MCP Reliability & Observability Runtime: replayable tool operations, SLO gates, incident similarity, and migration decision guardrails.
+Runnable Python and Rust implementations of PostgreSQL-like and Databricks-like system internals.
+
+This repository is a compact, local-first lab for exploring:
+
+- heap storage, B-tree indexes, and planner decisions,
+- WAL/checkpoint style persistence and replay,
+- Delta-style versioning and time-travel snapshots,
+- workflow DAG execution, event logs, idempotency, and single-write-path design,
+- programmatic access through an MCP adapter layer.
 
 ## Who This Is For
 
-- Platform/SRE engineers running MCP tools in real workflows.
-- Teams building agent pipelines that need objective reliability checks.
-- Developers who need local-first incident observability before cloud rollout.
+- Data engineers who want to understand what sits underneath warehouses and query engines.
+- Platform and infrastructure engineers teaching or learning storage and execution fundamentals.
+- Teams building onboarding, workshops, or demos around modern data system internals.
 
-## Top 3 Production Pains Solved
-
-- Non-reproducible MCP failures and weak incident memory.
-- No hard pass/fail runtime quality gate before changes ship.
-- Architecture decisions (Python vs Rust split) made without objective triggers.
-
-## What Success Looks Like In 2 Weeks
-
-- Baseline KPI snapshot captured and versioned.
-- Similar incident retrieval used in at least one real debugging flow.
-- Decision gate reports migration trigger status from live traces.
-- CI catches regressions on push/PR for Python and Rust paths.
+## What This Project Actually Contains
 
 This folder contains educational Python and Rust demos:
 
@@ -28,6 +25,16 @@ This folder contains educational Python and Rust demos:
 - `src/bin/mini_pg_like.rs` - Rust/Cargo PostgreSQL-like demo.
 - `src/bin/mini_databricks_clone.rs` - Rust/Cargo Databricks-like demo.
 - `src/lib.rs` + `src/common.rs` + `src/pg.rs` - shared Rust core modules used by both binaries.
+
+## Why It Exists
+
+Most explanations of data systems stop at diagrams. This lab is meant to be runnable:
+
+- inspect how heap storage and B-tree indexing affect plan choice,
+- see append/upsert/checkpoint flows rather than just reading about them,
+- trace a single-write-path architecture with canonical events and idempotency,
+- compare Python and Rust implementations of the same ideas,
+- automate the lab through MCP instead of only using ad hoc scripts.
 
 ## Requirements
 
@@ -80,9 +87,33 @@ Run full end-to-end flow (MiniPG + MiniDatabricks + DuckDB):
 cargo run --bin e2e_flow
 ```
 
-## MCP Adapter Layer (Cursor)
+## Quick Start
 
-This repo now includes a minimal MCP server that wraps engine operations:
+Run the full end-to-end flow:
+
+```bash
+cargo run --bin e2e_flow
+```
+
+Run the core demos:
+
+```bash
+.venv/bin/python mini_pg_like.py
+.venv/bin/python mini_databricks_clone.py
+cargo run --bin mini_pg_like
+cargo run --bin mini_databricks_clone
+```
+
+## Architecture Themes
+
+- PostgreSQL-like internals: heap tables, B-tree indexes, selectivity, planner cost tradeoffs.
+- Databricks-like internals: Delta-style commits, workflow DAGs, catalog concepts, bronze-to-silver style transforms.
+- Reliability discipline: deterministic transitions, idempotency, replay, canonical event logs, one write path.
+- Productization path: persistent engine CLI, transaction demo, recovery commands, Docker packaging.
+
+## MCP Adapter Layer
+
+This repo also includes a minimal MCP server that wraps the lab operations:
 
 - `mcp_engine_server.py`
 - Cursor config: `.cursor/mcp.json`
@@ -108,6 +139,8 @@ Tools exposed by MCP:
 
 If Cursor MCP auto-discovery is enabled, restart Cursor and connect `mini-data-engine`.
 Default MCP runtime data paths are under `tests/artifacts/mcp/*`.
+
+The MCP layer is an access interface, not the core product idea. The core of the repository is the runnable lab itself.
 
 Run persistent engine CLI (productization path):
 
@@ -147,6 +180,19 @@ cargo run --bin engine_cli -- tx-recovery-rollback ./tests/artifacts/engine/data
 - In `engine_cli tx-recovery-*`: staged transaction operations survive process restarts via per-transaction journal files and can be committed or rolled back explicitly.
 - In `e2e_flow`: one command runs write path, checkpoint, bronze->silver transform, planner explain, and DuckDB SQL validation on persisted data.
 
+## Technical Design Backbone
+
+[`TECHNICAL_DESIGN_GENERIC.md`](./TECHNICAL_DESIGN_GENERIC.md) captures the architectural discipline behind the code:
+
+- cross-layer reasoning (`Idea -> API -> Runtime -> Storage -> Perf`),
+- deterministic state transitions,
+- event-first design,
+- adapter contracts,
+- DAG-driven orchestration,
+- measurable go/no-go criteria.
+
+It is not a separate product claim. It is the review and implementation spine used across the lab.
+
 ## Docker package (pull and run on another Mac)
 
 Image is published to GHCR:
@@ -178,4 +224,3 @@ Use in Cursor MCP config (example):
   }
 }
 ```
-
