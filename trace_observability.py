@@ -1,11 +1,35 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+
+DEFAULT_KNOWLEDGE_EXTENSIONS = {
+    ".md",
+    ".py",
+    ".rs",
+    ".toml",
+    ".json",
+    ".yaml",
+    ".yml",
+}
+DEFAULT_EXCLUDED_DIR_NAMES = {
+    ".git",
+    ".idea",
+    ".pytest_cache",
+    ".venv",
+    "__pycache__",
+    "node_modules",
+    "target",
+}
+DEFAULT_EXCLUDED_PATH_PARTS = {
+    "tests/artifacts",
+}
 
 
 def _parse_utc(ts: str) -> datetime | None:
@@ -222,6 +246,10 @@ def refresh_docs_from_path(
     source_dir: Path,
     state_path: Path,
     scenario_id: str = "knowledge",
+    include_extensions: set[str] | None = None,
+    exclude_dir_names: set[str] | None = None,
+    exclude_path_parts: set[str] | None = None,
+    max_file_bytes: int = 200_000,
 ) -> dict[str, Any]:
     if not source_dir.exists():
         return {
@@ -229,6 +257,16 @@ def refresh_docs_from_path(
             "reason": "source dir does not exist",
             "imported_files": 0,
         }
+
+    extensions = {
+        ext if ext.startswith(".") else f".{ext}"
+        for ext in (include_extensions or DEFAULT_KNOWLEDGE_EXTENSIONS)
+    }
+    excluded_dirs = set(exclude_dir_names or DEFAULT_EXCLUDED_DIR_NAMES)
+    excluded_parts = {
+        part.replace("\\", "/")
+        for part in (exclude_path_parts or DEFAULT_EXCLUDED_PATH_PARTS)
+    }
 
     known_mtime: dict[str, float] = {}
     if state_path.exists():
@@ -238,34 +276,77 @@ def refresh_docs_from_path(
             known_mtime = {}
 
     imported = 0
+    scanned = 0
+    skipped_large_files = 0
     next_state: dict[str, float] = dict(known_mtime)
-    for path in sorted(source_dir.rglob("*.md")):
-        stat = path.stat()
-        mtime = float(stat.st_mtime)
-        key = str(path.resolve())
-        if known_mtime.get(key) == mtime:
+    for root, dirs, files in os.walk(source_dir):
+        root_path = Path(root)
+        dirs[:] = sorted(d for d in dirs if d not in excluded_dirs)
+        rel_root = str(root_path.relative_to(source_dir)).replace("\\", "/")
+        if rel_root != "." and any(part in rel_root for part in excluded_parts):
+            dirs[:] = []
+            continue
+
+        for name in sorted(files):
+            path = root_path / name
+            rel_path = str(path.relative_to(source_dir)).replace("\\", "/")
+            if any(part in rel_path for part in excluded_parts):
+                continue
+            if path.suffix.lower() not in extensions:
+                continue
+
+            scanned += 1
+            stat = path.stat()
+            if stat.st_size > max_file_bytes:
+                next_state[str(path.resolve())] = float(stat.st_mtime)
+                skipped_large_files += 1
+                continue
+
+            mtime = float(stat.st_mtime)
+            key = str(path.resolve())
+            if known_mtime.get(key) == mtime:
+                next_state[key] = mtime
+                continue
+
+            content = path.read_text(
+                encoding="utf-8", errors="ignore"
+            ).strip()
+            if not content:
+                next_state[key] = mtime
+                continue
+
+            summary = (
+                f"path: {rel_path}\n"
+                f"language: {path.suffix.lower().lstrip('.') or 'text'}\n\n"
+                f"{content[:500]}"
+            )
+            source_kind = (
+                "knowledge_doc"
+                if path.suffix.lower() == ".md"
+                else "knowledge_source"
+            )
+            store.append(
+                {
+                    "run_id": f"docs-{int(mtime)}-{path.name}",
+                    "tool_name": "refresh_docs",
+                    "status": "ok",
+                    "summary": summary,
+                    "error_text": "",
+                    "elapsed_ms": 0.0,
+                    "scenario_id": scenario_id,
+                    "source_kind": source_kind,
+                    "source_path": str(path),
+                }
+            )
             next_state[key] = mtime
-            continue
-        content = path.read_text(encoding="utf-8", errors="ignore").strip()
-        if not content:
-            continue
-        summary = content[:500]
-        store.append(
-            {
-                "run_id": f"docs-{int(mtime)}-{path.name}",
-                "tool_name": "refresh_docs",
-                "status": "ok",
-                "summary": summary,
-                "error_text": "",
-                "elapsed_ms": 0.0,
-                "scenario_id": scenario_id,
-                "source_kind": "knowledge_doc",
-                "source_path": str(path),
-            }
-        )
-        next_state[key] = mtime
-        imported += 1
+            imported += 1
 
     state_path.parent.mkdir(parents=True, exist_ok=True)
     state_path.write_text(json.dumps(next_state), encoding="utf-8")
-    return {"ok": True, "imported_files": imported}
+    return {
+        "ok": True,
+        "imported_files": imported,
+        "scanned_files": scanned,
+        "skipped_large_files": skipped_large_files,
+        "indexed_extensions": sorted(extensions),
+    }

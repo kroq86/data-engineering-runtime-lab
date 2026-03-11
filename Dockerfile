@@ -15,9 +15,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN python -m pip install --no-cache-dir mcp duckdb
 
-# Provide duckdb CLI wrapper for Rust e2e binary expectations.
-RUN printf '#!/bin/sh\npython -m duckdb "$@"\n' > /usr/local/bin/duckdb \
-    && chmod +x /usr/local/bin/duckdb
+# Provide a minimal duckdb CLI wrapper for Rust e2e binary expectations.
+COPY scripts/duckdb_wrapper.py /usr/local/bin/duckdb
+RUN chmod +x /usr/local/bin/duckdb
 
 COPY --from=builder /app/target/release/engine_cli /app/bin/engine_cli
 COPY --from=builder /app/target/release/e2e_flow /app/bin/e2e_flow

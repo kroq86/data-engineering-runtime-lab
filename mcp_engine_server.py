@@ -213,6 +213,10 @@ def _trace_store(path: str | None = None) -> TraceStore:
     return TraceStore(path=TRACE_DB_DEFAULT)
 
 
+def _parse_csv_set(value: str) -> set[str]:
+    return {item.strip() for item in value.split(",") if item.strip()}
+
+
 @mcp.tool()
 def init_engine(
     root_dir: str = "./tests/artifacts/mcp/engine_data", table: str = "orders"
@@ -384,8 +388,12 @@ def refresh_docs_path(
     trace_db_path: str = "",
     refresh_state_path: str = "",
     scenario_id: str = "knowledge",
+    include_extensions: str = ".md,.py,.rs,.toml,.json,.yaml,.yml",
+    exclude_dir_names: str = ".git,.idea,.pytest_cache,.venv,__pycache__,node_modules,target",
+    exclude_path_parts: str = "tests/artifacts",
+    max_file_bytes: int = 200000,
 ) -> dict[str, Any]:
-    """Incrementally ingest markdown docs into knowledge trace store."""
+    """Incrementally ingest project docs, code, and config files."""
     store = _trace_store(trace_db_path or None)
     state_path = (
         Path(refresh_state_path)
@@ -397,6 +405,10 @@ def refresh_docs_path(
         source_dir=Path(source_dir),
         state_path=state_path,
         scenario_id=scenario_id,
+        include_extensions=_parse_csv_set(include_extensions),
+        exclude_dir_names=_parse_csv_set(exclude_dir_names),
+        exclude_path_parts=_parse_csv_set(exclude_path_parts),
+        max_file_bytes=max_file_bytes,
     )
     return {
         **result,
