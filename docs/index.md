@@ -2,6 +2,7 @@
 layout: default
 title: Mini Data Engine Lab
 description: End-to-end mini data platform with MiniPG, MiniDatabricks flow, DuckDB validation, and MCP adapter tools.
+keywords: mini data engine, mcp server, duckdb, rust data engineering, wal replay, transaction journal
 ---
 
 # Mini Data Engine Lab

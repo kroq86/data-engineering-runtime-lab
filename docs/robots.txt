@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://your-github-username.github.io/mini-data-engine-lab/sitemap.xml
+Sitemap: https://kroq86.github.io/data-engineering-runtime-lab/sitemap.xml

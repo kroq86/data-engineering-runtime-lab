@@ -3,9 +3,8 @@ description: End-to-end mini data platform with MiniPG, MiniDatabricks, DuckDB, 
 theme: minima
 markdown: kramdown
 
-# Replace with your actual GitHub username/repository
-url: "https://your-github-username.github.io"
-baseurl: "/mini-data-engine-lab"
+url: "https://kroq86.github.io"
+baseurl: "/data-engineering-runtime-lab"
 
 plugins:
   - jekyll-seo-tag
@@ -15,4 +14,4 @@ seo:
   type: WebSite
   name: Mini Data Engine Lab
   links:
-    - https://github.com/your-github-username/mini-data-engine-lab
+    - https://github.com/kroq86/data-engineering-runtime-lab
