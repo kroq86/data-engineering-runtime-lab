@@ -1,0 +1,192 @@
+from __future__ import annotations
+
+import tempfile
+import unittest
+from datetime import datetime, timezone
+from pathlib import Path
+
+from trace_observability import (
+    TraceStore,
+    find_similar_incidents,
+    refresh_trace_from_path,
+)
+
+
+class SemanticObservabilityTests(unittest.TestCase):
+    def test_trace_store_append_and_filter(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "traces.jsonl"
+            store = TraceStore(db_path)
+            store.append(
+                {
+                    "run_id": "r1",
+                    "tool_name": "insert_row",
+                    "status": "ok",
+                    "scenario_id": "smoke",
+                    "summary": "insert succeeded",
+                    "error_text": "",
+                    "elapsed_ms": 10.0,
+                }
+            )
+            store.append(
+                {
+                    "run_id": "r2",
+                    "tool_name": "explain_customer",
+                    "status": "error",
+                    "scenario_id": "scenario-a",
+                    "summary": "planner timeout during explain",
+                    "error_text": "timeout waiting for lock",
+                    "elapsed_ms": 120.0,
+                }
+            )
+
+            failures = store.query(status="error")
+            self.assertEqual(len(failures), 1)
+            self.assertEqual(failures[0]["run_id"], "r2")
+
+    def test_find_similar_incidents_prefers_semantic_match(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "traces.jsonl"
+            store = TraceStore(db_path)
+            store.append(
+                {
+                    "run_id": "r-timeout",
+                    "tool_name": "explain_customer",
+                    "status": "error",
+                    "scenario_id": "scenario-timeout",
+                    "summary": "query timeout while waiting for lock",
+                    "error_text": "timeout lock wait exceeded",
+                    "elapsed_ms": 200.0,
+                }
+            )
+            store.append(
+                {
+                    "run_id": "r-conflict",
+                    "tool_name": "upsert_row",
+                    "status": "error",
+                    "scenario_id": "scenario-conflict",
+                    "summary": "conflict detected during concurrent upsert",
+                    "error_text": "optimistic conflict version mismatch",
+                    "elapsed_ms": 50.0,
+                }
+            )
+
+            results = find_similar_incidents(
+                store=store,
+                query_text="lock timeout on explain",
+                top_k=1,
+                status="error",
+            )
+            self.assertEqual(len(results), 1)
+            self.assertEqual(results[0]["run_id"], "r-timeout")
+
+    def test_similar_incidents_date_range_filter(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "traces.jsonl"
+            store = TraceStore(db_path)
+            store.append(
+                {
+                    "timestamp_utc": "2025-01-01T00:00:00+00:00",
+                    "run_id": "old",
+                    "tool_name": "explain_customer",
+                    "status": "error",
+                    "scenario_id": "s1",
+                    "summary": "old timeout lock",
+                    "error_text": "timeout",
+                    "elapsed_ms": 10.0,
+                }
+            )
+            store.append(
+                {
+                    "timestamp_utc": "2026-01-01T00:00:00+00:00",
+                    "run_id": "new",
+                    "tool_name": "explain_customer",
+                    "status": "error",
+                    "scenario_id": "s1",
+                    "summary": "new timeout lock",
+                    "error_text": "timeout",
+                    "elapsed_ms": 12.0,
+                }
+            )
+
+            now = datetime.now(timezone.utc).isoformat()
+            results = find_similar_incidents(
+                store=store,
+                query_text="timeout lock",
+                top_k=5,
+                status="error",
+                start_time_utc=now,
+            )
+            self.assertEqual(results, [])
+
+    def test_similar_incidents_min_score_cutoff(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "traces.jsonl"
+            store = TraceStore(db_path)
+            store.append(
+                {
+                    "run_id": "match",
+                    "tool_name": "explain_customer",
+                    "status": "error",
+                    "scenario_id": "s1",
+                    "summary": "timeout lock wait",
+                    "error_text": "lock timeout",
+                    "elapsed_ms": 20.0,
+                }
+            )
+            store.append(
+                {
+                    "run_id": "noise",
+                    "tool_name": "upsert_row",
+                    "status": "error",
+                    "scenario_id": "s2",
+                    "summary": "random unrelated text",
+                    "error_text": "",
+                    "elapsed_ms": 5.0,
+                }
+            )
+
+            results = find_similar_incidents(
+                store=store,
+                query_text="timeout lock wait",
+                top_k=5,
+                status="error",
+                min_score=0.5,
+            )
+            self.assertEqual(len(results), 1)
+            self.assertEqual(results[0]["run_id"], "match")
+
+    def test_refresh_trace_from_path_is_incremental(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "source.log"
+            db_path = root / "traces.jsonl"
+            state_path = root / "state.json"
+            store = TraceStore(db_path)
+
+            source.write_text("line1\nline2\n", encoding="utf-8")
+            first = refresh_trace_from_path(
+                store=store,
+                source_path=source,
+                state_path=state_path,
+                scenario_id="refresh-test",
+            )
+            self.assertTrue(first["ok"])
+            self.assertEqual(first["imported"], 2)
+
+            source.write_text("line1\nline2\nline3\n", encoding="utf-8")
+            second = refresh_trace_from_path(
+                store=store,
+                source_path=source,
+                state_path=state_path,
+                scenario_id="refresh-test",
+            )
+            self.assertTrue(second["ok"])
+            self.assertEqual(second["imported"], 1)
+
+            rows = store.query(tool_name="refresh_path")
+            self.assertEqual(len(rows), 3)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -9,6 +9,8 @@ from dataclasses import dataclass
 from time import perf_counter
 from typing import Any, Dict, List, Tuple
 
+from sql_interview_queries import print_sql_interview_queries
+
 
 @dataclass
 class RowRef:
@@ -248,7 +250,9 @@ class MiniPostgresLikeDB:
         # No stats/index yet -> fallback heuristic
         return 0.20
 
-    def _estimate_rows(self, table: str, column: str, value: Any) -> Tuple[int, int]:
+    def _estimate_rows(
+        self, table: str, column: str, value: Any
+    ) -> Tuple[int, int]:
         total_rows = len(self.tables[table].rows)
         selectivity = self._estimate_selectivity(table, column, value)
         est_rows = max(1, int(total_rows * selectivity))
@@ -264,7 +268,9 @@ class MiniPostgresLikeDB:
         cpu_cost = total_rows * self.costs.cpu_tuple_cost
         return io_cost + cpu_cost
 
-    def _index_scan_cost(self, table: str, column: str, est_rows: int) -> float:
+    def _index_scan_cost(
+        self, table: str, column: str, est_rows: int
+    ) -> float:
         idx = self.indexes[(table, column)]
 
         # Root-to-leaf path and relevant leaf pages are random-access heavy.
@@ -358,7 +364,10 @@ class InsertAdapter:
         return {"ok": True}
 
     def dry_run(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
-        return {"table": input_data["table"], "row_count": len(input_data["rows"])}
+        return {
+            "table": input_data["table"],
+            "row_count": len(input_data["rows"]),
+        }
 
     def run(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
         table = input_data["table"]
@@ -406,10 +415,14 @@ class WriteCore:
         )
 
         existing_same_key = [
-            k for k in self.idempotency_store if k.startswith(f"{scope}:{idem_key}:")
+            k
+            for k in self.idempotency_store
+            if k.startswith(f"{scope}:{idem_key}:")
         ]
         if existing_same_key and idem_identity not in self.idempotency_store:
-            raise ValueError("idempotency conflict: same key with different payload")
+            raise ValueError(
+                "idempotency conflict: same key with different payload"
+            )
 
         if idem_identity in self.idempotency_store:
             cached = self.idempotency_store[idem_identity]
@@ -489,7 +502,9 @@ def build_demo_data(core: WriteCore, rows: int = 100_000) -> None:
     )
 
 
-def _legacy_build_demo_data(db: MiniPostgresLikeDB, rows: int = 100_000) -> None:
+def _legacy_build_demo_data(
+    db: MiniPostgresLikeDB, rows: int = 100_000
+) -> None:
     db.create_table("orders", ["order_id", "customer_id", "amount"])
     for i in range(rows):
         # Distribution:
@@ -509,86 +524,6 @@ def _legacy_build_demo_data(db: MiniPostgresLikeDB, rows: int = 100_000) -> None
                 "amount": (i % 100) + 1,
             },
         )
-
-
-def print_sql_interview_queries() -> None:
-    print("Top SQL interview query patterns:\n")
-
-    print("1) Find duplicates by email")
-    print(
-        "SELECT email, COUNT(*) AS cnt\n"
-        "FROM users\n"
-        "GROUP BY email\n"
-        "HAVING COUNT(*) > 1;\n"
-    )
-
-    print("2) Top 3 salaries per department")
-    print(
-        "WITH ranked AS (\n"
-        "  SELECT department_id, employee_id, salary,\n"
-        "         ROW_NUMBER() OVER (\n"
-        "           PARTITION BY department_id ORDER BY salary DESC\n"
-        "         ) AS rn\n"
-        "  FROM employees\n"
-        ")\n"
-        "SELECT *\n"
-        "FROM ranked\n"
-        "WHERE rn <= 3;\n"
-    )
-
-    print("3) Customers with no orders")
-    print(
-        "SELECT c.customer_id\n"
-        "FROM customers c\n"
-        "LEFT JOIN orders o ON o.customer_id = c.customer_id\n"
-        "WHERE o.customer_id IS NULL;\n"
-    )
-
-    print("4) Second highest salary")
-    print(
-        "SELECT MAX(salary) AS second_highest\n"
-        "FROM employees\n"
-        "WHERE salary < (SELECT MAX(salary) FROM employees);\n"
-    )
-
-    print("5) Running total by date")
-    print(
-        "SELECT order_date, amount,\n"
-        "       SUM(amount) OVER (ORDER BY order_date) AS running_total\n"
-        "FROM orders;\n"
-    )
-
-    print("6) WHERE vs HAVING example")
-    print(
-        "SELECT department_id, COUNT(*) AS employee_count\n"
-        "FROM employees\n"
-        "WHERE is_active = TRUE\n"
-        "GROUP BY department_id\n"
-        "HAVING COUNT(*) >= 5;\n"
-    )
-
-    print("7) ROW_NUMBER vs RANK vs DENSE_RANK")
-    print(
-        "SELECT employee_id, department_id, salary,\n"
-        "       ROW_NUMBER() OVER (\n"
-        "         PARTITION BY department_id ORDER BY salary DESC\n"
-        "       ) AS row_num,\n"
-        "       RANK() OVER (\n"
-        "         PARTITION BY department_id ORDER BY salary DESC\n"
-        "       ) AS rank_num,\n"
-        "       DENSE_RANK() OVER (\n"
-        "         PARTITION BY department_id ORDER BY salary DESC\n"
-        "       ) AS dense_rank_num\n"
-        "FROM employees;\n"
-    )
-
-    print("8) EXPLAIN ANALYZE for plan inspection")
-    print(
-        "EXPLAIN ANALYZE\n"
-        "SELECT *\n"
-        "FROM orders\n"
-        "WHERE customer_id = 4242;\n"
-    )
 
 
 def main() -> None:

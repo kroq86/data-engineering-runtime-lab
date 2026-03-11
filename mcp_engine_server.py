@@ -3,12 +3,17 @@ from __future__ import annotations
 import os
 import subprocess
 import time
-from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
 from mcp.server.fastmcp import FastMCP
+from mcp_slo import benchmark_calls_impl, scenario_load_test_impl
+from trace_observability import (
+    TraceStore,
+    find_similar_incidents,
+    refresh_trace_from_path,
+)
 
 
 WORKSPACE = Path(__file__).resolve().parent
@@ -25,6 +30,10 @@ else:
 ENGINE_BIN = BIN_DIR / "engine_cli"
 E2E_BIN = BIN_DIR / "e2e_flow"
 mcp = FastMCP("mini-data-engine")
+TRACE_DB_DEFAULT = Path("./tests/artifacts/mcp/trace_store/traces.jsonl")
+TRACE_REFRESH_STATE_DEFAULT = Path(
+    "./tests/artifacts/mcp/trace_store/refresh_state.json"
+)
 
 
 class CommandRunner(Protocol):
@@ -182,6 +191,12 @@ OPS: EngineOps = EngineService(
 )
 
 
+def _trace_store(path: str | None = None) -> TraceStore:
+    if path:
+        return TraceStore(path=Path(path))
+    return TraceStore(path=TRACE_DB_DEFAULT)
+
+
 @mcp.tool()
 def init_engine(
     root_dir: str = "./tests/artifacts/mcp/engine_data", table: str = "orders"
@@ -261,6 +276,93 @@ def run_e2e_flow() -> dict[str, Any]:
 
 
 @mcp.tool()
+def record_tool_trace(
+    run_id: str,
+    tool_name: str,
+    status: str,
+    summary: str,
+    error_text: str = "",
+    elapsed_ms: float = 0.0,
+    scenario_id: str = "adhoc",
+    trace_db_path: str = "",
+) -> dict[str, Any]:
+    """Append one MCP tool trace record to local trace store."""
+    store = _trace_store(trace_db_path or None)
+    rec = store.append(
+        {
+            "run_id": run_id,
+            "tool_name": tool_name,
+            "status": status,
+            "summary": summary,
+            "error_text": error_text,
+            "elapsed_ms": float(elapsed_ms),
+            "scenario_id": scenario_id,
+        }
+    )
+    return {"ok": True, "trace_path": str(store.path), "record": rec}
+
+
+@mcp.tool()
+def similar_incidents(
+    query_text: str,
+    top_k: int = 5,
+    min_score: float = 0.0,
+    status: str = "error",
+    tool_name: str = "",
+    scenario_id: str = "",
+    start_time_utc: str = "",
+    end_time_utc: str = "",
+    trace_db_path: str = "",
+) -> dict[str, Any]:
+    """Find semantically similar historical incidents."""
+    store = _trace_store(trace_db_path or None)
+    results = find_similar_incidents(
+        store=store,
+        query_text=query_text,
+        top_k=top_k,
+        min_score=min_score,
+        status=status or None,
+        tool_name=tool_name or None,
+        scenario_id=scenario_id or None,
+        start_time_utc=start_time_utc or None,
+        end_time_utc=end_time_utc or None,
+    )
+    return {
+        "ok": True,
+        "query_text": query_text,
+        "count": len(results),
+        "results": results,
+    }
+
+
+@mcp.tool()
+def refresh_trace_path(
+    source_path: str,
+    trace_db_path: str = "",
+    refresh_state_path: str = "",
+    scenario_id: str = "refresh",
+) -> dict[str, Any]:
+    """Incrementally ingest new lines from source path into trace store."""
+    store = _trace_store(trace_db_path or None)
+    state_path = (
+        Path(refresh_state_path)
+        if refresh_state_path
+        else TRACE_REFRESH_STATE_DEFAULT
+    )
+    result = refresh_trace_from_path(
+        store=store,
+        source_path=Path(source_path),
+        state_path=state_path,
+        scenario_id=scenario_id,
+    )
+    return {
+        **result,
+        "trace_path": str(store.path),
+        "state_path": str(state_path),
+    }
+
+
+@mcp.tool()
 def health_check(
     root_dir: str = "./tests/artifacts/mcp/health", table: str = "orders"
 ) -> dict[str, Any]:
@@ -284,10 +386,23 @@ def health_check(
         ),
     ]
     ok = all(result.get("ok", False) for _, result in steps)
-    return {
+    out = {
         "ok": ok,
         "steps": [{name: result} for name, result in steps],
     }
+    status = "ok" if ok else "error"
+    summary = "health_check finished"
+    error_text = "" if ok else "one or more health steps failed"
+    record_tool_trace(
+        run_id=f"health-{int(time.time() * 1000)}",
+        tool_name="health_check",
+        status=status,
+        summary=summary,
+        error_text=error_text,
+        elapsed_ms=0.0,
+        scenario_id="health",
+    )
+    return out
 
 
 @mcp.tool()
@@ -299,112 +414,35 @@ def benchmark_calls(
     max_p95_ms: float = 100.0,
 ) -> dict[str, Any]:
     """Benchmark MCP operations with SLO-style summary metrics."""
-    if iterations < 1:
-        iterations = 1
-
-    init_res = init_engine(root_dir=root_dir, table=table)
-    if not init_res.get("ok", False):
-        return {"ok": False, "phase": "init", "result": init_res}
-
-    samples: list[float] = []
-    op_latencies: dict[str, list[float]] = defaultdict(list)
-    failures = defaultdict(int)
-    total_ops = 0
-    success_ops = 0
-
-    for i in range(iterations):
-        result = insert_row(
-            root_dir=root_dir,
-            table=table,
-            order_id=1000 + i,
-            customer_id=4242,
-            amount=10 + i,
-        )
-        elapsed = float(result.get("elapsed_ms", 0.0))
-        samples.append(elapsed)
-        op_latencies["insert"].append(elapsed)
-        total_ops += 1
-        if result.get("ok", False):
-            success_ops += 1
-        else:
-            failures["insert"] += 1
-
-    idx = reindex_project(root_dir=root_dir, table=table)
-    exp = explain_customer(root_dir=root_dir, table=table, customer_id=4242)
-    for op_name, result in [("reindex", idx), ("explain", exp)]:
-        elapsed = float(result.get("elapsed_ms", 0.0))
-        op_latencies[op_name].append(elapsed)
-        total_ops += 1
-        if result.get("ok", False):
-            success_ops += 1
-        else:
-            failures[op_name] += 1
-
-    sorted_samples = sorted(samples)
-    insert_p50 = _percentile(sorted_samples, 0.50)
-    insert_p95 = _percentile(sorted_samples, 0.95)
-    success_rate = (success_ops / total_ops) if total_ops else 0.0
-    violations: list[str] = []
-    if success_rate < min_success_rate:
-        violations.append(
-            f"success_rate {success_rate:.4f} < {min_success_rate:.4f}"
-        )
-    if insert_p95 > max_p95_ms:
-        violations.append(
-            f"insert_p95 {insert_p95:.2f}ms > {max_p95_ms:.2f}ms"
-        )
-
-    return {
-        "ok": True,
-        "iterations": iterations,
-        "total_operations": total_ops,
-        "successful_operations": success_ops,
-        "success_rate": round(success_rate, 4),
-        "insert_avg_ms": (
-            round(sum(samples) / len(samples), 2) if samples else 0.0
-        ),
-        "insert_min_ms": round(min(samples), 2) if samples else 0.0,
-        "insert_p50_ms": round(insert_p50, 2) if samples else 0.0,
-        "insert_p95_ms": round(insert_p95, 2) if samples else 0.0,
-        "insert_max_ms": round(max(samples), 2) if samples else 0.0,
-        "reindex_ms": idx.get("elapsed_ms", 0.0),
-        "explain_ms": exp.get("elapsed_ms", 0.0),
-        "failure_breakdown": dict(failures),
-        "per_operation_stats": {
-            op: {
-                "count": len(vals),
-                "avg_ms": round(sum(vals) / len(vals), 2) if vals else 0.0,
-                "p50_ms": (
-                    round(_percentile(sorted(vals), 0.50), 2) if vals else 0.0
-                ),
-                "p95_ms": (
-                    round(_percentile(sorted(vals), 0.95), 2) if vals else 0.0
-                ),
-                "max_ms": round(max(vals), 2) if vals else 0.0,
-            }
-            for op, vals in op_latencies.items()
-        },
-        "slo": {
-            "passed": len(violations) == 0,
-            "thresholds": {
-                "min_success_rate": min_success_rate,
-                "max_p95_ms": max_p95_ms,
-            },
-            "violations": violations,
-        },
-    }
-
-
-def _percentile(sorted_vals: list[float], q: float) -> float:
-    if not sorted_vals:
-        return 0.0
-    if len(sorted_vals) == 1:
-        return sorted_vals[0]
-    pos = (len(sorted_vals) - 1) * q
-    low = int(pos)
-    high = min(low + 1, len(sorted_vals) - 1)
-    frac = pos - low
-    return sorted_vals[low] * (1 - frac) + sorted_vals[high] * frac
+    out = benchmark_calls_impl(
+        iterations=iterations,
+        root_dir=root_dir,
+        table=table,
+        min_success_rate=min_success_rate,
+        max_p95_ms=max_p95_ms,
+        init_engine=init_engine,
+        insert_row=insert_row,
+        reindex_project=reindex_project,
+        explain_customer=explain_customer,
+    )
+    if not out.get("ok", False):
+        return out
+    status = "ok" if out["slo"]["passed"] else "error"
+    summary = (
+        f"benchmark_calls success_rate={out['success_rate']} "
+        f"p95={out['insert_p95_ms']}ms"
+    )
+    error_text = "; ".join(out["slo"]["violations"])
+    record_tool_trace(
+        run_id=f"benchmark-{int(time.time() * 1000)}",
+        tool_name="benchmark_calls",
+        status=status,
+        summary=summary,
+        error_text=error_text,
+        elapsed_ms=float(out["insert_avg_ms"]),
+        scenario_id="benchmark",
+    )
+    return out
 
 
 @mcp.tool()
@@ -420,130 +458,38 @@ def scenario_load_test(
     Mixed workload load test:
     insert/upsert/explain/reindex/e2e and summary metrics.
     """
-    if iterations < 1:
-        iterations = 1
-
-    init_res = init_engine(root_dir=root_dir, table=table)
-    if not init_res.get("ok", False):
-        return {"ok": False, "phase": "init", "result": init_res}
-
-    step_results: list[dict[str, Any]] = []
-    failures = defaultdict(int)
-    op_latencies: dict[str, list[float]] = defaultdict(list)
-
-    for i in range(iterations):
-        ops = [
-            (
-                "insert",
-                insert_row(
-                    root_dir=root_dir,
-                    table=table,
-                    order_id=10_000 + i,
-                    customer_id=4242 if i % 3 == 0 else 100 + (i % 20),
-                    amount=10 + (i % 50),
-                ),
-            ),
-            (
-                "upsert",
-                upsert_row(
-                    root_dir=root_dir,
-                    table=table,
-                    order_id=10_000 + (i // 2),
-                    customer_id=4242,
-                    amount=20 + (i % 40),
-                ),
-            ),
-            (
-                "explain",
-                explain_customer(
-                    root_dir=root_dir,
-                    table=table,
-                    customer_id=4242,
-                ),
-            ),
-        ]
-
-        if i % 3 == 0:
-            reindex_res = reindex_project(root_dir=root_dir, table=table)
-            ops.append(("reindex", reindex_res))
-        if i % 5 == 0:
-            ops.append(("e2e", run_e2e_flow()))
-
-        for op_name, result in ops:
-            ok = bool(result.get("ok", False))
-            elapsed_ms = float(result.get("elapsed_ms", 0.0))
-            op_latencies[op_name].append(elapsed_ms)
-            if not ok:
-                failures[op_name] += 1
-            step_results.append({
-                "op": op_name,
-                "ok": ok,
-                "elapsed_ms": elapsed_ms,
-                "result": result,
-            })
-
-    total = len(step_results)
-    success = sum(1 for s in step_results if s["ok"])
-    success_rate = (success / total) if total else 0.0
-
-    all_latencies = sorted(float(s["elapsed_ms"]) for s in step_results)
-    p50 = _percentile(all_latencies, 0.50)
-    p95 = _percentile(all_latencies, 0.95)
-
-    op_stats: dict[str, Any] = {}
-    for op_name, vals in op_latencies.items():
-        svals = sorted(vals)
-        op_stats[op_name] = {
-            "count": len(vals),
-            "avg_ms": round(sum(vals) / len(vals), 2) if vals else 0.0,
-            "p50_ms": round(_percentile(svals, 0.50), 2) if vals else 0.0,
-            "p95_ms": round(_percentile(svals, 0.95), 2) if vals else 0.0,
-            "max_ms": round(max(vals), 2) if vals else 0.0,
-        }
-
-    violations: list[str] = []
-    if success_rate < min_success_rate:
-        msg = (
-            f"success_rate {success_rate:.4f} < "
-            f"min_success_rate {min_success_rate:.4f}"
-        )
-        violations.append(msg)
-    if p95 > max_overall_p95_ms:
-        msg = (
-            f"overall_p95 {p95:.2f}ms > "
-            f"max_overall_p95_ms {max_overall_p95_ms:.2f}ms"
-        )
-        violations.append(msg)
-    if "e2e" in op_stats and op_stats["e2e"]["p95_ms"] > max_e2e_p95_ms:
-        msg = (
-            "e2e_p95 "
-            f"{op_stats['e2e']['p95_ms']:.2f}ms > "
-            f"max_e2e_p95_ms {max_e2e_p95_ms:.2f}ms"
-        )
-        violations.append(msg)
-
-    return {
-        "ok": True,
-        "iterations": iterations,
-        "total_operations": total,
-        "successful_operations": success,
-        "success_rate": round(success_rate, 4),
-        "latency_ms": {
-            "overall_p50": round(p50, 2),
-            "overall_p95": round(p95, 2),
-        },
-        "failure_breakdown": dict(failures),
-        "per_operation_stats": op_stats,
-        "slo": {
-            "passed": len(violations) == 0,
-            "thresholds": {
-                "min_success_rate": min_success_rate,
-                "max_overall_p95_ms": max_overall_p95_ms,
-                "max_e2e_p95_ms": max_e2e_p95_ms,
-            },
-            "violations": violations,
-        },
-    }
+    out = scenario_load_test_impl(
+        iterations=iterations,
+        root_dir=root_dir,
+        table=table,
+        min_success_rate=min_success_rate,
+        max_overall_p95_ms=max_overall_p95_ms,
+        max_e2e_p95_ms=max_e2e_p95_ms,
+        init_engine=init_engine,
+        insert_row=insert_row,
+        upsert_row=upsert_row,
+        explain_customer=explain_customer,
+        reindex_project=reindex_project,
+        run_e2e_flow=run_e2e_flow,
+    )
+    if not out.get("ok", False):
+        return out
+    status = "ok" if out["slo"]["passed"] else "error"
+    summary = (
+        f"scenario_load_test success_rate={out['success_rate']} "
+        f"overall_p95={out['latency_ms']['overall_p95']}ms"
+    )
+    error_text = "; ".join(out["slo"]["violations"])
+    record_tool_trace(
+        run_id=f"scenario-{int(time.time() * 1000)}",
+        tool_name="scenario_load_test",
+        status=status,
+        summary=summary,
+        error_text=error_text,
+        elapsed_ms=float(out["latency_ms"]["overall_p95"]),
+        scenario_id="scenario",
+    )
+    return out
 
 
 if __name__ == "__main__":
