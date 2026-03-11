@@ -1,0 +1,47 @@
+name: MCP macOS Build
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-macos:
+    name: build-${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-14
+            target: aarch64-apple-darwin
+            arch: arm64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Build release binaries
+        run: cargo build --release --bins --target ${{ matrix.target }}
+
+      - name: Prepare artifact bundle
+        run: |
+          mkdir -p dist/mini-data-engine-${{ matrix.arch }}/bin
+          cp target/${{ matrix.target }}/release/engine_cli dist/mini-data-engine-${{ matrix.arch }}/bin/
+          cp target/${{ matrix.target }}/release/e2e_flow dist/mini-data-engine-${{ matrix.arch }}/bin/
+          cp target/${{ matrix.target }}/release/mini_pg_like dist/mini-data-engine-${{ matrix.arch }}/bin/
+          cp target/${{ matrix.target }}/release/mini_databricks_clone dist/mini-data-engine-${{ matrix.arch }}/bin/
+          cp mcp_engine_server.py dist/mini-data-engine-${{ matrix.arch }}/
+          cp README.md dist/mini-data-engine-${{ matrix.arch }}/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-data-engine-macos-${{ matrix.arch }}
+          path: dist/mini-data-engine-${{ matrix.arch }}
