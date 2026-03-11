@@ -152,6 +152,13 @@ def scenario_load_test_impl(
     if not init_res.get("ok", False):
         return {"ok": False, "phase": "init", "result": init_res}
 
+    # Warm the end-to-end path once before collecting measured samples so
+    # SLOs reflect steady-state runtime rather than first-run startup cost.
+    warmup_root = f"{root_dir}/e2e_warmup"
+    warmup_res = run_e2e_flow(root_dir=warmup_root)
+    if not warmup_res.get("ok", False):
+        return {"ok": False, "phase": "e2e_warmup", "result": warmup_res}
+
     step_results: list[dict[str, Any]] = []
     failures = defaultdict(int)
     op_latencies: dict[str, list[float]] = defaultdict(list)

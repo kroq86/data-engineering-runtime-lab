@@ -68,6 +68,9 @@ def _normalize_trace_record(record: dict[str, Any]) -> dict[str, Any]:
     error_text = str(record.get("error_text", ""))
     normalized: dict[str, Any] = {
         "run_id": str(record.get("run_id", "run-unknown")),
+        "correlation_id": str(
+            record.get("correlation_id", record.get("run_id", "run-unknown"))
+        ),
         "tool_name": str(record.get("tool_name", "unknown_tool")),
         "status": status,
         "summary": str(record.get("summary", "")),
@@ -75,6 +78,12 @@ def _normalize_trace_record(record: dict[str, Any]) -> dict[str, Any]:
         "error_type": str(
             record.get("error_type", _infer_error_type(status, error_text))
         ),
+        "attempt": int(record.get("attempt", 1)),
+        "retry_classification": str(
+            record.get("retry_classification", "not_applicable")
+        ),
+        "decision_reason": str(record.get("decision_reason", "")),
+        "actual_effects": str(record.get("actual_effects", "")),
         "elapsed_ms": float(record.get("elapsed_ms", 0.0)),
         "scenario_id": str(record.get("scenario_id", "adhoc")),
         "environment": str(record.get("environment", "local")),
@@ -232,6 +241,11 @@ def explain_run(
             "status": str(row.get("status", "")),
             "summary": str(row.get("summary", "")),
             "error_text": str(row.get("error_text", "")),
+            "correlation_id": str(row.get("correlation_id", "")),
+            "attempt": int(row.get("attempt", 1)),
+            "retry_classification": str(row.get("retry_classification", "")),
+            "decision_reason": str(row.get("decision_reason", "")),
+            "actual_effects": str(row.get("actual_effects", "")),
             "elapsed_ms": float(row.get("elapsed_ms", 0.0)),
         }
         for row in rows[:max_timeline_events]
@@ -269,6 +283,9 @@ def explain_run(
                 "tool_name": str(row.get("tool_name", "")),
                 "error_text": str(row.get("error_text", "")),
                 "summary": str(row.get("summary", "")),
+                "decision_reason": str(row.get("decision_reason", "")),
+                "retry_classification": str(row.get("retry_classification", "")),
+                "actual_effects": str(row.get("actual_effects", "")),
             }
             for row in failed
         ],

@@ -48,6 +48,11 @@ def record_tool_trace(
     error_text: str = "",
     elapsed_ms: float = 0.0,
     scenario_id: str = "adhoc",
+    correlation_id: str = "",
+    attempt: int = 1,
+    retry_classification: str = "not_applicable",
+    decision_reason: str = "",
+    actual_effects: str = "",
     trace_db_path: str = "",
 ) -> dict[str, Any]:
     """Append one MCP tool trace record to local trace store."""
@@ -62,6 +67,11 @@ def record_tool_trace(
             "error_text": error_text,
             "elapsed_ms": float(elapsed_ms),
             "scenario_id": scenario_id,
+            "correlation_id": correlation_id or run_id,
+            "attempt": int(attempt),
+            "retry_classification": retry_classification,
+            "decision_reason": decision_reason,
+            "actual_effects": actual_effects,
         }
     )
     return {"ok": True, "trace_path": str(store.path), "record": rec}

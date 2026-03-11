@@ -207,6 +207,11 @@ class SemanticObservabilityTests(unittest.TestCase):
             self.assertEqual(rec["error_type"], "none")
             self.assertEqual(rec["environment"], "local")
             self.assertEqual(rec["source_kind"], "tool_trace")
+            self.assertEqual(rec["correlation_id"], "r-min")
+            self.assertEqual(rec["attempt"], 1)
+            self.assertEqual(rec["retry_classification"], "not_applicable")
+            self.assertEqual(rec["decision_reason"], "")
+            self.assertEqual(rec["actual_effects"], "")
 
     def test_load_run_records_and_explain_run(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -227,6 +232,10 @@ class SemanticObservabilityTests(unittest.TestCase):
                     "tool_name": "insert_row",
                     "status": "ok",
                     "summary": "inserted order 1",
+                    "correlation_id": "corr-1",
+                    "attempt": 1,
+                    "decision_reason": "demo insert succeeded",
+                    "actual_effects": "one row inserted",
                     "elapsed_ms": 2.5,
                 }
             )
@@ -250,6 +259,14 @@ class SemanticObservabilityTests(unittest.TestCase):
             self.assertEqual(explained["status"], "ok")
             self.assertEqual(explained["record_count"], 2)
             self.assertEqual(explained["tool_path"], ["init_engine", "insert_row"])
+            self.assertEqual(explained["timeline"][1]["correlation_id"], "corr-1")
+            self.assertEqual(
+                explained["timeline"][1]["decision_reason"],
+                "demo insert succeeded",
+            )
+            self.assertEqual(
+                explained["timeline"][1]["actual_effects"], "one row inserted"
+            )
             self.assertIn("completed 2 steps successfully", explained["summary"])
 
     def test_explain_run_surfaces_failure(self) -> None:
@@ -263,6 +280,9 @@ class SemanticObservabilityTests(unittest.TestCase):
                     "status": "error",
                     "summary": "duckdb validation failed",
                     "error_text": "duckdb wrapper unavailable",
+                    "retry_classification": "non_retryable",
+                    "decision_reason": "duckdb runtime unavailable",
+                    "actual_effects": "validation stopped before query execution",
                     "elapsed_ms": 12.0,
                 }
             )
@@ -271,6 +291,14 @@ class SemanticObservabilityTests(unittest.TestCase):
             self.assertTrue(explained["ok"])
             self.assertEqual(explained["status"], "error")
             self.assertEqual(explained["failed_tools"][0]["tool_name"], "run_e2e_flow")
+            self.assertEqual(
+                explained["failed_tools"][0]["retry_classification"],
+                "non_retryable",
+            )
+            self.assertEqual(
+                explained["failed_tools"][0]["decision_reason"],
+                "duckdb runtime unavailable",
+            )
             self.assertIn("duckdb wrapper unavailable", explained["summary"])
 
     def test_refresh_docs_from_path_is_incremental(self) -> None:

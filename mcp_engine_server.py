@@ -13,7 +13,10 @@ from mcp.server.fastmcp import FastMCP
 from mcp_explainability import (
     configure_explainability_tools,
     demo_explain_run,
+    demo_explain_idempotency_conflict,
     demo_explain_run_failure,
+    demo_explain_semantic_failure,
+    explain_regression_suite,
     explain_run,
     register_explainability_tools,
 )
@@ -491,6 +494,10 @@ configure_explainability_tools(
     create_index=create_index,
     explain_customer=explain_customer,
     run_e2e_flow=run_e2e_flow,
+    health_check=health_check,
+    benchmark_calls=benchmark_calls,
+    scenario_load_test=scenario_load_test,
+    workspace=WORKSPACE,
 )
 configure_trace_tools(
     trace_store_factory=_trace_store,

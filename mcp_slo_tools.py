@@ -93,8 +93,9 @@ def health_check(
     ]
     ok = all(result.get("ok", False) for _, result in steps)
     out = {"ok": ok, "steps": [{name: result} for name, result in steps]}
+    trace_run_id = f"health-{int(time.time() * 1000)}"
     record_tool_trace(
-        run_id=f"health-{int(time.time() * 1000)}",
+        run_id=trace_run_id,
         tool_name="health_check",
         status="ok" if ok else "error",
         summary="health_check finished",
@@ -102,6 +103,7 @@ def health_check(
         elapsed_ms=0.0,
         scenario_id="health",
     )
+    out["trace_run_id"] = trace_run_id
     return out
 
 
@@ -132,8 +134,9 @@ def benchmark_calls(
     )
     if not out.get("ok", False):
         return out
+    trace_run_id = f"benchmark-{int(time.time() * 1000)}"
     record_tool_trace(
-        run_id=f"benchmark-{int(time.time() * 1000)}",
+        run_id=trace_run_id,
         tool_name="benchmark_calls",
         status="ok" if out["slo"]["passed"] else "error",
         summary=(
@@ -144,6 +147,7 @@ def benchmark_calls(
         elapsed_ms=float(out["insert_avg_ms"]),
         scenario_id="benchmark",
     )
+    out["trace_run_id"] = trace_run_id
     return out
 
 
@@ -183,8 +187,9 @@ def scenario_load_test(
     )
     if not out.get("ok", False):
         return out
+    trace_run_id = f"scenario-{int(time.time() * 1000)}"
     record_tool_trace(
-        run_id=f"scenario-{int(time.time() * 1000)}",
+        run_id=trace_run_id,
         tool_name="scenario_load_test",
         status="ok" if out["slo"]["passed"] else "error",
         summary=(
@@ -195,6 +200,7 @@ def scenario_load_test(
         elapsed_ms=float(out["latency_ms"]["overall_p95"]),
         scenario_id="scenario",
     )
+    out["trace_run_id"] = trace_run_id
     return out
 
 
