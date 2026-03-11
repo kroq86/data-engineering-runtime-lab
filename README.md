@@ -132,6 +132,11 @@ Tools exposed by MCP:
 - `record_tool_trace`
 - `explain_run`
 - `demo_explain_run`
+- `demo_explain_run_failure`
+- `demo_explain_semantic_failure`
+- `demo_explain_idempotency_conflict`
+- `demo_explain_concurrency_failure_storm`
+- `explain_regression_suite`
 - `similar_incidents`
 - `refresh_trace_path`
 - `refresh_docs_path`
@@ -161,6 +166,53 @@ You can then replay the same explanation directly with:
 ```text
 explain_run(run_id="...")
 ```
+
+## Explain Regression Suite
+
+Use `explain_regression_suite` when you want regression checks to run through MCP and come back as explainable run summaries instead of isolated test output.
+
+The suite drives the current validation surface through the MCP layer, attaches `run_id` traces, and returns explain output for each check so regressions can be inspected with the same mechanism used for runtime incidents.
+
+It currently runs:
+
+- Python unit tests via `python -m unittest discover`
+- Rust tests via `cargo test`, including the current `engine_cli` integration tests
+- `health_check`
+- `benchmark_calls`
+- `scenario_load_test`
+- explainability control demos
+
+The explainability demos intentionally include both positive and negative controls:
+
+- `demo_explain_run` as `expected_success`
+- `demo_explain_run_failure` as `expected_failure`
+- `demo_explain_semantic_failure` as `expected_failure`
+- `demo_explain_idempotency_conflict` as `expected_failure`
+- `demo_explain_concurrency_failure_storm` as `expected_failure`
+
+That means the suite is not only checking that the happy path stays green. It also checks that the explain layer still classifies and summarizes known failure classes correctly.
+
+The current regression surface covers:
+
+- happy-path traced execution
+- runtime/path failures
+- semantic data validation failures
+- idempotency conflict failures
+- concurrency and failure-storm control scenarios
+- sampled benchmark and scenario SLO regressions
+
+Fastest MCP call for the full regression bundle:
+
+```text
+explain_regression_suite
+```
+
+Use it as the top-level MCP regression entrypoint when you want one answer that includes:
+
+- which checks passed
+- which failures were expected controls
+- explain summaries for each traced run
+- early signals that a latency or behavior regression appeared
 
 The MCP layer is an access interface, not the core product idea. The core of the repository is the runnable lab itself.
 
