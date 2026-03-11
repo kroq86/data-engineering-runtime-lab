@@ -30,6 +30,39 @@ def _similarity_score(query_text: str, candidate_text: str) -> float:
     return inter / union if union else 0.0
 
 
+def _infer_error_type(status: str, error_text: str) -> str:
+    if status.lower() == "ok" or not error_text.strip():
+        return "none"
+    token = re.findall(r"[A-Za-z_][A-Za-z0-9_]*", error_text)
+    if not token:
+        return "unknown_error"
+    return token[0].lower()
+
+
+def _normalize_trace_record(record: dict[str, Any]) -> dict[str, Any]:
+    status = str(record.get("status", "ok"))
+    error_text = str(record.get("error_text", ""))
+    normalized: dict[str, Any] = {
+        "run_id": str(record.get("run_id", "run-unknown")),
+        "tool_name": str(record.get("tool_name", "unknown_tool")),
+        "status": status,
+        "summary": str(record.get("summary", "")),
+        "error_text": error_text,
+        "error_type": str(
+            record.get("error_type", _infer_error_type(status, error_text))
+        ),
+        "elapsed_ms": float(record.get("elapsed_ms", 0.0)),
+        "scenario_id": str(record.get("scenario_id", "adhoc")),
+        "environment": str(record.get("environment", "local")),
+        "source_kind": str(record.get("source_kind", "tool_trace")),
+        "source_path": str(record.get("source_path", "")),
+    }
+    for key, value in record.items():
+        if key not in normalized:
+            normalized[key] = value
+    return normalized
+
+
 @dataclass(slots=True)
 class TraceStore:
     path: Path
@@ -38,7 +71,7 @@ class TraceStore:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         payload = {
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-            **record,
+            **_normalize_trace_record(record),
         }
         with self.path.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(payload, ensure_ascii=True) + "\n")
@@ -182,3 +215,57 @@ def refresh_trace_from_path(
         "imported": imported,
         "last_line": idx if "idx" in locals() else last_line,
     }
+
+
+def refresh_docs_from_path(
+    store: TraceStore,
+    source_dir: Path,
+    state_path: Path,
+    scenario_id: str = "knowledge",
+) -> dict[str, Any]:
+    if not source_dir.exists():
+        return {
+            "ok": False,
+            "reason": "source dir does not exist",
+            "imported_files": 0,
+        }
+
+    known_mtime: dict[str, float] = {}
+    if state_path.exists():
+        try:
+            known_mtime = json.loads(state_path.read_text(encoding="utf-8"))
+        except (ValueError, json.JSONDecodeError):
+            known_mtime = {}
+
+    imported = 0
+    next_state: dict[str, float] = dict(known_mtime)
+    for path in sorted(source_dir.rglob("*.md")):
+        stat = path.stat()
+        mtime = float(stat.st_mtime)
+        key = str(path.resolve())
+        if known_mtime.get(key) == mtime:
+            next_state[key] = mtime
+            continue
+        content = path.read_text(encoding="utf-8", errors="ignore").strip()
+        if not content:
+            continue
+        summary = content[:500]
+        store.append(
+            {
+                "run_id": f"docs-{int(mtime)}-{path.name}",
+                "tool_name": "refresh_docs",
+                "status": "ok",
+                "summary": summary,
+                "error_text": "",
+                "elapsed_ms": 0.0,
+                "scenario_id": scenario_id,
+                "source_kind": "knowledge_doc",
+                "source_path": str(path),
+            }
+        )
+        next_state[key] = mtime
+        imported += 1
+
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(json.dumps(next_state), encoding="utf-8")
+    return {"ok": True, "imported_files": imported}

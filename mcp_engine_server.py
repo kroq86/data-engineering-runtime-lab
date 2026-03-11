@@ -8,10 +8,15 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from mcp.server.fastmcp import FastMCP
-from mcp_slo import benchmark_calls_impl, scenario_load_test_impl
+from mcp_slo import (
+    benchmark_calls_impl,
+    capture_baseline_snapshot,
+    scenario_load_test_impl,
+)
 from trace_observability import (
     TraceStore,
     find_similar_incidents,
+    refresh_docs_from_path,
     refresh_trace_from_path,
 )
 
@@ -33,6 +38,12 @@ mcp = FastMCP("mini-data-engine")
 TRACE_DB_DEFAULT = Path("./tests/artifacts/mcp/trace_store/traces.jsonl")
 TRACE_REFRESH_STATE_DEFAULT = Path(
     "./tests/artifacts/mcp/trace_store/refresh_state.json"
+)
+DOCS_REFRESH_STATE_DEFAULT = Path(
+    "./tests/artifacts/mcp/trace_store/docs_refresh_state.json"
+)
+BASELINE_SNAPSHOT_DEFAULT = Path(
+    "./tests/artifacts/mcp/baseline/latest_baseline.json"
 )
 
 
@@ -363,6 +374,33 @@ def refresh_trace_path(
 
 
 @mcp.tool()
+def refresh_docs_path(
+    source_dir: str = "./docs",
+    trace_db_path: str = "",
+    refresh_state_path: str = "",
+    scenario_id: str = "knowledge",
+) -> dict[str, Any]:
+    """Incrementally ingest markdown docs into knowledge trace store."""
+    store = _trace_store(trace_db_path or None)
+    state_path = (
+        Path(refresh_state_path)
+        if refresh_state_path
+        else DOCS_REFRESH_STATE_DEFAULT
+    )
+    result = refresh_docs_from_path(
+        store=store,
+        source_dir=Path(source_dir),
+        state_path=state_path,
+        scenario_id=scenario_id,
+    )
+    return {
+        **result,
+        "trace_path": str(store.path),
+        "state_path": str(state_path),
+    }
+
+
+@mcp.tool()
 def health_check(
     root_dir: str = "./tests/artifacts/mcp/health", table: str = "orders"
 ) -> dict[str, Any]:
@@ -490,6 +528,43 @@ def scenario_load_test(
         scenario_id="scenario",
     )
     return out
+
+
+@mcp.tool()
+def capture_roi_baseline(
+    root_dir: str = "./tests/artifacts/mcp/baseline_runtime",
+    table: str = "orders",
+    benchmark_iterations: int = 5,
+    scenario_iterations: int = 5,
+    output_path: str = "",
+) -> dict[str, Any]:
+    """Capture baseline KPI snapshot for ROI Phase 0."""
+    bench = benchmark_calls(
+        iterations=benchmark_iterations,
+        root_dir=root_dir,
+        table=table,
+        min_success_rate=0.9,
+        max_p95_ms=2000.0,
+    )
+    scen = scenario_load_test(
+        iterations=scenario_iterations,
+        root_dir=root_dir,
+        table=table,
+        min_success_rate=0.9,
+        max_overall_p95_ms=3000.0,
+        max_e2e_p95_ms=6000.0,
+    )
+    snapshot_path = Path(output_path) if output_path else BASELINE_SNAPSHOT_DEFAULT
+    return capture_baseline_snapshot(
+        output_path=snapshot_path,
+        benchmark_result=bench,
+        scenario_result=scen,
+        kpi_targets={
+            "troubleshooting_time_reduction_pct": 30,
+            "retrieval_p95_ms_max": 300.0,
+            "first_attempt_recovery_usefulness_pct": 70,
+        },
+    )
 
 
 if __name__ == "__main__":

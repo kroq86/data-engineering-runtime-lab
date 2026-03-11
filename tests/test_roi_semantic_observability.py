@@ -8,6 +8,7 @@ from pathlib import Path
 from trace_observability import (
     TraceStore,
     find_similar_incidents,
+    refresh_docs_from_path,
     refresh_trace_from_path,
 )
 
@@ -186,6 +187,58 @@ class SemanticObservabilityTests(unittest.TestCase):
 
             rows = store.query(tool_name="refresh_path")
             self.assertEqual(len(rows), 3)
+
+    def test_trace_store_normalizes_defaults(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "traces.jsonl"
+            store = TraceStore(db_path)
+            rec = store.append(
+                {
+                    "run_id": "r-min",
+                    "tool_name": "health_check",
+                    "status": "ok",
+                    "summary": "health ok",
+                }
+            )
+            self.assertEqual(rec["scenario_id"], "adhoc")
+            self.assertEqual(rec["error_text"], "")
+            self.assertEqual(rec["error_type"], "none")
+            self.assertEqual(rec["environment"], "local")
+            self.assertEqual(rec["source_kind"], "tool_trace")
+
+    def test_refresh_docs_from_path_is_incremental(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            docs_dir = root / "docs"
+            docs_dir.mkdir(parents=True, exist_ok=True)
+            state_path = root / "docs_state.json"
+            db_path = root / "traces.jsonl"
+            store = TraceStore(db_path)
+
+            (docs_dir / "runbook.md").write_text(
+                "# Incident Runbook\nUse checkpoint and replay.",
+                encoding="utf-8",
+            )
+            first = refresh_docs_from_path(
+                store=store,
+                source_dir=docs_dir,
+                state_path=state_path,
+                scenario_id="knowledge",
+            )
+            self.assertTrue(first["ok"])
+            self.assertEqual(first["imported_files"], 1)
+
+            second = refresh_docs_from_path(
+                store=store,
+                source_dir=docs_dir,
+                state_path=state_path,
+                scenario_id="knowledge",
+            )
+            self.assertTrue(second["ok"])
+            self.assertEqual(second["imported_files"], 0)
+
+            rows = store.query(tool_name="refresh_docs")
+            self.assertEqual(len(rows), 1)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import json
 from collections import defaultdict
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Callable
 
 
@@ -265,3 +268,20 @@ def scenario_load_test_impl(
             "violations": violations,
         },
     }
+
+
+def capture_baseline_snapshot(
+    output_path: Path,
+    benchmark_result: dict[str, Any],
+    scenario_result: dict[str, Any],
+    kpi_targets: dict[str, Any],
+) -> dict[str, Any]:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "captured_at_utc": datetime.now(timezone.utc).isoformat(),
+        "benchmark": benchmark_result,
+        "scenario": scenario_result,
+        "kpi_targets": kpi_targets,
+    }
+    output_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return {"ok": True, "output_path": str(output_path), "payload": payload}
