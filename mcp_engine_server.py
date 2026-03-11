@@ -11,6 +11,8 @@ from mcp.server.fastmcp import FastMCP
 from mcp_slo import (
     benchmark_calls_impl,
     capture_baseline_snapshot,
+    evaluate_decision_gate,
+    increment_drift_bug_counter,
     scenario_load_test_impl,
 )
 from trace_observability import (
@@ -44,6 +46,9 @@ DOCS_REFRESH_STATE_DEFAULT = Path(
 )
 BASELINE_SNAPSHOT_DEFAULT = Path(
     "./tests/artifacts/mcp/baseline/latest_baseline.json"
+)
+DRIFT_BUG_COUNTER_DEFAULT = Path(
+    "./tests/artifacts/mcp/baseline/drift_bug_counter.json"
 )
 
 
@@ -554,7 +559,9 @@ def capture_roi_baseline(
         max_overall_p95_ms=3000.0,
         max_e2e_p95_ms=6000.0,
     )
-    snapshot_path = Path(output_path) if output_path else BASELINE_SNAPSHOT_DEFAULT
+    snapshot_path = (
+        Path(output_path) if output_path else BASELINE_SNAPSHOT_DEFAULT
+    )
     return capture_baseline_snapshot(
         output_path=snapshot_path,
         benchmark_result=bench,
@@ -565,6 +572,61 @@ def capture_roi_baseline(
             "first_attempt_recovery_usefulness_pct": 70,
         },
     )
+
+
+@mcp.tool()
+def report_drift_bug(note: str = "", counter_path: str = "") -> dict[str, Any]:
+    """Increment and persist split-logic drift bug counter."""
+    path = Path(counter_path) if counter_path else DRIFT_BUG_COUNTER_DEFAULT
+    return increment_drift_bug_counter(counter_path=path, note=note)
+
+
+@mcp.tool()
+def decision_gate(
+    trace_db_path: str = "",
+    baseline_path: str = "",
+    drift_counter_path: str = "",
+    need_rust_portfolio: bool = False,
+    volume_threshold_per_day: int = 100_000,
+    regression_threshold_pct: float = 30.0,
+    consecutive_regressions_required: int = 2,
+) -> dict[str, Any]:
+    """Evaluate migration triggers and return pass/fail gate."""
+    tpath = Path(trace_db_path) if trace_db_path else TRACE_DB_DEFAULT
+    bpath = Path(baseline_path) if baseline_path else BASELINE_SNAPSHOT_DEFAULT
+    dpath = (
+        Path(drift_counter_path)
+        if drift_counter_path
+        else DRIFT_BUG_COUNTER_DEFAULT
+    )
+
+    drift_count = 0
+    if dpath.exists():
+        try:
+            import json
+
+            payload = json.loads(dpath.read_text(encoding="utf-8"))
+            drift_count = int(payload.get("count", 0))
+        except (ValueError, json.JSONDecodeError):
+            drift_count = 0
+
+    result = evaluate_decision_gate(
+        trace_path=tpath,
+        baseline_path=bpath,
+        drift_bug_count=drift_count,
+        need_rust_portfolio=need_rust_portfolio,
+        volume_threshold_per_day=volume_threshold_per_day,
+        regression_threshold_pct=regression_threshold_pct,
+        consecutive_regressions_required=consecutive_regressions_required,
+    )
+    return {
+        **result,
+        "paths": {
+            "trace": str(tpath),
+            "baseline": str(bpath),
+            "drift_counter": str(dpath),
+        },
+    }
 
 
 if __name__ == "__main__":

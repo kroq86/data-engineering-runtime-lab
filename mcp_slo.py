@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -285,3 +286,153 @@ def capture_baseline_snapshot(
     }
     output_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return {"ok": True, "output_path": str(output_path), "payload": payload}
+
+
+def increment_drift_bug_counter(
+    counter_path: Path, note: str = ""
+) -> dict[str, Any]:
+    counter_path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"count": 0, "events": []}
+    if counter_path.exists():
+        try:
+            payload = json.loads(counter_path.read_text(encoding="utf-8"))
+        except (ValueError, json.JSONDecodeError):
+            payload = {"count": 0, "events": []}
+    payload["count"] = int(payload.get("count", 0)) + 1
+    payload.setdefault("events", []).append(
+        {
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "note": note,
+        }
+    )
+    counter_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return {
+        "ok": True,
+        "count": payload["count"],
+        "counter_path": str(counter_path),
+    }
+
+
+def _extract_summary_metric(summary: str, key: str) -> float | None:
+    if key == "benchmark_p95":
+        pattern = r"p95=([0-9]+(?:\\.[0-9]+)?)ms"
+    else:
+        pattern = r"overall_p95=([0-9]+(?:\\.[0-9]+)?)ms"
+    m = re.search(pattern, summary or "")
+    if not m:
+        return None
+    return float(m.group(1))
+
+
+def evaluate_decision_gate(
+    trace_path: Path,
+    baseline_path: Path,
+    drift_bug_count: int,
+    need_rust_portfolio: bool,
+    volume_threshold_per_day: int = 100_000,
+    regression_threshold_pct: float = 30.0,
+    consecutive_regressions_required: int = 2,
+) -> dict[str, Any]:
+    rows: list[dict[str, Any]] = []
+    if trace_path.exists():
+        for line in trace_path.read_text(
+            encoding="utf-8", errors="ignore"
+        ).splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                rows.append(json.loads(line))
+            except (ValueError, json.JSONDecodeError):
+                continue
+
+    now = datetime.now(timezone.utc)
+    day_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    volume_24h = 0
+    for row in rows:
+        ts = row.get("timestamp_utc")
+        if not isinstance(ts, str):
+            continue
+        try:
+            dt = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if dt >= day_start:
+            volume_24h += 1
+
+    base_bench = None
+    base_scen = None
+    if baseline_path.exists():
+        try:
+            base = json.loads(baseline_path.read_text(encoding="utf-8"))
+            base_bench = base.get("benchmark", {}).get("insert_p95_ms")
+            base_scen = (
+                base.get("scenario", {})
+                .get("latency_ms", {})
+                .get("overall_p95")
+            )
+        except (ValueError, json.JSONDecodeError):
+            pass
+
+    bench_samples: list[float] = []
+    scen_samples: list[float] = []
+    for row in rows:
+        tool = row.get("tool_name", "")
+        summary = str(row.get("summary", ""))
+        if tool == "benchmark_calls":
+            val = _extract_summary_metric(summary, "benchmark_p95")
+            if val is not None:
+                bench_samples.append(val)
+        elif tool == "scenario_load_test":
+            val = _extract_summary_metric(summary, "scenario_p95")
+            if val is not None:
+                scen_samples.append(val)
+
+    def _count_consecutive_regressions(
+        samples: list[float], baseline: float | None
+    ) -> int:
+        if baseline in (None, 0) or not samples:
+            return 0
+        count = 0
+        for sample in reversed(samples):
+            reg = ((sample - float(baseline)) / float(baseline)) * 100.0
+            if reg > regression_threshold_pct:
+                count += 1
+            else:
+                break
+        return count
+
+    bench_reg_count = _count_consecutive_regressions(bench_samples, base_bench)
+    scen_reg_count = _count_consecutive_regressions(scen_samples, base_scen)
+    regression_trigger = (
+        bench_reg_count >= consecutive_regressions_required
+        or scen_reg_count >= consecutive_regressions_required
+    )
+
+    checks = {
+        "volume_trigger": volume_24h > volume_threshold_per_day,
+        "regression_trigger": regression_trigger,
+        "drift_bug_trigger": drift_bug_count >= 2,
+        "portfolio_trigger": bool(need_rust_portfolio),
+    }
+    true_count = sum(1 for v in checks.values() if v)
+
+    return {
+        "ok": True,
+        "checks": checks,
+        "true_trigger_count": true_count,
+        "migration_triggered": true_count >= 2,
+        "details": {
+            "volume_24h": volume_24h,
+            "bench_regression_streak": bench_reg_count,
+            "scenario_regression_streak": scen_reg_count,
+            "drift_bug_count": drift_bug_count,
+            "thresholds": {
+                "volume_threshold_per_day": volume_threshold_per_day,
+                "regression_threshold_pct": regression_threshold_pct,
+                "consecutive_regressions_required": (
+                    consecutive_regressions_required
+                ),
+            },
+        },
+    }
