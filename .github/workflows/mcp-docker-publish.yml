@@ -8,10 +8,14 @@ on:
     paths:
       - "Dockerfile"
       - ".dockerignore"
-      - "mcp_engine_server.py"
+      - "*.py"
+      - "mcp_*.py"
+      - "trace_observability.py"
+      - "scripts/**"
       - "Cargo.toml"
       - "Cargo.lock"
       - "src/**"
+      - "tests/**"
       - ".github/workflows/mcp-docker-publish.yml"
   workflow_dispatch:
 
