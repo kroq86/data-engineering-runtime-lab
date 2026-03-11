@@ -5,6 +5,10 @@ from pathlib import Path
 from typing import Any
 
 from mcp.server.fastmcp import FastMCP
+from mcp_project_contract_tools import (
+    configure_project_contract_tools,
+    register_project_contract_tools,
+)
 from mcp_engine_runtime import EngineOps, EngineService, SubprocessRunner
 from mcp_engine_tools import register_engine_tools
 from mcp_explainability import (
@@ -128,9 +132,20 @@ configure_slo_tools(
     baseline_snapshot_default=BASELINE_SNAPSHOT_DEFAULT,
     drift_bug_counter_default=DRIFT_BUG_COUNTER_DEFAULT,
 )
+configure_project_contract_tools(
+    workspace=WORKSPACE,
+    trace_db_default=TRACE_DB_DEFAULT,
+    baseline_snapshot_default=BASELINE_SNAPSHOT_DEFAULT,
+    explain_regression_suite=explain_regression_suite,
+    capture_roi_baseline=capture_roi_baseline,
+    benchmark_calls=benchmark_calls,
+    scenario_load_test=scenario_load_test,
+    explain_run=explain_run,
+)
 register_explainability_tools(mcp)
 register_trace_tools(mcp)
 register_slo_tools(mcp)
+register_project_contract_tools(mcp)
 
 
 if __name__ == "__main__":
