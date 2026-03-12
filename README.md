@@ -118,7 +118,9 @@ This repo also includes a minimal MCP server that wraps the lab operations:
 - `mcp_engine_server.py`
 - Cursor config: `.cursor/mcp.json`
 
-Tools exposed by MCP:
+Full MCP tool list currently exposed by the server (`39` tools total):
+
+Engine state and runtime:
 - `init_engine`
 - `insert_row`
 - `upsert_row`
@@ -126,10 +128,8 @@ Tools exposed by MCP:
 - `explain_customer`
 - `reindex_project`
 - `run_e2e_flow`
-- `health_check`
-- `benchmark_calls`
-- `scenario_load_test`
-- `record_tool_trace`
+
+Explainability and demos:
 - `explain_run`
 - `demo_explain_run`
 - `demo_explain_run_failure`
@@ -137,12 +137,52 @@ Tools exposed by MCP:
 - `demo_explain_idempotency_conflict`
 - `demo_explain_concurrency_failure_storm`
 - `explain_regression_suite`
+
+Trace and retrieval:
+- `record_tool_trace`
 - `similar_incidents`
 - `refresh_trace_path`
 - `refresh_docs_path`
+
+SLO and ROI:
+- `health_check`
+- `benchmark_calls`
+- `scenario_load_test`
 - `capture_roi_baseline`
 - `report_drift_bug`
 - `decision_gate`
+
+Project contract and regression:
+- `project_manifest`
+- `project_capabilities`
+- `project_run_regression`
+- `project_capture_baseline`
+- `project_compare_baseline`
+
+Generic project state:
+- `project_list_entities`
+- `project_get_entity`
+- `project_upsert_entity`
+- `project_delete_entity`
+- `project_append_event`
+- `project_ingest_trace`
+- `project_explain_run`
+- `project_export_state`
+
+Generic heuristics:
+- `project_list_heuristics`
+- `project_run_heuristic`
+
+Current heuristic profiles available through `project_run_heuristic`:
+- `pain_structure`
+- `naive_bias`
+- `price_distribution`
+- `liquidity_signals`
+- `price_liquidity_matrix`
+- `cross_category`
+- `sale_format`
+- `speed_signals`
+- `trust_signals`
 
 If Cursor MCP auto-discovery is enabled, restart Cursor and connect `mini-data-engine`.
 Default MCP runtime data paths are under `tests/artifacts/mcp/*`.
