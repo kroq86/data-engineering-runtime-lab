@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
@@ -14,6 +15,8 @@ except ModuleNotFoundError:  # pragma: no cover - local import fallback outside 
 ToolFn = Callable[..., dict[str, Any]]
 
 from mcp_generic_project_state_tools import declared_entities
+from mcp_project_heuristic_tools import declared_heuristics
+from trace_observability import TraceStore
 
 
 TRACE_SCHEMA_V1 = {
@@ -137,6 +140,37 @@ def _baseline_metric_pct_change(current: float, baseline: float) -> float:
     return ((current - baseline) / baseline) * 100.0
 
 
+def _append_suite_trace(
+    *,
+    run_id: str,
+    trace_db_path: str,
+    tool_name: str,
+    status: str,
+    summary: str,
+    error_text: str = "",
+    decision_reason: str = "",
+    actual_effects: str = "",
+) -> dict[str, Any]:
+    store = TraceStore(Path(trace_db_path))
+    return store.append(
+        {
+            "run_id": run_id,
+            "correlation_id": run_id,
+            "tool_name": tool_name,
+            "status": status,
+            "summary": summary,
+            "error_text": error_text,
+            "attempt": 1,
+            "retry_classification": "not_applicable",
+            "decision_reason": decision_reason,
+            "actual_effects": actual_effects,
+            "scenario_id": "project_regression_bundle",
+            "source_kind": "project_contract",
+            "source_path": trace_db_path,
+        }
+    )
+
+
 def project_manifest() -> dict[str, Any]:
     """Describe project state roots, schemas, and supported regression primitives."""
     workspace = _require("workspace", CONTEXT.workspace)
@@ -180,6 +214,10 @@ def project_manifest() -> dict[str, Any]:
                 "project_ingest_trace",
                 "project_explain_run",
                 "project_export_state",
+            ],
+            "heuristics": [
+                "project_list_heuristics",
+                "project_run_heuristic",
             ],
             "state": [
                 "init_engine",
@@ -226,6 +264,11 @@ def project_capabilities() -> dict[str, Any]:
                 "ingest_trace": True,
                 "export_state": True,
             },
+            "heuristics": {
+                "list_heuristics": True,
+                "run_heuristic": True,
+                "profiles": declared_heuristics(),
+            },
             "explainability": {
                 "explain_run": CONTEXT.explain_run is not None,
                 "expected_failure_controls": True,
@@ -255,9 +298,11 @@ def project_run_regression(
     explain_regression_suite = _require(
         "explain_regression_suite", CONTEXT.explain_regression_suite
     )
+    trace_path = str(trace_db_path or _require("trace_db_default", CONTEXT.trace_db_default))
+    suite_run_id = f"project-regression-{int(time.time() * 1000)}"
     suite = explain_regression_suite(
         root_prefix=root_prefix,
-        trace_db_path=trace_db_path,
+        trace_db_path=trace_path,
         benchmark_iterations=benchmark_iterations,
         scenario_iterations=scenario_iterations,
     )
@@ -271,9 +316,19 @@ def project_run_regression(
         name = str(item.get("name", "unknown_check"))
         explanation = item.get("explanation", {})
         status = str(explanation.get("status", "error"))
+        summary = str(explanation.get("summary", "unexpected traced check failure"))
+        _append_suite_trace(
+            run_id=suite_run_id,
+            trace_db_path=trace_path,
+            tool_name=name,
+            status="ok" if status == "ok" else "error",
+            summary=summary,
+            error_text="" if status == "ok" else summary,
+            decision_reason="bundle trace mirrors traced regression check outcome",
+            actual_effects="traced check included in project regression bundle",
+        )
         if status != "ok":
             changed_scope.append(name)
-            summary = str(explanation.get("summary", "unexpected traced check failure"))
             unexpected_regressions.append({"name": name, "summary": summary})
             top_causes.append(summary)
 
@@ -282,9 +337,13 @@ def project_run_regression(
         explanation = payload.get("explanation", {})
         status = str(explanation.get("status", "error"))
         summary = str(explanation.get("summary", ""))
+        bundle_status = "ok"
+        bundle_summary = f"{expectation}: {summary}"
+        bundle_error = ""
         if expectation == "expected_failure":
             if status == "error":
                 expected_failures.append({"name": name, "summary": summary})
+                bundle_status = "ok"
             else:
                 changed_scope.append(name)
                 unexpected_regressions.append(
@@ -296,10 +355,25 @@ def project_run_regression(
                 top_causes.append(
                     f"{name} unexpectedly passed despite expected_failure control"
                 )
+                bundle_status = "error"
+                bundle_error = "negative control unexpectedly passed"
         elif status != "ok":
             changed_scope.append(name)
             unexpected_regressions.append({"name": name, "summary": summary})
             top_causes.append(summary)
+            bundle_status = "error"
+            bundle_error = summary
+
+        _append_suite_trace(
+            run_id=suite_run_id,
+            trace_db_path=trace_path,
+            tool_name=name,
+            status=bundle_status,
+            summary=bundle_summary,
+            error_text=bundle_error,
+            decision_reason="bundle trace mirrors explain-demo expectation handling",
+            actual_effects="explain demo included in project regression bundle",
+        )
 
     verdict = "fail" if unexpected_regressions else "pass"
     severity = "high" if unexpected_regressions else "info"
@@ -308,9 +382,26 @@ def project_run_regression(
         if unexpected_regressions
         else "No unexpected regressions detected; keep current baseline or capture a new one if behavior changed intentionally."
     )
+    verdict_summary = (
+        "project_run_regression detected unexpected regressions"
+        if unexpected_regressions
+        else "project_run_regression completed without unexpected regressions"
+    )
+    _append_suite_trace(
+        run_id=suite_run_id,
+        trace_db_path=trace_path,
+        tool_name="project_run_regression",
+        status="error" if unexpected_regressions else "ok",
+        summary=verdict_summary,
+        error_text="; ".join(top_causes[:3]) if unexpected_regressions else "",
+        decision_reason="unified verdict derived from traced checks and explain demos",
+        actual_effects="bundle-level regression verdict recorded",
+    )
     return {
         "ok": True,
         "suite": suite,
+        "run_id": suite_run_id,
+        "trace_db_path": trace_path,
         "schema_versions": {
             "trace": TRACE_SCHEMA_V1["version"],
             "explain": EXPLAIN_SCHEMA_V1["version"],

@@ -26,6 +26,12 @@ from mcp_generic_project_state_tools import (
     project_upsert_entity,
     register_generic_project_state_tools,
 )
+from mcp_project_heuristic_tools import (
+    configure_project_heuristic_tools,
+    project_list_heuristics,
+    project_run_heuristic,
+    register_project_heuristic_tools,
+)
 from mcp_engine_runtime import EngineOps, EngineService, SubprocessRunner
 from mcp_engine_tools import register_engine_tools
 from mcp_explainability import (
@@ -90,6 +96,7 @@ DRIFT_BUG_COUNTER_DEFAULT = Path(
     "./tests/artifacts/mcp/baseline/drift_bug_counter.json"
 )
 PROJECT_STATE_ROOT_DEFAULT = Path("./tests/artifacts/mcp/project_state")
+PROJECT_HEURISTICS_ROOT_DEFAULT = Path("./tests/artifacts/mcp/project_heuristics")
 
 
 OPS: EngineOps = EngineService(
@@ -166,11 +173,16 @@ configure_generic_project_state_tools(
     trace_store_factory=_trace_store,
     explain_run=explain_run,
 )
+configure_project_heuristic_tools(
+    workspace=WORKSPACE,
+    analysis_root_default=PROJECT_HEURISTICS_ROOT_DEFAULT,
+)
 register_explainability_tools(mcp)
 register_trace_tools(mcp)
 register_slo_tools(mcp)
 register_project_contract_tools(mcp)
 register_generic_project_state_tools(mcp)
+register_project_heuristic_tools(mcp)
 
 
 if __name__ == "__main__":

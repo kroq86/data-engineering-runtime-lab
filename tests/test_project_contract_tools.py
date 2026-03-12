@@ -88,6 +88,8 @@ class ProjectContractToolsTests(unittest.TestCase):
             self.assertEqual(result["verdict"], "pass")
             self.assertEqual(len(result["unexpected_regressions"]), 0)
             self.assertEqual(len(result["expected_failures"]), 1)
+            self.assertTrue(str(result["run_id"]).startswith("project-regression-"))
+            self.assertEqual(result["trace_db_path"], str(root / "traces.jsonl"))
 
     def test_project_compare_baseline_flags_metric_regression(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

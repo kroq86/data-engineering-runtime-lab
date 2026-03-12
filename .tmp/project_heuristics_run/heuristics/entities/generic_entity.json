@@ -1,0 +1,1395 @@
+[
+  {
+    "heuristic_name": "price_distribution",
+    "source_kind": "telegram_html_export",
+    "source_path": "/Users/ll/Downloads/Telegram Desktop/ChatExport_2026-03-12",
+    "run_id": "manual-price_distribution-20260312",
+    "result": {
+      "message_count": 141455,
+      "sale_offer_count": 5895,
+      "gel_overall": {
+        "count": 5044,
+        "min": 20,
+        "median": 250,
+        "p75": 600,
+        "max": 9500
+      },
+      "usd_overall": {
+        "count": 2638,
+        "min": 20,
+        "median": 230,
+        "p75": 460,
+        "max": 7000
+      },
+      "categories": [
+        {
+          "category": "other",
+          "count": 4896,
+          "examples": [
+            {
+              "author": "Unknown Mary Read",
+              "text": "\ud83c\udfb8\u0427\u0430\u0442 \u0434\u043b\u044f \u043c\u0443\u0437\u044b\u043a\u0430\u043d\u0442\u043e\u0432 \u0438 \u0442\u0432\u043e\u0440\u0447\u0435\u0441\u043a\u0438\u0445 \u043b\u044e\u0434\u0435\u0439 \u0413\u0440\u0443\u0437\u0438\u0438. \u041e\u0431\u043c\u0435\u043d \u043f\u043e\u043b\u0435\u0437\u043d\u043e\u0439 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0435\u0439, \u0430\u0440\u0435\u043d\u0434\u0430/\u043f\u0440\u043e\u0434\u0430\u0436\u0430 \u0430\u043f\u043f\u0430\u0440\u0430\u0442\u0443\u0440\u044b \u0438 \u043c\u0443\u0437. \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442\u043e\u0432, \u043a\u043e\u043b\u043b\u0430\u0431\u043e\u0440\u0430\u0446\u0438\u044f. \u2139\u041f\u0440\u0430\u0432\u0438\u043b\u0430 \u043d\u0430\u0448\u0438\u0445 \u0447\u0430\u0442\u043e\u0432 \u27a1\ufe0f https://t.me/chats_ge/6 \u274c\u0440\u0435\u043a\u043b\u0430\u043c\u0430 \u0431\u0435\u0437 \u0441\u043e\u0433\u043b\u0430\u0441\u043e\u0432\u0430\u043d\u0438\u044f \u274c\u043e\u0441\u043a\u043e\u0440\u0431\u043b\u0435\u043d",
+              "file": "messages.html"
+            },
+            {
+              "author": "Unknown",
+              "text": "\u043f\u0440\u043e\u0434\u0430\u043c",
+              "file": "messages.html"
+            }
+          ],
+          "gel_stats": {
+            "count": 4052,
+            "min": 20,
+            "median": 250,
+            "p75": 550,
+            "max": 9500
+          },
+          "usd_stats": {
+            "count": 1762,
+            "min": 20,
+            "median": 249,
+            "p75": 500,
+            "max": 7000
+          }
+        },
+        {
+          "category": "electronics",
+          "count": 388,
+          "examples": [
+            {
+              "author": "Unknown Vsevolod Heat",
+              "text": "\u041f\u0440\u043e\u0434\u0430\u043c \u0441\u0442\u0443\u0434\u0438\u0439\u043d\u044b\u0435 \u043f\u0430\u0441\u0441\u0438\u0432\u043d\u044b\u0435 \u043c\u043e\u043d\u0438\u0442\u043e\u0440\u044b JBL \u0438 \u0441\u0442\u0443\u0434\u0438\u0439\u043d\u044b\u0435 \u043d\u0430\u0443\u0448\u043d\u0438\u043a\u0438 Sennheiser HD 25",
+              "file": "messages3.html"
+            },
+            {
+              "author": "Unknown Vitaly Inzhelevsky",
+              "text": "\u041e\u0442\u0434\u0430\u043c \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e \u0432 \u0440\u0443\u043a\u0438 \u043d\u0443\u0436\u0434\u0430\u044e\u0449\u0435\u0433\u043e\u0441\u044f iRig nano amp \u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u043d\u0430 3\u0445 \u0431\u0430\u0442\u0430\u0440\u0435\u0439\u043a\u0430\u0445 \u0410\u0410, \u043c\u043e\u0436\u043d\u043e \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0438\u0442\u044c \u0442\u0435\u043b\u0435\u0444\u043e\u043d \u0438 \u043d\u0430\u0440\u0443\u043b\u0438\u0442\u044c \u043b\u044e\u0431\u043e\u0439 \u0442\u043e\u043d \u041d\u0435 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u0432\u044b\u0445\u043e\u0434 \u043d\u0430 \u043d\u0430\u0443\u0448\u043d\u0438\u043a\u0438, \u043d\u043e \u043c\u043e\u0436\u043d\u043e \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0438\u0442\u044c\u0441\u044f \u0447\u0435\u0440\u0435\u0437 \u0432\u044b\u0445\u043e\u0434 \u043d\u0430 \u043a\u0430\u0431\u0438\u043d\u0435\u0442 \u0447\u0435\u0440\u0435\u0437 \u043f\u0435\u0440\u0435\u0445\u043e\u0434\u043d\u0438\u043a \u041f",
+              "file": "messages5.html"
+            }
+          ],
+          "gel_stats": {
+            "count": 375,
+            "min": 20,
+            "median": 450,
+            "p75": 800,
+            "max": 8500
+          },
+          "usd_stats": {
+            "count": 206,
+            "min": 20,
+            "median": 320,
+            "p75": 500,
+            "max": 6666
+          }
+        },
+        {
+          "category": "pets",
+          "count": 282,
+          "examples": [
+            {
+              "author": "Unknown \u0425\u0438\u0442\u0440\u044b\u0439 if",
+              "text": "\u0442\u0430\u043c \u043d\u0430 \u0441\u043b\u043e\u0432\u043e \u043f\u0440\u043e\u0434\u0430\u044e \u0441 \u0442\u044d\u0433\u043e\u043c \u0431\u043e\u0442 \u0431\u0443\u0437\u0438\u0442, \u0442\u0435\u0445\u043d\u0438\u0447\u0435\u0441\u043a\u0438\u0435 \u0441\u043b\u043e\u0436\u043d\u043e\u0441\u0442\u0438, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u043d\u0438\u043a\u0442\u043e \u043d\u0435 \u0431\u0443\u0434\u0435\u0442 \u0438\u0441\u043f\u0440\u0430\u0432\u043b\u044f\u0442\u044c \ud83d\ude06",
+              "file": "messages7.html"
+            },
+            {
+              "author": "Unknown Musical Jesus",
+              "text": "#\u0431\u0430\u0440\u0430\u0445\u043e\u043b\u043a\u0430 #\u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u0421\u043b\u0430\u0439\u0434\u044b Dunlop \u0441\u0442\u0435\u043a\u043b\u044f\u043d\u043d\u044b\u0439 \u0438 \u043b\u0430\u0442\u0443\u043d\u043d\u044b\u0439 \u0428\u043d\u0443\u0440\u044b Jack-Jack \u0432\u0438\u0442\u043e\u0439 \u0438 3 \u043c Fender 2 \u043f\u0430\u0442\u0447-\u043a\u0430\u0431\u0435\u043b\u044f \u041a\u0430\u043f\u043e\u0434\u0430\u0441\u0442\u0440 \u0441 \u0436\u0435\u043d\u0441\u043a\u0438\u043c\u0438 \u043d\u043e\u0436\u043a\u0430\u043c\u0438 \u041e\u0442\u0434\u0430\u043c \u0437\u0430 \u041b\u042e\u0411\u0423\u042e \u0426\u0415\u041d\u0423, \u043a\u043e\u0442\u043e\u0440\u0443\u044e \u0432\u044b \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0438\u0442\u0435! \u041f\u0438\u0448\u0438\u0442\u0435 \u0432 \u041b\u0421.",
+              "file": "messages7.html"
+            }
+          ],
+          "gel_stats": {
+            "count": 250,
+            "min": 20,
+            "median": 300,
+            "p75": 700,
+            "max": 2900
+          },
+          "usd_stats": {
+            "count": 436,
+            "min": 30,
+            "median": 170,
+            "p75": 300,
+            "max": 2400
+          }
+        },
+        {
+          "category": "home_furniture",
+          "count": 182,
+          "examples": [
+            {
+              "author": "Unknown Aleksey Mazur",
+              "text": "\u043d\u0443 \u044f \u043a \u0442\u043e\u043c\u0443 \u0447\u0442\u043e \u0431\u0430\u043b\u0430\u043d\u0441 \"\u043f\u0440\u043e\u0434\u0430\u043b \u0441\u043b\u0438\u0448\u043a\u043e\u043c \u0434\u0435\u0448\u0435\u0432\u043e - \u043d\u0430\u0431\u0435\u0436\u0430\u043b\u043e \u0432\u0430\u0433\u043e\u043d \u043f\u043e\u043a\u0443\u043f\u0430\u0442\u0435\u043b\u0435\u0439 / \u043f\u0440\u043e\u0434\u0430\u044e \u0441\u043b\u0438\u0448\u043a\u043e\u043c \u0434\u043e\u0440\u043e\u0433\u043e - \u0442\u0438\u0448\u0438\u043d\u0430 \u043f\u043e\u043b\u043d\u0430\u044f\" \u0441\u043c\u0435\u0449\u0430\u0435\u0442\u0441\u044f \u043f\u043e\u0447\u0442\u0438 \u043a\u0430\u0436\u0434\u044b\u0439 \u0434\u0435\u043d\u044c \u0438\u0437-\u0437\u0430 \u043d\u0435\u0432\u043d\u044f\u0442\u043d\u043e\u0433\u043e \u043a\u0443\u0440\u0441\u0430. \u041f\u043e\u0438\u0441\u043a \u0446\u0435\u043d\u044b \u0432\u0441\u0435 \u0436 \u0438\u0442\u0435\u0440\u0430\u0442\u0438\u0432\u043d\u044b\u0439 \u043f\u0440\u043e\u0446\u0435\u0441\u0441 \u0447\u0430\u0449\u0435 \u0432\u0441\u0435\u0433\u043e, \u0432\u044b\u0441",
+              "file": "messages6.html"
+            },
+            {
+              "author": "Unknown \u0414\u043c\u0438\u0442\u0440\u0438\u0439 \u0424\u0438\u043b\u0430\u0442\u043e\u0432",
+              "text": "\u041f\u0440\u043e\u0434\u0430\u043c \u0441\u0442\u0443\u043b 250 \u043b\u0430\u0440\u0438 \u0442\u043e\u0440\u0433",
+              "file": "messages6.html"
+            }
+          ],
+          "gel_stats": {
+            "count": 193,
+            "min": 20,
+            "median": 280,
+            "p75": 530,
+            "max": 4000
+          },
+          "usd_stats": {
+            "count": 178,
+            "min": 20,
+            "median": 180,
+            "p75": 250,
+            "max": 3370
+          }
+        },
+        {
+          "category": "clothing_shoes",
+          "count": 82,
+          "examples": [
+            {
+              "author": "Unknown",
+              "text": "#\u0431\u0430\u0440\u0430\u0445\u043e\u043b\u043a\u0430 #\u0422\u0431\u0438\u043b\u0438\u0441\u0438 #percussion #\u0431\u0430\u0440\u0430\u0431\u0430\u043d \u041f\u0440\u043e\u0434\u0430\u043c \u0430\u0444\u0440\u0438\u043a\u0430\u043d\u0446\u0430, \u0441\u0442\u0440\u0430\u043d\u0430 \u0438 \u0434\u0435\u0440\u0435\u0432\u043e \u043d\u0435 \u043f\u043e\u043c\u043d\u044e, \u043a\u043e\u0436\u0430 \u043c\u0435\u043d\u044f\u043b\u0430\u0441\u044c \u043c\u0430\u0441\u0442\u0435\u0440\u043e\u043c \u0432 \u0420\u0424. \u0420\u0430\u0437\u043c\u0435\u0440 - \u0441\u0440\u0435\u0434\u043d\u0438\u0439\ud83d\ude04 \u043f\u043e\u0437\u0436\u0435 \u043c\u043e\u0433\u0443 \u0437\u0430\u043c\u0435\u0440\u0438\u0442\u044c.\u041f\u0440\u043e\u0431\u0435\u0433 \u043c\u0438\u043d\u0438\u043c\u0430\u043b\u044c\u043d\u044b\u0439, \u0434\u0435\u0444\u0435\u043a\u0442\u043e\u0432 \u043d\u0435\u0442. \u0425\u0440\u0430\u043d\u0435\u043d\u0438\u0435 \u0433\u0430\u0440\u0430\u0436\u043d\u043e\u0435) \u043f\u043e\u043b\u0443\u0436\u0435\u0441\u0442\u043a\u0438\u0439 \u043a\u043e\u0444",
+              "file": "messages7.html"
+            },
+            {
+              "author": "Unknown",
+              "text": "\u0412 \u043e\u0431\u0449\u0435\u043c \u044d\u0442\u043e. \u041f\u0438\u0448\u0438\u0442\u0435, \u043f\u043e\u0442\u043e\u0440\u0433\u0443\u0435\u043c\u0441\u044f, \u042f \u043d\u0435 \u043a\u0443\u0441\u0430\u044e\u0441\u044c. \u041c\u043d\u0435 \u043f\u0440\u043e\u0441\u0442\u043e \u043d\u0443\u0436\u043d\u044b \u0432\u0435\u0449\u0438 \u0432 \u043f\u043e\u0445\u043e\u0434. \u041f\u0430\u043b\u0430\u0442\u043a\u0430, 2 \u0441\u043f\u0430\u043b\u044c\u043d\u0438\u043a\u0430, \u0441\u0430\u043f\u043e\u0433\u0438, \u0444\u043b\u044f\u0433\u0438, \u043e\u0433\u043d\u0438\u0432\u043e, \u043a\u043e\u0442\u0435\u043b\u043e\u043a, \u0443\u0434\u043e\u0447\u043a\u0438, \u0440\u044b\u0431\u043e\u043b\u043e\u0432\u043d\u044b\u0435 \u0441\u043d\u0430\u0441\u0442\u0438. \u0422\u0430\u043a\u0436\u0435 \u0440\u0430\u0441\u0441\u043c\u043e\u0442\u0440\u044e \u043e\u0431\u043c\u0435\u043d \u043d\u0430 \u0443\u043a\u0430\u0437\u0430\u043d\u043d\u044b\u0435 \u0432\u044b\u0448\u0435 \u043d\u0438\u0448\u0442\u044f\u043a\u0438",
+              "file": "messages7.html"
+            }
+          ],
+          "gel_stats": {
+            "count": 74,
+            "min": 30,
+            "median": 200,
+            "p75": 700,
+            "max": 2250
+          },
+          "usd_stats": {
+            "count": 27,
+            "min": 30,
+            "median": 225,
+            "p75": 450,
+            "max": 850
+          }
+        },
+        {
+          "category": "appliances_household",
+          "count": 28,
+          "examples": [
+            {
+              "author": "Unknown Kirill Semenov",
+              "text": "\u0422\u0431\u0438\u043b\u0438\u0441\u0438, \u0412\u0435\u0440\u0430 \u2014 #\u043f\u0440\u043e\u0434\u0430\u043c \u043c\u043e\u0434\u0443\u043b\u044f\u0440\u043d\u043e\u0435: TH VCO-1 $120 - \u043e\u0447\u0435\u043d\u044c \u0434\u043e\u0431\u0440\u043e\u0442\u043d\u044b\u0439 \u0438 \u043a\u043b\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0441\u0446\u0438\u043b\u043b\u044f\u0442\u043e\u0440 \u0441 \u043a\u0432\u0430\u0434\u0440\u0430\u0442\u043e\u043c, \u0442\u0440\u0435\u0443\u0433\u043e\u043b\u044c\u043d\u0438\u043a\u043e\u043c \u0438 \u0441\u0438\u043d\u0443\u0441\u043e\u043c Pusherman 4\u00d73 Matrix Mixer $50 - \u043c\u0430\u0442\u0440\u0438\u0447\u043d\u044b\u0439 \u043c\u0438\u043a\u0448\u0435\u0440, \u0445\u043e\u0440\u043e\u0448 \u0434\u043b\u044f \u043f\u043e\u0441\u044b\u043b\u043e\u0432-\u0432\u043e\u0437\u0432\u0440\u0430\u0442\u043e\u0432-\u0444\u0438\u0434\u0431\u0435\u043a\u043e\u0432 \u0438",
+              "file": "messages22.html"
+            },
+            {
+              "author": "Unknown Pavel Pavlov",
+              "text": "\u041f\u0440\u0438\u0432\u0435\u0442. \u0412\u0441\u0435 \u0435\u0449\u0435 \u043f\u0440\u043e\u0434\u0430\u044e \u044f\u043f\u043e\u043d\u0441\u043a\u0438\u0439 \u0424\u0435\u043d\u0434\u0435\u0440 \u201896. \u0418\u043b\u0438 \u043e\u0431\u043c\u0435\u043d\u044f\u044e \u043d\u0430 \u0445\u0430\u0440\u0434\u0442\u0435\u0439\u043b, \u0422\u0431\u0438\u043b\u0438\u0441\u0438. \u0421 \u0433\u0438\u0442\u0430\u0440\u043e\u0439 \u0432\u0441\u0435 \u043e\u0442\u043b\u0438\u0447\u043d\u043e. \u0426\u0435\u043d\u0430 600$, \u0442\u043e\u0440\u0433\u0443\u044e\u0441\u044c. \u041f\u0440\u0438 \u043e\u0431\u043c\u0435\u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u043e \u0434\u043e\u043f\u043b\u0430\u0447\u0443.",
+              "file": "messages34.html"
+            }
+          ],
+          "gel_stats": {
+            "count": 70,
+            "min": 30,
+            "median": 150,
+            "p75": 400,
+            "max": 1433
+          },
+          "usd_stats": {
+            "count": 17,
+            "min": 50,
+            "median": 120,
+            "p75": 300,
+            "max": 700
+          }
+        },
+        {
+          "category": "baby_kids",
+          "count": 24,
+          "examples": [
+            {
+              "author": "Unknown \u041b\u044e\u0431\u0430",
+              "text": "\u041d\u0438\u043a\u043e\u0433\u0434\u0430 \u043d\u0435 \u043e\u0442\u0434\u0430\u043c \u0440\u0435\u0431\u0435\u043d\u043a\u0430 \u043d\u0430 \u0441\u043a\u0440\u0438\u043f\u043a\u0443...",
+              "file": "messages16.html"
+            },
+            {
+              "author": "Unknown Dmitry Belyaev",
+              "text": "\u0420\u0435\u0431\u044f\u0442, \u043f\u0440\u043e\u0434\u0430\u044e \u0441\u0432\u043e\u044e \u043c\u0430\u043b\u044b\u0448\u043a\u0443, fender Stratocaster player hss sunburst. \u041c\u0435\u043a\u0441\u0438\u043a\u0430. \u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u0438\u0434\u0435\u0430\u043b\u044c\u043d\u043e\u0435, \u0442\u043e\u043b\u044c\u043a\u043e \u0434\u043e\u043c\u0430\u0448\u043d\u0435\u0435 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435, \u043e\u0447\u0435\u043d\u044c \u043a\u0440\u0443\u0442\u043e\u0439 \u0438 \u0434\u043e\u0440\u043e\u0433\u043e\u0439 \u043c\u043d\u0435 \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442. \u041e\u0442\u0434\u0430\u043c \u0432 \u0445\u043e\u0440\u043e\u0448\u0438\u0435 \u0440\u0443\u043a\u0438, \u0442\u0430\u043a \u043a\u0430\u043a \u043a \u0441\u043e\u0436\u0430\u043b\u0435\u043d\u0438\u044e \u043d\u0430\u0448\u0438 \u043f\u0443\u0442\u0438",
+              "file": "messages17.html"
+            }
+          ],
+          "gel_stats": {
+            "count": 15,
+            "min": 20,
+            "median": 400,
+            "p75": 450,
+            "max": 700
+          },
+          "usd_stats": {
+            "count": 7,
+            "min": 100,
+            "median": 110,
+            "p75": 200,
+            "max": 600
+          }
+        },
+        {
+          "category": "sports_outdoor",
+          "count": 9,
+          "examples": [
+            {
+              "author": "Unknown Artyom",
+              "text": "\u041f\u0440\u043e\u0434\u0430\u044e Squier Affinity Jazzmaster (Lake Placid Blue) \u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435: \u0422\u0435\u0445\u043d\u0438\u0447\u0435\u0441\u043a\u043e\u0435 - \u0438\u0434\u0435\u0430\u043b\u044c\u043d\u043e\u0435, \u0432\u0438\u0437\u0443\u0430\u043b\u044c\u043d\u043e - \u043d\u0435\u0431\u043e\u043b\u044c\u0448\u043e\u0439 \u0441\u043a\u043e\u043b, \u0432\u0438\u0437\u0443\u0430\u043b\u044c\u043d\u043e \u043f\u0440\u0438 \u0438\u0433\u0440\u0435 \u0430\u0431\u0441\u043e\u043b\u044e\u0442\u043d\u043e \u043d\u0435\u0437\u0430\u043c\u0435\u0442\u0435\u043d \u0412 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u0435: \u0442\u0432\u0435\u0440\u0434\u044b\u0439 \u043a\u0435\u0439\u0441 \u0434\u043b\u044f \u0442\u0440\u0430\u043d\u0441\u043f\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u043e\u043a (\u0441\u0430\u043c\u043e\u043b\u0435\u0442) \u041a\u0430\u0431\u0435\u043b\u044c \u0426",
+              "file": "messages55.html"
+            },
+            {
+              "author": "Unknown Angelina Volina",
+              "text": "\u0412\u0441\u0435\u043c \u043f\u0440\u0438\u0432\u0435\u0442 \ud83d\udc4b #\u0442\u0431\u0438\u043b\u0438\u0441\u0438 #\u043f\u0440\u043e\u0434\u0430\u043c \u0426\u0438\u0444\u0440\u043e\u0432\u043e\u0435 \u043f\u0438\u0430\u043d\u0438\u043d\u043e YAMAHA NP-12B \u043d\u0430 61 \u043a\u043b\u0430\u0432\u0438\u0448\u0443 \u0421\u0441\u044b\u043b\u043a\u0430 \u043d\u0430 \u043e\u0444. \u0441\u0430\u0439\u0442 (\u043f\u043e\u043a\u0443\u043f\u0430\u043b\u0430 \u0443\u0436\u0435 \u0432 \u0413\u0440\u0443\u0437\u0438\u0438) \u0418\u0433\u0440\u0430\u043b\u0430 \u043d\u0430 \u043d\u0435\u043c \u043f\u0430\u0440\u0443 \u0440\u0430\u0437, \u0442\u0430\u043a \u0447\u0442\u043e \u043d\u0443\u043b\u0435\u0432\u043e\u0435 \u043f\u043e \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u044e. \u0415\u0441\u0442\u044c \u043e\u0440\u0438\u0433\u0438\u043d\u0430\u043b\u044c\u043d\u0430\u044f \u043a\u043e\u0440\u043e\u0431\u043a\u0430 \u0434\u043b\u044f \u0442\u0440\u0430\u043d\u0441\u043f\u043e\u0440\u0442\u0438\u0440\u043e\u0432\u043a\u0438. ",
+              "file": "messages68.html"
+            }
+          ],
+          "gel_stats": {
+            "count": 7,
+            "min": 90,
+            "median": 1600,
+            "p75": 3100,
+            "max": 3100
+          },
+          "usd_stats": {
+            "count": 1,
+            "min": 2000,
+            "median": 2000,
+            "p75": 2000,
+            "max": 2000
+          }
+        },
+        {
+          "category": "books_hobby",
+          "count": 4,
+          "examples": [
+            {
+              "author": "Unknown Anastasiya Mikhaleva",
+              "text": "\u042d\u043b\u0435\u043a\u0442\u0440\u043e\u043d\u043d\u044b\u0435 \u043c\u0443\u0437\u044b\u043a\u0430\u043d\u0442\u044b \u0435\u0441\u0442\u044c \u0432 \u0447\u0430\u0442\u0435? \u0421\u0434\u0435\u043b\u0430\u0439\u0442\u0435 \u0441\u0435\u0431\u0435 \u043f\u043e\u0434\u0430\u0440\u043e\u043a \u043d\u0430 \u041d\u043e\u0432\u044b\u0439 \u0433\u043e\u0434 :) \u041f\u0440\u043e\u0434\u0430\u043c Arturia minibrute 2s - \u0430\u043d\u0430\u043b\u043e\u0433\u043e\u0432\u044b\u0439 \u0441\u0438\u043d\u0442\u0435\u0437\u0430\u0442\u043e\u0440 \u0441 \u0436\u0438\u0440\u043d\u044b\u043c, \u0432\u043a\u0443\u0441\u043d\u044b\u043c \u0437\u0432\u0443\u043a\u043e\u043c. \u041a\u043d\u0438\u0433\u0430 \u0440\u0435\u0446\u0435\u043f\u0442\u043e\u0432 \u043f\u0430\u0442\u0447\u0435\u0439 \u0432 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u0435. \u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u043d\u0430 5+ \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043b\u0441\u044f \u0432\u0441\u0435\u0433",
+              "file": "messages31.html"
+            },
+            {
+              "author": "Unknown Kostya Smek",
+              "text": "\u0445\u044d\u0439 \u0431\u0440\u0430\u0431\u0430\u043d\u0449\u0438\u043a\u0438 \u0438 \u043f\u0440\u0438\u0447\u0430\u0441\u0442\u043d\u044b\u0435, \u043f\u0440\u043e\u0434\u0430\u043c \u0432 \u0422\u0431\u0438\u043b\u0438\u0441\u0438: \u041a\u043d\u0438\u0433\u0430 Drumeo The Drummers toolbox, $20 \u0438\u043b\u0438 \u044d\u043a\u0432\u0438\u0432\u0430\u043b\u0435\u043d\u0442 \u0432 \u043b\u0430\u0440\u0438 - https://www.drumeo.com/drumshop/the-drummers-toolbox \u0422\u0440\u0435\u0438\u043d\u0440\u043e\u0432\u043e\u0447\u043d\u044b\u0439 \u043f\u044d\u0434 \u0434\u043b\u044f \u043f\u0435\u0434\u0430\u043b\u0438/\u043a\u0430\u0440\u0434\u0430\u043d\u0430 Drumeo Quiet Kick \u0441 ",
+              "file": "messages69.html"
+            }
+          ],
+          "gel_stats": {
+            "count": 8,
+            "min": 20,
+            "median": 50,
+            "p75": 80,
+            "max": 130
+          },
+          "usd_stats": {
+            "count": 4,
+            "min": 20,
+            "median": 150,
+            "p75": 1500,
+            "max": 1500
+          }
+        }
+      ]
+    },
+    "entity_id": "heuristic-price_distribution-latest",
+    "updated_at_utc": "2026-03-12T10:52:41.339540+00:00",
+    "created_at_utc": "2026-03-12T10:52:41.339540+00:00"
+  },
+  {
+    "heuristic_name": "liquidity_signals",
+    "source_kind": "telegram_html_export",
+    "source_path": "/Users/ll/Downloads/Telegram Desktop/ChatExport_2026-03-12",
+    "run_id": "manual-liquidity_signals-20260312",
+    "result": {
+      "message_count": 141455,
+      "liquidity_method": {
+        "strong_signal": "status marker appears inside sale offer text",
+        "weak_signal": "same author posts status-only update within next 5 messages",
+        "caveat": "Heuristic liquidity signal, not true thread-linked sell-through."
+      },
+      "overall": {
+        "offer_count": 5895,
+        "strong_status_offer_count": 53,
+        "weak_status_offer_count": 3,
+        "strong_signal_ratio": 0.009,
+        "all_signal_ratio": 0.0095
+      },
+      "top_liquidity_categories": [
+        {
+          "category": "books_hobby",
+          "offers": 4,
+          "strong_status_signals": 1,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.25,
+          "all_signal_ratio": 0.25,
+          "gel_stats": {
+            "count": 8,
+            "min": 20,
+            "median": 50,
+            "p75": 80,
+            "max": 130
+          },
+          "examples_strong": [
+            {
+              "author": "Unknown lera",
+              "text": "\u043f\u0440\u0438\u0432\u0435\u0442! \u043f\u0440\u043e\u0434\u0430\u044e \u043c\u0438\u043a\u0440\u043e\u0444\u043e\u043d rode nt1-a, \u0432 \u043e\u0447\u0435\u043d\u044c \u0445\u043e\u0440\u043e\u0448\u0435\u043c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0438, 150$ - \u0411\u0420\u041e\u041d\u042c \u043a\u043d\u0438\u0433\u0438: Creative Act Rick Rubin (en) 40 gel \u0414\u0436\u043e\u043d \u0421\u0438\u0431\u0440\u0443\u043a 20 gel Tbilisi",
+              "file": "messages112.html"
+            }
+          ],
+          "examples_weak": []
+        },
+        {
+          "category": "appliances_household",
+          "offers": 28,
+          "strong_status_signals": 1,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0357,
+          "all_signal_ratio": 0.0357,
+          "gel_stats": {
+            "count": 70,
+            "min": 30,
+            "median": 150,
+            "p75": 400,
+            "max": 1433
+          },
+          "examples_strong": [
+            {
+              "author": "Unknown \u0410\u043b\u0435\u043a\u0441\u0430\u043d\u0434\u0440",
+              "text": "\u0412\u0441\u0435\u043c \u043f\u0440\u0438\u0432\u0435\u0442! \u041f\u0440\u043e\u0434\u0430\u044e \u0447\u0430\u0441\u0442\u044c \u0441\u0442\u0430\u0444\u0430: 1. Cordoba C4 CE \u041a\u043b\u0435\u0432\u044b\u0439 \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442 \u0441 \u043f\u044c\u0435\u0437\u043e\u0439 Fishman \u0432 \u043e\u0442\u043b\u0438\u0447\u043d\u043e\u043c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0438 + \u043b\u0435\u0433\u043a\u0438\u0439 \u0447\u0435\u0445\u043e\u043b 750 Gel 2. \u041d\u0435\u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u0446\u0438\u0440\u0443\u0435\u043c\u044b\u0439 Squier c \u0432\u043e\u043b\u043d\u0438\u0441\u0442\u044b\u043c \u0433\u0440\u0438\u0444\u043e\u043c \u0421\u0442\u043e\u044f\u0442 \u043d\u043e\u0432\u044b\u0435 \u0448\u0438\u0440\u043e\u043a\u0438\u0435 \u043b\u0430\u0434\u044b \u0438 \u043f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043b\u0435\u0433",
+              "file": "messages103.html"
+            }
+          ],
+          "examples_weak": []
+        },
+        {
+          "category": "pets",
+          "offers": 282,
+          "strong_status_signals": 6,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0213,
+          "all_signal_ratio": 0.0213,
+          "gel_stats": {
+            "count": 250,
+            "min": 20,
+            "median": 300,
+            "p75": 700,
+            "max": 2900
+          },
+          "examples_strong": [
+            {
+              "author": "Unknown Andrey Mrzh",
+              "text": "#\u0431\u0430\u0440\u0430\u0445\u043e\u043b\u043a\u0430 #\u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u041f\u0440\u043e\u0434\u0430\u043c \u0432 \u0442\u0431\u0438\u043b\u0438\u0441\u0438 \u0442\u0430\u043a\u0438\u0435 \u043f\u0440\u0438\u043a\u043e\u043b\u044b: 1) Zoom u-44 \u0410\u0443\u0434\u0438\u043e\u0438\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441 \u0432 \u043f\u043e\u0445\u043e\u0434\u043d\u043e\u043c \u0444\u043e\u0440\u043c\u0444\u0430\u043a\u0442\u043e\u0440\u0435 \u0441 \u043a\u0443\u0447\u0435\u0439 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0435\u0439, \u0443\u043c\u0435\u0435\u0442 \u043f\u0440\u0438\u043d\u0438\u043c\u0430\u0442\u044c \u0432 \u0441\u0432\u043e\u0451 \u043e\u0442\u0432\u0435\u0440\u0441\u0442\u0438\u0435 \u043a\u0430\u043f\u0441\u044e\u043b\u0438 \u043e\u0442 \u0442\u0432\u043e\u0435\u0433\u043e \u0440\u0435\u043a\u043e\u0440\u0434\u0435\u0440\u0430 \u043f\u044f\u0442\u043e\u0439 \u0441\u0435\u0440\u0438\u0438 \u0438 \u0432\u044b\u0448\u0435, \u043c\u043e\u0436\u043d\u043e \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044c",
+              "file": "messages76.html"
+            },
+            {
+              "author": "Unknown Andrey Mrzh Andrey Mrzh 14.09.2023 23:14:03",
+              "text": "#\u0431\u0430\u0440\u0430\u0445\u043e\u043b\u043a\u0430 #\u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u041f\u0440\u043e\u0434\u0430\u043c \u0432 \u0442\u0431\u0438\u043b\u0438\u0441\u0438 \u0442\u0430\u043a\u0438\u0435 \u043f\u0440\u0438\u043a\u043e\u043b\u044b: 1) Zoom u-44 \u0410\u0443\u0434\u0438\u043e\u0438\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441 \u0432 \u043f\u043e\u0445\u043e\u0434\u043d\u043e\u043c \u0444\u043e\u0440\u043c\u0444\u0430\u043a\u0442\u043e\u0440\u0435 \u0441 \u043a\u0443\u0447\u0435\u0439 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0435\u0439, \u0443\u043c\u0435\u0435\u0442 \u043f\u0440\u0438\u043d\u0438\u043c\u0430\u0442\u044c \u0432 \u0441\u0432\u043e\u0451 \u043e\u0442\u0432\u0435\u0440\u0441\u0442\u0438\u0435 \u043a\u0430\u043f\u0441\u044e\u043b\u0438 \u043e\u0442 \u0442\u0432\u043e\u0435\u0433\u043e \u0440\u0435\u043a\u043e\u0440\u0434\u0435\u0440\u0430 \u043f\u044f\u0442\u043e\u0439 \u0441\u0435\u0440\u0438\u0438 \u0438 \u0432\u044b\u0448\u0435, \u043c\u043e\u0436\u043d\u043e \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044c",
+              "file": "messages76.html"
+            }
+          ],
+          "examples_weak": []
+        },
+        {
+          "category": "home_furniture",
+          "offers": 182,
+          "strong_status_signals": 2,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.011,
+          "all_signal_ratio": 0.011,
+          "gel_stats": {
+            "count": 193,
+            "min": 20,
+            "median": 280,
+            "p75": 530,
+            "max": 4000
+          },
+          "examples_strong": [
+            {
+              "author": "Unknown \u0410\u043d\u0434\u0440\u0435\u0439",
+              "text": "\u041f\u0440\u043e\u0434\u0430\u044e \u0434\u0435\u0432\u0430\u0439\u0441\u044b \u0432 \u0422\u0431\u0438\u043b\u0438\u0441\u0438. \u0426\u0435\u043d\u044b \u043b\u0438\u0431\u043e \u0434\u0435\u0448\u0435\u0432\u043b\u0435, \u0447\u0435\u043c \u0432 \u0420\u0424, \u043b\u0438\u0431\u043e \u043d\u0430 \u0443\u0440\u043e\u0432\u043d\u0435. \u0421\u043e\u0432\u0441\u0435\u043c \u043d\u0435\u0431\u043e\u043b\u044c\u0448\u043e\u0439 \u0442\u043e\u0440\u0433 \u0432\u043e\u0437\u043c\u043e\u0436\u0435\u043d. \u041b\u043e\u0442 \u043d\u043e\u043c\u0435\u0440 \u043e\u0434\u0438\u043d: Roland MC-101. \u041f\u043e\u043b\u043d\u044b\u0439 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442 \u0441 \u043a\u043e\u0440\u043e\u0431\u043a\u043e\u0439 \u0438 \u0447\u0435\u043a\u043e\u043c, \u0444\u043b\u0435\u0448\u043a\u0430 \u043d\u0430 8\u0433\u0431, \u0438\u0434\u0435\u0430\u043b\u044c\u043d\u043e\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435. \u0426\u0435\u043d\u0430 1100 \u043b\u0430\u0440\u0438",
+              "file": "messages91.html"
+            },
+            {
+              "author": "Unknown Beavis",
+              "text": "\u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u041f\u0440\u043e\u0434\u0430\u043c: \u2014 Hotone Ampero Mini Vanilla, \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442: \u043f\u0440\u043e\u0446\u0435\u0441\u0441\u043e\u0440, \u0431\u043b\u043e\u043a \u043f\u0438\u0442\u0430\u043d\u0438\u044f, \u043a\u043e\u0440\u043e\u0431\u043a\u0430. \u0418\u0434\u0435\u0430\u043b\u044c\u043d\u043e\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435, \u0438\u0433\u0440\u0430\u043b 2-3 \u0440\u0430\u0437\u0430, \u043b\u0435\u0436\u0430\u043b \u0442\u043e\u043b\u044c\u043a\u043e \u043d\u0430 \u0441\u0442\u043e\u043b\u0435. 560 \u043b\u0430\u0440\u0438 \u043f\u0440\u043e\u0434\u0430\u043d\u043e \u2014 \u041a\u043e\u043c\u0431\u0438\u043a Yamaha GA15II. 450 \u043b\u0430\u0440\u0438. \u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 4.5/5, \u0431\u043e",
+              "file": "messages137.html"
+            }
+          ],
+          "examples_weak": []
+        },
+        {
+          "category": "other",
+          "offers": 4896,
+          "strong_status_signals": 41,
+          "weak_status_signals": 3,
+          "strong_signal_ratio": 0.0084,
+          "all_signal_ratio": 0.009,
+          "gel_stats": {
+            "count": 4052,
+            "min": 20,
+            "median": 250,
+            "p75": 550,
+            "max": 9500
+          },
+          "examples_strong": [
+            {
+              "author": "Unknown Deleted Account",
+              "text": "\u0411\u0430\u0442\u0443\u043c\u0438. \u041f\u0440\u043e\u0434\u0430\u044e Akai. \u0421\u043a\u0430\u0440\u043b\u0435\u0442 \u0441 \u043a\u0440\u043e\u043d\u0430\u043c\u0438 \u0443\u0436\u0435 \u043f\u0440\u043e\u0434\u0430\u043d",
+              "file": "messages37.html"
+            },
+            {
+              "author": "Unknown \u041c\u0430\u043a\u0441\u0438\u043c \u041a\u0443\u043f\u043b\u044f\u043d\u0438\u043d",
+              "text": "\u0422\u043e\u0432\u0430\u0440\u0438\u0449\u0438 \u043c\u0443\u0437\u044b\u043a\u0430\u043d\u0442\u044b. \u041f\u0440\u043e\u0434\u0430\u043c \u0432 \u0422\u0431\u0438\u043b\u0438\u0441\u0438: Akai MPK mini mk3 (\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 4,8 / 5) - \u043f\u0440\u043e\u0434\u0430\u043d\u043e Korg Nanokontrol 2 midi controller (\u043e\u0442\u0441\u0443\u0442\u0441\u0432\u0443\u0435\u0442 \u0440\u0443\u0447\u043a\u0430 \u043e\u0434\u043d\u043e\u0433\u043e \u0444\u0435\u0439\u0434\u0435\u0440\u0430, \u0440\u0443\u0447\u043a\u0438 \u044d\u043d\u043a\u043e\u0434\u0435\u0440\u043e\u0432 \u043d\u0435\u043e\u0440\u0438\u0433\u0438\u043d\u0430\u043b\u044c\u043d\u044b\u0435 \u0441\u0442\u043e\u044f\u0442) - 70 \u043b\u0430\u0440\u0438 Shure White Label",
+              "file": "messages48.html"
+            }
+          ],
+          "examples_weak": [
+            {
+              "author": "Unknown ILIA",
+              "text": "\u043a\u0430\u043d\u0446\u0438\u043a \u0441\u0435\u0433\u043e\u0434\u043d\u044f, \u0443\u0436\u0435 \u043e\u0447\u0435\u0440\u0435\u0434\u0438 \u043d\u0430 \u0432\u0445\u043e\u0434\u0435 \u0432 \u044d\u043b\u0435\u043a\u0442\u0440\u043e\u0432\u0435\u0440\u043a. \u0431\u0440\u0430\u043b \u0437\u0430 90 \u043e\u0442\u0434\u0430\u043c \u0437\u0430 70",
+              "file": "messages44.html"
+            },
+            {
+              "author": "Unknown Dmitri Spiridonov",
+              "text": "\u041a\u0441\u0442\u0430\u0442\u0438, \u0435\u0441\u043b\u0438 \u043a\u043e\u043c\u0443-\u0442\u043e \u043d\u0430\u0434\u043e Boss DD-6, \u044f \u043e\u0442\u0434\u0430\u043c \u0437\u0430 340 \u043b\u0430\u0440\u0438))",
+              "file": "messages54.html"
+            }
+          ]
+        },
+        {
+          "category": "electronics",
+          "offers": 388,
+          "strong_status_signals": 2,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0052,
+          "all_signal_ratio": 0.0052,
+          "gel_stats": {
+            "count": 375,
+            "min": 20,
+            "median": 450,
+            "p75": 800,
+            "max": 8500
+          },
+          "examples_strong": [
+            {
+              "author": "Unknown \u0413\u0435\u0440\u043c\u0430\u043d",
+              "text": "#\u041f\u0440\u043e\u0434\u0430\u0435\u0442\u0441\u044f #\u041f\u0440\u043e\u0434\u0430\u043c \u0411\u0430\u0442\u0443\u043c\u0438 \u0421\u0442\u0443\u0434\u0438\u0439\u043d\u044b\u0435 \u043c\u043e\u043d\u0438\u0442\u043e\u0440\u044b (\u043a\u043e\u043b\u043e\u043d\u043a\u0438) ALESIS ELEVATE 5 MKII Studio Monitors (speakers) 300 \u043b\u0430\u0440\u0438 \u0410\u0443\u0434\u0438\u043e\u043a\u0430\u0440\u0442\u0430 PreSonus Studio 24c (USB \u0430\u0443\u0434\u0438\u043e\u0438\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441) USB audio interface 400 \u043b\u0430\u0440\u0438 \u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u0438\u0434\u0435\u0430\u043b\u044c\u043d\u043e\u0435 Upd: \u043c",
+              "file": "messages93.html"
+            },
+            {
+              "author": "Unknown Rinat S",
+              "text": "\u041f\u0420\u041e\u0414\u0410\u041d\u041e! \u041f\u0440\u043e\u0434\u0430\u043c \u043d\u043e\u0432\u044b\u0439 \u043c\u0438\u043d\u0438-\u043f\u0440\u043e\u0446\u0435\u0441\u0441\u043e\u0440, \u0432 \u043a\u043e\u0442\u043e\u0440\u043e\u043c \u0435\u0441\u0442\u044c +- \u0432\u0441\u0451 \u0434\u043b\u044f \u0433\u0438\u0442\u0430\u0440\u0438\u0441\u0442\u0430, \u0432\u043a\u043b\u044e\u0447\u0430\u044f \u043a\u0430\u0431\u0441\u0438\u043c. \u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u043e\u0442 \u0430\u043a\u043a\u0443\u043c\u0430 \u0438 \u0411\u041f. \u0415\u0441\u0442\u044c \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u0434\u043b\u044f \u043a\u043e\u043c\u043f\u0430. \u0417\u0430\u043f\u0438\u0441\u044c \u0432 \u0442\u0435\u043b\u0435\u0444\u043e\u043d \u043f\u043e \u043f\u0440\u043e\u0432\u043e\u0434\u0443. 80 \u043b\u0430\u0440\u0438. \u041a\u0443\u043f\u0438\u043b, \u043a\u043e\u0433\u0434\u0430 \u0434\u0443\u043c\u0430\u043b, \u0447\u0442\u043e \u043c\u043e\u0439 \u043c\u0443\u0435\u0440 \u043a\u0440\u044f\u043a\u043d\u0443",
+              "file": "messages127.html"
+            }
+          ],
+          "examples_weak": []
+        },
+        {
+          "category": "clothing_shoes",
+          "offers": 82,
+          "strong_status_signals": 0,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0,
+          "all_signal_ratio": 0.0,
+          "gel_stats": {
+            "count": 74,
+            "min": 30,
+            "median": 200,
+            "p75": 700,
+            "max": 2250
+          },
+          "examples_strong": [],
+          "examples_weak": []
+        },
+        {
+          "category": "baby_kids",
+          "offers": 24,
+          "strong_status_signals": 0,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0,
+          "all_signal_ratio": 0.0,
+          "gel_stats": {
+            "count": 15,
+            "min": 20,
+            "median": 400,
+            "p75": 450,
+            "max": 700
+          },
+          "examples_strong": [],
+          "examples_weak": []
+        },
+        {
+          "category": "sports_outdoor",
+          "offers": 9,
+          "strong_status_signals": 0,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0,
+          "all_signal_ratio": 0.0,
+          "gel_stats": {
+            "count": 7,
+            "min": 90,
+            "median": 1600,
+            "p75": 3100,
+            "max": 3100
+          },
+          "examples_strong": [],
+          "examples_weak": []
+        }
+      ],
+      "top_volume_categories": [
+        {
+          "category": "other",
+          "offers": 4896,
+          "strong_status_signals": 41,
+          "weak_status_signals": 3,
+          "strong_signal_ratio": 0.0084,
+          "all_signal_ratio": 0.009,
+          "gel_stats": {
+            "count": 4052,
+            "min": 20,
+            "median": 250,
+            "p75": 550,
+            "max": 9500
+          },
+          "examples_strong": [
+            {
+              "author": "Unknown Deleted Account",
+              "text": "\u0411\u0430\u0442\u0443\u043c\u0438. \u041f\u0440\u043e\u0434\u0430\u044e Akai. \u0421\u043a\u0430\u0440\u043b\u0435\u0442 \u0441 \u043a\u0440\u043e\u043d\u0430\u043c\u0438 \u0443\u0436\u0435 \u043f\u0440\u043e\u0434\u0430\u043d",
+              "file": "messages37.html"
+            },
+            {
+              "author": "Unknown \u041c\u0430\u043a\u0441\u0438\u043c \u041a\u0443\u043f\u043b\u044f\u043d\u0438\u043d",
+              "text": "\u0422\u043e\u0432\u0430\u0440\u0438\u0449\u0438 \u043c\u0443\u0437\u044b\u043a\u0430\u043d\u0442\u044b. \u041f\u0440\u043e\u0434\u0430\u043c \u0432 \u0422\u0431\u0438\u043b\u0438\u0441\u0438: Akai MPK mini mk3 (\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 4,8 / 5) - \u043f\u0440\u043e\u0434\u0430\u043d\u043e Korg Nanokontrol 2 midi controller (\u043e\u0442\u0441\u0443\u0442\u0441\u0432\u0443\u0435\u0442 \u0440\u0443\u0447\u043a\u0430 \u043e\u0434\u043d\u043e\u0433\u043e \u0444\u0435\u0439\u0434\u0435\u0440\u0430, \u0440\u0443\u0447\u043a\u0438 \u044d\u043d\u043a\u043e\u0434\u0435\u0440\u043e\u0432 \u043d\u0435\u043e\u0440\u0438\u0433\u0438\u043d\u0430\u043b\u044c\u043d\u044b\u0435 \u0441\u0442\u043e\u044f\u0442) - 70 \u043b\u0430\u0440\u0438 Shure White Label",
+              "file": "messages48.html"
+            }
+          ],
+          "examples_weak": [
+            {
+              "author": "Unknown ILIA",
+              "text": "\u043a\u0430\u043d\u0446\u0438\u043a \u0441\u0435\u0433\u043e\u0434\u043d\u044f, \u0443\u0436\u0435 \u043e\u0447\u0435\u0440\u0435\u0434\u0438 \u043d\u0430 \u0432\u0445\u043e\u0434\u0435 \u0432 \u044d\u043b\u0435\u043a\u0442\u0440\u043e\u0432\u0435\u0440\u043a. \u0431\u0440\u0430\u043b \u0437\u0430 90 \u043e\u0442\u0434\u0430\u043c \u0437\u0430 70",
+              "file": "messages44.html"
+            },
+            {
+              "author": "Unknown Dmitri Spiridonov",
+              "text": "\u041a\u0441\u0442\u0430\u0442\u0438, \u0435\u0441\u043b\u0438 \u043a\u043e\u043c\u0443-\u0442\u043e \u043d\u0430\u0434\u043e Boss DD-6, \u044f \u043e\u0442\u0434\u0430\u043c \u0437\u0430 340 \u043b\u0430\u0440\u0438))",
+              "file": "messages54.html"
+            }
+          ]
+        },
+        {
+          "category": "electronics",
+          "offers": 388,
+          "strong_status_signals": 2,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0052,
+          "all_signal_ratio": 0.0052,
+          "gel_stats": {
+            "count": 375,
+            "min": 20,
+            "median": 450,
+            "p75": 800,
+            "max": 8500
+          },
+          "examples_strong": [
+            {
+              "author": "Unknown \u0413\u0435\u0440\u043c\u0430\u043d",
+              "text": "#\u041f\u0440\u043e\u0434\u0430\u0435\u0442\u0441\u044f #\u041f\u0440\u043e\u0434\u0430\u043c \u0411\u0430\u0442\u0443\u043c\u0438 \u0421\u0442\u0443\u0434\u0438\u0439\u043d\u044b\u0435 \u043c\u043e\u043d\u0438\u0442\u043e\u0440\u044b (\u043a\u043e\u043b\u043e\u043d\u043a\u0438) ALESIS ELEVATE 5 MKII Studio Monitors (speakers) 300 \u043b\u0430\u0440\u0438 \u0410\u0443\u0434\u0438\u043e\u043a\u0430\u0440\u0442\u0430 PreSonus Studio 24c (USB \u0430\u0443\u0434\u0438\u043e\u0438\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441) USB audio interface 400 \u043b\u0430\u0440\u0438 \u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u0438\u0434\u0435\u0430\u043b\u044c\u043d\u043e\u0435 Upd: \u043c",
+              "file": "messages93.html"
+            },
+            {
+              "author": "Unknown Rinat S",
+              "text": "\u041f\u0420\u041e\u0414\u0410\u041d\u041e! \u041f\u0440\u043e\u0434\u0430\u043c \u043d\u043e\u0432\u044b\u0439 \u043c\u0438\u043d\u0438-\u043f\u0440\u043e\u0446\u0435\u0441\u0441\u043e\u0440, \u0432 \u043a\u043e\u0442\u043e\u0440\u043e\u043c \u0435\u0441\u0442\u044c +- \u0432\u0441\u0451 \u0434\u043b\u044f \u0433\u0438\u0442\u0430\u0440\u0438\u0441\u0442\u0430, \u0432\u043a\u043b\u044e\u0447\u0430\u044f \u043a\u0430\u0431\u0441\u0438\u043c. \u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u043e\u0442 \u0430\u043a\u043a\u0443\u043c\u0430 \u0438 \u0411\u041f. \u0415\u0441\u0442\u044c \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u0434\u043b\u044f \u043a\u043e\u043c\u043f\u0430. \u0417\u0430\u043f\u0438\u0441\u044c \u0432 \u0442\u0435\u043b\u0435\u0444\u043e\u043d \u043f\u043e \u043f\u0440\u043e\u0432\u043e\u0434\u0443. 80 \u043b\u0430\u0440\u0438. \u041a\u0443\u043f\u0438\u043b, \u043a\u043e\u0433\u0434\u0430 \u0434\u0443\u043c\u0430\u043b, \u0447\u0442\u043e \u043c\u043e\u0439 \u043c\u0443\u0435\u0440 \u043a\u0440\u044f\u043a\u043d\u0443",
+              "file": "messages127.html"
+            }
+          ],
+          "examples_weak": []
+        },
+        {
+          "category": "pets",
+          "offers": 282,
+          "strong_status_signals": 6,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0213,
+          "all_signal_ratio": 0.0213,
+          "gel_stats": {
+            "count": 250,
+            "min": 20,
+            "median": 300,
+            "p75": 700,
+            "max": 2900
+          },
+          "examples_strong": [
+            {
+              "author": "Unknown Andrey Mrzh",
+              "text": "#\u0431\u0430\u0440\u0430\u0445\u043e\u043b\u043a\u0430 #\u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u041f\u0440\u043e\u0434\u0430\u043c \u0432 \u0442\u0431\u0438\u043b\u0438\u0441\u0438 \u0442\u0430\u043a\u0438\u0435 \u043f\u0440\u0438\u043a\u043e\u043b\u044b: 1) Zoom u-44 \u0410\u0443\u0434\u0438\u043e\u0438\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441 \u0432 \u043f\u043e\u0445\u043e\u0434\u043d\u043e\u043c \u0444\u043e\u0440\u043c\u0444\u0430\u043a\u0442\u043e\u0440\u0435 \u0441 \u043a\u0443\u0447\u0435\u0439 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0435\u0439, \u0443\u043c\u0435\u0435\u0442 \u043f\u0440\u0438\u043d\u0438\u043c\u0430\u0442\u044c \u0432 \u0441\u0432\u043e\u0451 \u043e\u0442\u0432\u0435\u0440\u0441\u0442\u0438\u0435 \u043a\u0430\u043f\u0441\u044e\u043b\u0438 \u043e\u0442 \u0442\u0432\u043e\u0435\u0433\u043e \u0440\u0435\u043a\u043e\u0440\u0434\u0435\u0440\u0430 \u043f\u044f\u0442\u043e\u0439 \u0441\u0435\u0440\u0438\u0438 \u0438 \u0432\u044b\u0448\u0435, \u043c\u043e\u0436\u043d\u043e \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044c",
+              "file": "messages76.html"
+            },
+            {
+              "author": "Unknown Andrey Mrzh Andrey Mrzh 14.09.2023 23:14:03",
+              "text": "#\u0431\u0430\u0440\u0430\u0445\u043e\u043b\u043a\u0430 #\u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u041f\u0440\u043e\u0434\u0430\u043c \u0432 \u0442\u0431\u0438\u043b\u0438\u0441\u0438 \u0442\u0430\u043a\u0438\u0435 \u043f\u0440\u0438\u043a\u043e\u043b\u044b: 1) Zoom u-44 \u0410\u0443\u0434\u0438\u043e\u0438\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441 \u0432 \u043f\u043e\u0445\u043e\u0434\u043d\u043e\u043c \u0444\u043e\u0440\u043c\u0444\u0430\u043a\u0442\u043e\u0440\u0435 \u0441 \u043a\u0443\u0447\u0435\u0439 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0435\u0439, \u0443\u043c\u0435\u0435\u0442 \u043f\u0440\u0438\u043d\u0438\u043c\u0430\u0442\u044c \u0432 \u0441\u0432\u043e\u0451 \u043e\u0442\u0432\u0435\u0440\u0441\u0442\u0438\u0435 \u043a\u0430\u043f\u0441\u044e\u043b\u0438 \u043e\u0442 \u0442\u0432\u043e\u0435\u0433\u043e \u0440\u0435\u043a\u043e\u0440\u0434\u0435\u0440\u0430 \u043f\u044f\u0442\u043e\u0439 \u0441\u0435\u0440\u0438\u0438 \u0438 \u0432\u044b\u0448\u0435, \u043c\u043e\u0436\u043d\u043e \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044c",
+              "file": "messages76.html"
+            }
+          ],
+          "examples_weak": []
+        },
+        {
+          "category": "home_furniture",
+          "offers": 182,
+          "strong_status_signals": 2,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.011,
+          "all_signal_ratio": 0.011,
+          "gel_stats": {
+            "count": 193,
+            "min": 20,
+            "median": 280,
+            "p75": 530,
+            "max": 4000
+          },
+          "examples_strong": [
+            {
+              "author": "Unknown \u0410\u043d\u0434\u0440\u0435\u0439",
+              "text": "\u041f\u0440\u043e\u0434\u0430\u044e \u0434\u0435\u0432\u0430\u0439\u0441\u044b \u0432 \u0422\u0431\u0438\u043b\u0438\u0441\u0438. \u0426\u0435\u043d\u044b \u043b\u0438\u0431\u043e \u0434\u0435\u0448\u0435\u0432\u043b\u0435, \u0447\u0435\u043c \u0432 \u0420\u0424, \u043b\u0438\u0431\u043e \u043d\u0430 \u0443\u0440\u043e\u0432\u043d\u0435. \u0421\u043e\u0432\u0441\u0435\u043c \u043d\u0435\u0431\u043e\u043b\u044c\u0448\u043e\u0439 \u0442\u043e\u0440\u0433 \u0432\u043e\u0437\u043c\u043e\u0436\u0435\u043d. \u041b\u043e\u0442 \u043d\u043e\u043c\u0435\u0440 \u043e\u0434\u0438\u043d: Roland MC-101. \u041f\u043e\u043b\u043d\u044b\u0439 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442 \u0441 \u043a\u043e\u0440\u043e\u0431\u043a\u043e\u0439 \u0438 \u0447\u0435\u043a\u043e\u043c, \u0444\u043b\u0435\u0448\u043a\u0430 \u043d\u0430 8\u0433\u0431, \u0438\u0434\u0435\u0430\u043b\u044c\u043d\u043e\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435. \u0426\u0435\u043d\u0430 1100 \u043b\u0430\u0440\u0438",
+              "file": "messages91.html"
+            },
+            {
+              "author": "Unknown Beavis",
+              "text": "\u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u041f\u0440\u043e\u0434\u0430\u043c: \u2014 Hotone Ampero Mini Vanilla, \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442: \u043f\u0440\u043e\u0446\u0435\u0441\u0441\u043e\u0440, \u0431\u043b\u043e\u043a \u043f\u0438\u0442\u0430\u043d\u0438\u044f, \u043a\u043e\u0440\u043e\u0431\u043a\u0430. \u0418\u0434\u0435\u0430\u043b\u044c\u043d\u043e\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435, \u0438\u0433\u0440\u0430\u043b 2-3 \u0440\u0430\u0437\u0430, \u043b\u0435\u0436\u0430\u043b \u0442\u043e\u043b\u044c\u043a\u043e \u043d\u0430 \u0441\u0442\u043e\u043b\u0435. 560 \u043b\u0430\u0440\u0438 \u043f\u0440\u043e\u0434\u0430\u043d\u043e \u2014 \u041a\u043e\u043c\u0431\u0438\u043a Yamaha GA15II. 450 \u043b\u0430\u0440\u0438. \u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 4.5/5, \u0431\u043e",
+              "file": "messages137.html"
+            }
+          ],
+          "examples_weak": []
+        },
+        {
+          "category": "clothing_shoes",
+          "offers": 82,
+          "strong_status_signals": 0,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0,
+          "all_signal_ratio": 0.0,
+          "gel_stats": {
+            "count": 74,
+            "min": 30,
+            "median": 200,
+            "p75": 700,
+            "max": 2250
+          },
+          "examples_strong": [],
+          "examples_weak": []
+        },
+        {
+          "category": "appliances_household",
+          "offers": 28,
+          "strong_status_signals": 1,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0357,
+          "all_signal_ratio": 0.0357,
+          "gel_stats": {
+            "count": 70,
+            "min": 30,
+            "median": 150,
+            "p75": 400,
+            "max": 1433
+          },
+          "examples_strong": [
+            {
+              "author": "Unknown \u0410\u043b\u0435\u043a\u0441\u0430\u043d\u0434\u0440",
+              "text": "\u0412\u0441\u0435\u043c \u043f\u0440\u0438\u0432\u0435\u0442! \u041f\u0440\u043e\u0434\u0430\u044e \u0447\u0430\u0441\u0442\u044c \u0441\u0442\u0430\u0444\u0430: 1. Cordoba C4 CE \u041a\u043b\u0435\u0432\u044b\u0439 \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442 \u0441 \u043f\u044c\u0435\u0437\u043e\u0439 Fishman \u0432 \u043e\u0442\u043b\u0438\u0447\u043d\u043e\u043c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0438 + \u043b\u0435\u0433\u043a\u0438\u0439 \u0447\u0435\u0445\u043e\u043b 750 Gel 2. \u041d\u0435\u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u0446\u0438\u0440\u0443\u0435\u043c\u044b\u0439 Squier c \u0432\u043e\u043b\u043d\u0438\u0441\u0442\u044b\u043c \u0433\u0440\u0438\u0444\u043e\u043c \u0421\u0442\u043e\u044f\u0442 \u043d\u043e\u0432\u044b\u0435 \u0448\u0438\u0440\u043e\u043a\u0438\u0435 \u043b\u0430\u0434\u044b \u0438 \u043f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043b\u0435\u0433",
+              "file": "messages103.html"
+            }
+          ],
+          "examples_weak": []
+        },
+        {
+          "category": "baby_kids",
+          "offers": 24,
+          "strong_status_signals": 0,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0,
+          "all_signal_ratio": 0.0,
+          "gel_stats": {
+            "count": 15,
+            "min": 20,
+            "median": 400,
+            "p75": 450,
+            "max": 700
+          },
+          "examples_strong": [],
+          "examples_weak": []
+        },
+        {
+          "category": "sports_outdoor",
+          "offers": 9,
+          "strong_status_signals": 0,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0,
+          "all_signal_ratio": 0.0,
+          "gel_stats": {
+            "count": 7,
+            "min": 90,
+            "median": 1600,
+            "p75": 3100,
+            "max": 3100
+          },
+          "examples_strong": [],
+          "examples_weak": []
+        },
+        {
+          "category": "books_hobby",
+          "offers": 4,
+          "strong_status_signals": 1,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.25,
+          "all_signal_ratio": 0.25,
+          "gel_stats": {
+            "count": 8,
+            "min": 20,
+            "median": 50,
+            "p75": 80,
+            "max": 130
+          },
+          "examples_strong": [
+            {
+              "author": "Unknown lera",
+              "text": "\u043f\u0440\u0438\u0432\u0435\u0442! \u043f\u0440\u043e\u0434\u0430\u044e \u043c\u0438\u043a\u0440\u043e\u0444\u043e\u043d rode nt1-a, \u0432 \u043e\u0447\u0435\u043d\u044c \u0445\u043e\u0440\u043e\u0448\u0435\u043c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0438, 150$ - \u0411\u0420\u041e\u041d\u042c \u043a\u043d\u0438\u0433\u0438: Creative Act Rick Rubin (en) 40 gel \u0414\u0436\u043e\u043d \u0421\u0438\u0431\u0440\u0443\u043a 20 gel Tbilisi",
+              "file": "messages112.html"
+            }
+          ],
+          "examples_weak": []
+        }
+      ]
+    },
+    "entity_id": "heuristic-liquidity_signals-latest",
+    "updated_at_utc": "2026-03-12T10:52:56.954694+00:00",
+    "created_at_utc": "2026-03-12T10:52:56.954694+00:00"
+  },
+  {
+    "heuristic_name": "price_liquidity_matrix",
+    "source_kind": "telegram_html_export",
+    "source_path": "/Users/ll/Downloads/Telegram Desktop/ChatExport_2026-03-12",
+    "run_id": "manual-price_liquidity_matrix-20260312",
+    "result": {
+      "message_count": 141455,
+      "band_summary": [
+        {
+          "price_band_gel": "<50",
+          "offers": 287,
+          "strong_status_signals": 5,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0174,
+          "all_signal_ratio": 0.0174
+        },
+        {
+          "price_band_gel": "50-99",
+          "offers": 274,
+          "strong_status_signals": 5,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0182,
+          "all_signal_ratio": 0.0182
+        },
+        {
+          "price_band_gel": "100-249",
+          "offers": 711,
+          "strong_status_signals": 10,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0141,
+          "all_signal_ratio": 0.0141
+        },
+        {
+          "price_band_gel": "250-499",
+          "offers": 713,
+          "strong_status_signals": 8,
+          "weak_status_signals": 1,
+          "strong_signal_ratio": 0.0112,
+          "all_signal_ratio": 0.0126
+        },
+        {
+          "price_band_gel": "500-999",
+          "offers": 719,
+          "strong_status_signals": 5,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.007,
+          "all_signal_ratio": 0.007
+        },
+        {
+          "price_band_gel": "1000+",
+          "offers": 401,
+          "strong_status_signals": 1,
+          "weak_status_signals": 0,
+          "strong_signal_ratio": 0.0025,
+          "all_signal_ratio": 0.0025
+        }
+      ],
+      "category_band_matrix": [
+        {
+          "category": "other",
+          "offers": 2571,
+          "bands": [
+            {
+              "price_band_gel": "<50",
+              "offers": 247,
+              "strong_status_signals": 3,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0121,
+              "all_signal_ratio": 0.0121,
+              "examples": [
+                {
+                  "author": "Unknown \u0410\u0439\u0434\u0430\u0440 \u0428.",
+                  "text": "#\u043f\u0440\u043e\u0434\u0430\u043c #\u0431\u0430\u0440\u0430\u0445\u043e\u043b\u043a\u0430 \u0412\u0441\u0432\u044f\u0437\u0438 \u0441\u043e \u0441\u043a\u043e\u0440\u044b\u043c \u043f\u0435\u0440\u0435\u0435\u0437\u0434\u043e\u043c \u0441 \u043f\u0435\u0447\u0430\u043b\u044c\u044e \u0432 \u0441\u0435\u0440\u0434\u0446\u0435 \u043f\u0440\u043e\u0434\u0430\u044e. \u0412 \u0422\u0431\u0438\u043b\u0438\u0441\u0438, \u0443\u043b\u0438\u0446\u0430 \u0411\u0430\u0440\u043d\u043e\u0432\u0438, 5 \u043c\u0438\u043d \u043e\u0442 \u043c\u0435\u0442\u0440\u043e \u0420\u0443\u0441\u0442\u0430\u0432\u0435\u043b\u0438 1. Harley Benton Fusion III Shell Pink, 400 \u043b\u0430\u0440\u0438 https://www.thomann.de/gb/harley_benton_fusion_",
+                  "file": "messages98.html"
+                },
+                {
+                  "author": "Unknown",
+                  "text": "\u0437\u0430 20 \u043b\u0430\u0440\u0438 \u043e\u0442\u0434\u0430\u043c (\u043f\u0440\u043e\u0447\u0435\u043a\u0430\u043b \u0446\u0435\u043d\u044b, \u0441\u0442\u0430\u0432\u043b\u044e, \u0442\u0430\u043a \u043a\u0430\u043a \u043d\u0435 \u043d\u043e\u0432\u044b\u0439) \u26a0\ufe0f\u0410\u041f\u0414\u0415\u0419\u0422: \u041f\u0420\u041e\u0414\u0410\u041d\u041e!\u26a0\ufe0f",
+                  "file": "messages133.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "50-99",
+              "offers": 205,
+              "strong_status_signals": 4,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0195,
+              "all_signal_ratio": 0.0195,
+              "examples": [
+                {
+                  "author": "Unknown \u041c\u0430\u043a\u0441\u0438\u043c \u041a\u0443\u043f\u043b\u044f\u043d\u0438\u043d",
+                  "text": "\u0422\u043e\u0432\u0430\u0440\u0438\u0449\u0438 \u043c\u0443\u0437\u044b\u043a\u0430\u043d\u0442\u044b. \u041f\u0440\u043e\u0434\u0430\u043c \u0432 \u0422\u0431\u0438\u043b\u0438\u0441\u0438: Akai MPK mini mk3 (\u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 4,8 / 5) - \u043f\u0440\u043e\u0434\u0430\u043d\u043e Korg Nanokontrol 2 midi controller (\u043e\u0442\u0441\u0443\u0442\u0441\u0432\u0443\u0435\u0442 \u0440\u0443\u0447\u043a\u0430 \u043e\u0434\u043d\u043e\u0433\u043e \u0444\u0435\u0439\u0434\u0435\u0440\u0430, \u0440\u0443\u0447\u043a\u0438 \u044d\u043d\u043a\u043e\u0434\u0435\u0440\u043e\u0432 \u043d\u0435\u043e\u0440\u0438\u0433\u0438\u043d\u0430\u043b\u044c\u043d\u044b\u0435 \u0441\u0442\u043e\u044f\u0442) - 70 \u043b\u0430\u0440\u0438 Shure White Label",
+                  "file": "messages48.html"
+                },
+                {
+                  "author": "Unknown \u0421\u043e\u0444\u0438\u044f Winnocent",
+                  "text": "\u041f\u0440\u043e\u0434\u0430\u043c \u0433\u0438\u0442\u0430\u0440\u0443, \u043a\u043b\u0430\u0441\u0441\u0438\u043a\u0430. \u0421\u0442\u0440\u043e\u0439 \u0434\u0435\u0440\u0436\u0438\u0442 \u043e\u0442\u043b\u0438\u0447\u043d\u043e. \ud83d\udcb390 \u043b\u0430\u0440\u0438 - \u0412\u041c\u0415\u0421\u0422\u0415 \u0441 \u043d\u043e\u0432\u044b\u043c\u0438 \u0441\u0442\u0440\u0443\u043d\u0430\u043c\u0438 (\u0443\u0436\u0435 \u043d\u0435 \u00ab\u043f\u043e\u043b\u0437\u0443\u0442\u00bb) \ud83d\udccd\u0422\u0431\u0438\u043b\u0438\u0441\u0438, \u0412\u0430\u0440\u043a\u0435\u0442\u0438\u043b\u0438 \u041f\u0438\u0448\u0438\u0442\u0435 \u0432 \u043b\u0441 UPD: \u043f\u0440\u043e\u0434\u0430\u043d\u043e",
+                  "file": "messages84.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "100-249",
+              "offers": 613,
+              "strong_status_signals": 7,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0114,
+              "all_signal_ratio": 0.0114,
+              "examples": [
+                {
+                  "author": "Unknown Evgeniy Slezhuk",
+                  "text": "\u041f\u0440\u0438\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044e! \u041f\u0440\u043e\u0434\u0430\u044e \u0432 \u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u043f\u043e \u043f\u0440\u0438\u0447\u0438\u043d\u0435 \u043f\u0435\u0440\u0435\u0435\u0437\u0434\u0430: 1. \u042d\u043b\u0435\u043a\u0442\u0440\u043e\u043d\u043d\u043e\u0435 \u043f\u0438\u0430\u043d\u0438\u043d\u043e Casio PX-S1000 WE. \u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u0445\u043e\u0440\u043e\u0448\u0435\u0435, \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043b\u0441\u044f \u0431\u0435\u0440\u0435\u0436\u043d\u043e. \u041a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u0430\u0446\u0438\u044f: - \u043f\u0438\u0430\u043d\u0438\u043d\u043e - X-\u043e\u0431\u0440\u0430\u0437\u043d\u0430\u044f \u0441\u0442\u043e\u0439\u043a\u0430 - \u043f\u0435\u0434\u0430\u043b\u044c Cherub WTB-005 - \u043d\u0430\u043a\u0438\u0434\u043a\u0430 \u043e\u0442 \u043f\u044b\u043b\u0438 (",
+                  "file": "messages99.html"
+                },
+                {
+                  "author": "Unknown Boo Boo",
+                  "text": "https://artist-pro.ru/crusader-cf-6022fm-eq/ \u041f\u0440\u043e\u0434\u0430\u043c \u044d\u043b\u0430\u043a\u0443\u0441\u0442\u0438\u0447\u0435\u0441\u043a\u0443\u044e \u0433\u0438\u0442\u0430\u0440\u0443 120 \u043b\u0430\u0440\u0438 \u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u041f\u0440\u043e\u0434\u0430\u043d\u043e",
+                  "file": "messages101.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "250-499",
+              "offers": 604,
+              "strong_status_signals": 5,
+              "weak_status_signals": 1,
+              "strong_signal_ratio": 0.0083,
+              "all_signal_ratio": 0.0099,
+              "examples": [
+                {
+                  "author": "Unknown Dmitri Spiridonov",
+                  "text": "\u041a\u0441\u0442\u0430\u0442\u0438, \u0435\u0441\u043b\u0438 \u043a\u043e\u043c\u0443-\u0442\u043e \u043d\u0430\u0434\u043e Boss DD-6, \u044f \u043e\u0442\u0434\u0430\u043c \u0437\u0430 340 \u043b\u0430\u0440\u0438))",
+                  "file": "messages54.html"
+                },
+                {
+                  "author": "Unknown Nikita Kryazhev",
+                  "text": "\u041f\u0440\u043e\u0434\u0430\u043c \u0441\u0438\u043d\u0442\u0435\u0437\u0430\u0442\u043e\u0440 Behringer TD-3-AM \u0432 \u043e\u0442\u043b\u0438\u0447\u043d\u043e\u043c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0438, \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043b\u0441\u044f \u0432\u0441\u0435\u0433\u043e \u043f\u0430\u0440\u0443 \u0440\u0430\u0437. \u0415\u0441\u0442\u044c \u043a\u043e\u0440\u043e\u0431\u043a\u0430 \u0438 \u0431\u043b\u043e\u043a \u043f\u0438\u0442\u0430\u043d\u0438\u044f. \u0422\u0431\u0438\u043b\u0438\u0441\u0438 250 GEL \u041f\u0440\u043e\u0434\u0430\u043d\u043e",
+                  "file": "messages93.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "500-999",
+              "offers": 584,
+              "strong_status_signals": 4,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0068,
+              "all_signal_ratio": 0.0068,
+              "examples": [
+                {
+                  "author": "Unknown \u0410\u043d\u0434\u0440\u0435\u0439",
+                  "text": "\u041f\u0440\u043e\u0434\u0430\u043c Model Samples. \u041f\u0440\u0430\u043a\u0442\u0438\u0447\u0435\u0441\u043a\u0438 \u0432 \u0438\u0434\u0435\u0430\u043b\u044c\u043d\u043e\u043c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0438, \u043f\u043e\u043b\u043d\u044b\u0439 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442 \u0441 \u0447\u0435\u043a\u043e\u043c. 800 \u043b\u0430\u0440\u0438. \u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u041f\u0440\u043e\u0434\u0430\u043d\u043e!",
+                  "file": "messages81.html"
+                },
+                {
+                  "author": "Unknown Andrey Mrzh",
+                  "text": "#\u0431\u0430\u0440\u0430\u0445\u043e\u043b\u043a\u0430 #\u0442\u0431\u0438\u043b\u0438\u0441\u0438 \u041f\u0440\u043e\u0434\u0430\u043c \u0432 \u0442\u0431\u0438\u043b\u0438\u0441\u0438 \u043c\u0438\u043a\u0448\u0435\u0440\u043d\u044b\u0439 \u043f\u0443\u043b\u044c\u0442 Soundcraft Signature 10 10 \u043a\u0430\u043d\u0430\u043b\u043e\u0432, 6 \u043c\u0438\u043a\u0440\u043e\u0444\u043e\u043d\u043d\u044b\u0445 \u0432\u0445\u043e\u0434\u043e\u0432, \u0432\u0441\u0442\u0440\u043e\u0435\u043d\u043d\u044b\u0435 \u044d\u0444\u0444\u0435\u043a\u0442\u044b, \u043f\u0438\u0448\u0435\u0442 \u0441\u0442\u0435\u0440\u0435\u043e\u043f\u0430\u0440\u0443 \u041c\u0430\u0441\u0442\u0435\u0440 \u0430\u0443\u0442\u044b \u0437\u0430\u043c\u0435\u043d\u0435\u043d\u044b \u043d\u0430 Neutrik \u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u043e\u0442\u043b\u0438\u0447\u043d\u043e, \u044f \u043a\u0443\u043f\u0438\u043b \u0441\u0435\u0431\u0435 \u043c\u0430\u043b\u0435\u043d\u044c\u043a\u0438\u0439",
+                  "file": "messages90.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "1000+",
+              "offers": 318,
+              "strong_status_signals": 1,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0031,
+              "all_signal_ratio": 0.0031,
+              "examples": [
+                {
+                  "author": "Unknown Rinat S",
+                  "text": "\u041f\u0440\u043e\u0434\u0430\u043d \u041f\u043e\u043a\u0430 \u0432 \u043f\u0440\u043e\u0434\u0430\u0436\u0435 \u0435\u0441\u0442\u044c \u0438\u043d\u0442\u0435\u0440\u0435\u0441\u0443\u044e\u0449\u0438\u0439 \u043c\u0435\u043d\u044f \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442, \u043f\u0440\u043e\u0434\u0430\u044e \u0441\u0432\u043e\u0439 \u0442\u0435\u043b\u0435\u043a \u0431\u0430\u0440\u0438\u0442\u043e\u043d 27 \u0434\u044e\u0439\u043c\u043e\u0432. \u0414\u0435-\u044e\u0440\u0435 \u044d\u0442\u043e Inspector, \u0434\u0435-\u0444\u0430\u043a\u0442\u043e \u043e\u0442 \u043d\u0435\u0433\u043e \u0442\u043e\u043b\u044c\u043a\u043e \u0434\u0435\u0440\u0435\u0432\u043e, \u0438 \u0442\u043e \u0434\u043e\u043f\u0438\u043b\u0435\u043d\u043d\u043e\u0435, \u0434\u043e\u0440\u0430\u0431\u043e\u0442\u0430\u043d\u043d\u043e\u0435 \u0438 \u043f\u043e\u043a\u0440\u0430\u0448\u0435\u043d\u043d\u043e\u0435 \u0432 \u043c\u043e\u0434\u043d\u044b\u0439 \u0446\u0432\u0435\u0442 Surf Green. \u041b\u043e",
+                  "file": "messages113.html"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "category": "electronics",
+          "offers": 225,
+          "bands": [
+            {
+              "price_band_gel": "<50",
+              "offers": 13,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "50-99",
+              "offers": 28,
+              "strong_status_signals": 1,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0357,
+              "all_signal_ratio": 0.0357,
+              "examples": [
+                {
+                  "author": "Unknown Rinat S",
+                  "text": "\u041f\u0420\u041e\u0414\u0410\u041d\u041e! \u041f\u0440\u043e\u0434\u0430\u043c \u043d\u043e\u0432\u044b\u0439 \u043c\u0438\u043d\u0438-\u043f\u0440\u043e\u0446\u0435\u0441\u0441\u043e\u0440, \u0432 \u043a\u043e\u0442\u043e\u0440\u043e\u043c \u0435\u0441\u0442\u044c +- \u0432\u0441\u0451 \u0434\u043b\u044f \u0433\u0438\u0442\u0430\u0440\u0438\u0441\u0442\u0430, \u0432\u043a\u043b\u044e\u0447\u0430\u044f \u043a\u0430\u0431\u0441\u0438\u043c. \u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 \u043e\u0442 \u0430\u043a\u043a\u0443\u043c\u0430 \u0438 \u0411\u041f. \u0415\u0441\u0442\u044c \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u0434\u043b\u044f \u043a\u043e\u043c\u043f\u0430. \u0417\u0430\u043f\u0438\u0441\u044c \u0432 \u0442\u0435\u043b\u0435\u0444\u043e\u043d \u043f\u043e \u043f\u0440\u043e\u0432\u043e\u0434\u0443. 80 \u043b\u0430\u0440\u0438. \u041a\u0443\u043f\u0438\u043b, \u043a\u043e\u0433\u0434\u0430 \u0434\u0443\u043c\u0430\u043b, \u0447\u0442\u043e \u043c\u043e\u0439 \u043c\u0443\u0435\u0440 \u043a\u0440\u044f\u043a\u043d\u0443",
+                  "file": "messages127.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "100-249",
+              "offers": 33,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "250-499",
+              "offers": 45,
+              "strong_status_signals": 1,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0222,
+              "all_signal_ratio": 0.0222,
+              "examples": [
+                {
+                  "author": "Unknown \u0413\u0435\u0440\u043c\u0430\u043d",
+                  "text": "#\u041f\u0440\u043e\u0434\u0430\u0435\u0442\u0441\u044f #\u041f\u0440\u043e\u0434\u0430\u043c \u0411\u0430\u0442\u0443\u043c\u0438 \u0421\u0442\u0443\u0434\u0438\u0439\u043d\u044b\u0435 \u043c\u043e\u043d\u0438\u0442\u043e\u0440\u044b (\u043a\u043e\u043b\u043e\u043d\u043a\u0438) ALESIS ELEVATE 5 MKII Studio Monitors (speakers) 300 \u043b\u0430\u0440\u0438 \u0410\u0443\u0434\u0438\u043e\u043a\u0430\u0440\u0442\u0430 PreSonus Studio 24c (USB \u0430\u0443\u0434\u0438\u043e\u0438\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441) USB audio interface 400 \u043b\u0430\u0440\u0438 \u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u0438\u0434\u0435\u0430\u043b\u044c\u043d\u043e\u0435 Upd: \u043c",
+                  "file": "messages93.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "500-999",
+              "offers": 66,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "1000+",
+              "offers": 40,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            }
+          ]
+        },
+        {
+          "category": "pets",
+          "offers": 139,
+          "bands": [
+            {
+              "price_band_gel": "<50",
+              "offers": 9,
+              "strong_status_signals": 1,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.1111,
+              "all_signal_ratio": 0.1111,
+              "examples": [
+                {
+                  "author": "Unknown Mikhail Khursevich",
+                  "text": "\u041f\u0440\u043e\u0434\u0430\u044e \u0437\u0432\u0443\u043a\u043e\u0432\u043e\u0435 \u043e\u0431\u043e\u0440\u0443\u0434\u043e\u0432\u0430\u043d\u0438\u0435, \u043a\u043e\u0442\u043e\u0440\u043e\u0435 \u043b\u0435\u0436\u0438\u0442 \u0431\u0435\u0437 \u0434\u0435\u043b\u0430: 1. Zoom h5 + 4 \u0430\u043a\u043a\u0443\u043c\u0443\u043b\u044f\u0442\u043e\u0440\u0430 \u0438 \u0437\u0430\u0440\u044f\u0434\u043d\u043e\u0435, \u043a\u0435\u0439\u0441 \u0441\u0442\u0430\u043d\u0434\u0430\u0440\u0442\u043d\u044b\u0439, \u0432\u0435\u0442\u0440\u043e\u0437\u0430\u0449\u0438\u0442\u0430 \u043d\u0430 \u0441\u0442\u0430\u043d\u0434\u0430\u0440\u0442\u043d\u044b\u0435 \u043c\u0438\u043a\u0440\u043e\u0444\u043e\u043d\u044b- 450 \u043b\u0430\u0440\u0438 2. Sennheiser mke 600. \u0421\u0443\u043f\u0435\u0440 \u043f\u0443\u0448\u043a\u0430, \u0441 \u043a\u043e\u0442\u043e\u0440\u043e\u0439 \u0436\u0438\u043b \u043e\u0447\u0435\u043d\u044c \u043c\u043d\u043e\u0433\u043e",
+                  "file": "messages149.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "50-99",
+              "offers": 20,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "100-249",
+              "offers": 28,
+              "strong_status_signals": 2,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0714,
+              "all_signal_ratio": 0.0714,
+              "examples": [
+                {
+                  "author": "Unknown Andrey Mrzh",
+                  "text": "#\u0431\u0430\u0440\u0430\u0445\u043e\u043b\u043a\u0430 #\u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u041f\u0440\u043e\u0434\u0430\u043c \u0432 \u0442\u0431\u0438\u043b\u0438\u0441\u0438 \u0442\u0430\u043a\u0438\u0435 \u043f\u0440\u0438\u043a\u043e\u043b\u044b: 1) Zoom u-44 \u0410\u0443\u0434\u0438\u043e\u0438\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441 \u0432 \u043f\u043e\u0445\u043e\u0434\u043d\u043e\u043c \u0444\u043e\u0440\u043c\u0444\u0430\u043a\u0442\u043e\u0440\u0435 \u0441 \u043a\u0443\u0447\u0435\u0439 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0435\u0439, \u0443\u043c\u0435\u0435\u0442 \u043f\u0440\u0438\u043d\u0438\u043c\u0430\u0442\u044c \u0432 \u0441\u0432\u043e\u0451 \u043e\u0442\u0432\u0435\u0440\u0441\u0442\u0438\u0435 \u043a\u0430\u043f\u0441\u044e\u043b\u0438 \u043e\u0442 \u0442\u0432\u043e\u0435\u0433\u043e \u0440\u0435\u043a\u043e\u0440\u0434\u0435\u0440\u0430 \u043f\u044f\u0442\u043e\u0439 \u0441\u0435\u0440\u0438\u0438 \u0438 \u0432\u044b\u0448\u0435, \u043c\u043e\u0436\u043d\u043e \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044c",
+                  "file": "messages76.html"
+                },
+                {
+                  "author": "Unknown Andrey Mrzh Andrey Mrzh 14.09.2023 23:14:03",
+                  "text": "#\u0431\u0430\u0440\u0430\u0445\u043e\u043b\u043a\u0430 #\u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u041f\u0440\u043e\u0434\u0430\u043c \u0432 \u0442\u0431\u0438\u043b\u0438\u0441\u0438 \u0442\u0430\u043a\u0438\u0435 \u043f\u0440\u0438\u043a\u043e\u043b\u044b: 1) Zoom u-44 \u0410\u0443\u0434\u0438\u043e\u0438\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441 \u0432 \u043f\u043e\u0445\u043e\u0434\u043d\u043e\u043c \u0444\u043e\u0440\u043c\u0444\u0430\u043a\u0442\u043e\u0440\u0435 \u0441 \u043a\u0443\u0447\u0435\u0439 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0435\u0439, \u0443\u043c\u0435\u0435\u0442 \u043f\u0440\u0438\u043d\u0438\u043c\u0430\u0442\u044c \u0432 \u0441\u0432\u043e\u0451 \u043e\u0442\u0432\u0435\u0440\u0441\u0442\u0438\u0435 \u043a\u0430\u043f\u0441\u044e\u043b\u0438 \u043e\u0442 \u0442\u0432\u043e\u0435\u0433\u043e \u0440\u0435\u043a\u043e\u0440\u0434\u0435\u0440\u0430 \u043f\u044f\u0442\u043e\u0439 \u0441\u0435\u0440\u0438\u0438 \u0438 \u0432\u044b\u0448\u0435, \u043c\u043e\u0436\u043d\u043e \u0432\u0441\u0442\u0430\u0432\u0438\u0442\u044c",
+                  "file": "messages76.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "250-499",
+              "offers": 30,
+              "strong_status_signals": 1,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0333,
+              "all_signal_ratio": 0.0333,
+              "examples": [
+                {
+                  "author": "Unknown nikita poloskov",
+                  "text": "\u041f\u0440\u0438\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044e \u0435\u0434\u0438\u043d\u043e\u043c\u044b\u0448\u043b\u0435\u043d\u043d\u0438\u043a\u043e\u0432! \u0432\u044b\u043d\u0443\u0436\u0434\u0435\u043d\u043d\u044b\u0439 \u043f\u0435\u0440\u0435\u0435\u0437\u0434\u043e\u043c \u043d\u0435 \u0431\u0435\u0437 \u0431\u043e\u043b\u0438 \u0432 \u0441\u0435\u0440\u0434\u0446\u0435 \u043f\u0440\u043e\u0434\u0430\u044e \u0441\u0442\u0430\u0440\u044b\u0445 \u0434\u0440\u0443\u0437\u0435\u0439: 1. \u041f\u0420\u041e\u0414\u0410\u041d! Squier Telecaster custom (\u0431\u044e\u0434\u0436\u0435\u0442\u043d\u0430\u044f \u0432\u0435\u0440\u0441\u0438\u044f Fender Telecaster custom '72, \u0442\u043e\u043b\u044c\u043a\u043e \u0441 \u0434\u0432\u0443\u043c\u044f \u0445\u0430\u043c\u0431\u0430\u043a\u0435\u0440\u0430\u043c\u0438). - \u0433\u0440\u0438\u0444 \u043a\u043b\u0451\u043d ",
+                  "file": "messages150.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "500-999",
+              "offers": 44,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "1000+",
+              "offers": 8,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            }
+          ]
+        },
+        {
+          "category": "home_furniture",
+          "offers": 91,
+          "bands": [
+            {
+              "price_band_gel": "<50",
+              "offers": 4,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "50-99",
+              "offers": 9,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "100-249",
+              "offers": 20,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "250-499",
+              "offers": 17,
+              "strong_status_signals": 1,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0588,
+              "all_signal_ratio": 0.0588,
+              "examples": [
+                {
+                  "author": "Unknown Beavis",
+                  "text": "\u0422\u0431\u0438\u043b\u0438\u0441\u0438 \u041f\u0440\u043e\u0434\u0430\u043c: \u2014 Hotone Ampero Mini Vanilla, \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442: \u043f\u0440\u043e\u0446\u0435\u0441\u0441\u043e\u0440, \u0431\u043b\u043e\u043a \u043f\u0438\u0442\u0430\u043d\u0438\u044f, \u043a\u043e\u0440\u043e\u0431\u043a\u0430. \u0418\u0434\u0435\u0430\u043b\u044c\u043d\u043e\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435, \u0438\u0433\u0440\u0430\u043b 2-3 \u0440\u0430\u0437\u0430, \u043b\u0435\u0436\u0430\u043b \u0442\u043e\u043b\u044c\u043a\u043e \u043d\u0430 \u0441\u0442\u043e\u043b\u0435. 560 \u043b\u0430\u0440\u0438 \u043f\u0440\u043e\u0434\u0430\u043d\u043e \u2014 \u041a\u043e\u043c\u0431\u0438\u043a Yamaha GA15II. 450 \u043b\u0430\u0440\u0438. \u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 4.5/5, \u0431\u043e",
+                  "file": "messages137.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "500-999",
+              "offers": 15,
+              "strong_status_signals": 1,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0667,
+              "all_signal_ratio": 0.0667,
+              "examples": [
+                {
+                  "author": "Unknown \u0410\u043d\u0434\u0440\u0435\u0439",
+                  "text": "\u041f\u0440\u043e\u0434\u0430\u044e \u0434\u0435\u0432\u0430\u0439\u0441\u044b \u0432 \u0422\u0431\u0438\u043b\u0438\u0441\u0438. \u0426\u0435\u043d\u044b \u043b\u0438\u0431\u043e \u0434\u0435\u0448\u0435\u0432\u043b\u0435, \u0447\u0435\u043c \u0432 \u0420\u0424, \u043b\u0438\u0431\u043e \u043d\u0430 \u0443\u0440\u043e\u0432\u043d\u0435. \u0421\u043e\u0432\u0441\u0435\u043c \u043d\u0435\u0431\u043e\u043b\u044c\u0448\u043e\u0439 \u0442\u043e\u0440\u0433 \u0432\u043e\u0437\u043c\u043e\u0436\u0435\u043d. \u041b\u043e\u0442 \u043d\u043e\u043c\u0435\u0440 \u043e\u0434\u0438\u043d: Roland MC-101. \u041f\u043e\u043b\u043d\u044b\u0439 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442 \u0441 \u043a\u043e\u0440\u043e\u0431\u043a\u043e\u0439 \u0438 \u0447\u0435\u043a\u043e\u043c, \u0444\u043b\u0435\u0448\u043a\u0430 \u043d\u0430 8\u0433\u0431, \u0438\u0434\u0435\u0430\u043b\u044c\u043d\u043e\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435. \u0426\u0435\u043d\u0430 1100 \u043b\u0430\u0440\u0438",
+                  "file": "messages91.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "1000+",
+              "offers": 26,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            }
+          ]
+        },
+        {
+          "category": "clothing_shoes",
+          "offers": 48,
+          "bands": [
+            {
+              "price_band_gel": "<50",
+              "offers": 4,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "50-99",
+              "offers": 9,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "100-249",
+              "offers": 11,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "250-499",
+              "offers": 9,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "500-999",
+              "offers": 8,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "1000+",
+              "offers": 7,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            }
+          ]
+        },
+        {
+          "category": "appliances_household",
+          "offers": 15,
+          "bands": [
+            {
+              "price_band_gel": "<50",
+              "offers": 8,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "50-99",
+              "offers": 1,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "100-249",
+              "offers": 4,
+              "strong_status_signals": 1,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.25,
+              "all_signal_ratio": 0.25,
+              "examples": [
+                {
+                  "author": "Unknown \u0410\u043b\u0435\u043a\u0441\u0430\u043d\u0434\u0440",
+                  "text": "\u0412\u0441\u0435\u043c \u043f\u0440\u0438\u0432\u0435\u0442! \u041f\u0440\u043e\u0434\u0430\u044e \u0447\u0430\u0441\u0442\u044c \u0441\u0442\u0430\u0444\u0430: 1. Cordoba C4 CE \u041a\u043b\u0435\u0432\u044b\u0439 \u0438\u043d\u0441\u0442\u0440\u0443\u043c\u0435\u043d\u0442 \u0441 \u043f\u044c\u0435\u0437\u043e\u0439 Fishman \u0432 \u043e\u0442\u043b\u0438\u0447\u043d\u043e\u043c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0438 + \u043b\u0435\u0433\u043a\u0438\u0439 \u0447\u0435\u0445\u043e\u043b 750 Gel 2. \u041d\u0435\u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u0446\u0438\u0440\u0443\u0435\u043c\u044b\u0439 Squier c \u0432\u043e\u043b\u043d\u0438\u0441\u0442\u044b\u043c \u0433\u0440\u0438\u0444\u043e\u043c \u0421\u0442\u043e\u044f\u0442 \u043d\u043e\u0432\u044b\u0435 \u0448\u0438\u0440\u043e\u043a\u0438\u0435 \u043b\u0430\u0434\u044b \u0438 \u043f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043b\u0435\u0433",
+                  "file": "messages103.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "250-499",
+              "offers": 1,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "500-999",
+              "offers": 1,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            }
+          ]
+        },
+        {
+          "category": "baby_kids",
+          "offers": 10,
+          "bands": [
+            {
+              "price_band_gel": "<50",
+              "offers": 1,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "100-249",
+              "offers": 2,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "250-499",
+              "offers": 7,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            }
+          ]
+        },
+        {
+          "category": "sports_outdoor",
+          "offers": 4,
+          "bands": [
+            {
+              "price_band_gel": "50-99",
+              "offers": 1,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "500-999",
+              "offers": 1,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            },
+            {
+              "price_band_gel": "1000+",
+              "offers": 2,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            }
+          ]
+        },
+        {
+          "category": "books_hobby",
+          "offers": 2,
+          "bands": [
+            {
+              "price_band_gel": "<50",
+              "offers": 1,
+              "strong_status_signals": 1,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 1.0,
+              "all_signal_ratio": 1.0,
+              "examples": [
+                {
+                  "author": "Unknown lera",
+                  "text": "\u043f\u0440\u0438\u0432\u0435\u0442! \u043f\u0440\u043e\u0434\u0430\u044e \u043c\u0438\u043a\u0440\u043e\u0444\u043e\u043d rode nt1-a, \u0432 \u043e\u0447\u0435\u043d\u044c \u0445\u043e\u0440\u043e\u0448\u0435\u043c \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0438, 150$ - \u0411\u0420\u041e\u041d\u042c \u043a\u043d\u0438\u0433\u0438: Creative Act Rick Rubin (en) 40 gel \u0414\u0436\u043e\u043d \u0421\u0438\u0431\u0440\u0443\u043a 20 gel Tbilisi",
+                  "file": "messages112.html"
+                }
+              ]
+            },
+            {
+              "price_band_gel": "50-99",
+              "offers": 1,
+              "strong_status_signals": 0,
+              "weak_status_signals": 0,
+              "strong_signal_ratio": 0.0,
+              "all_signal_ratio": 0.0,
+              "examples": []
+            }
+          ]
+        }
+      ],
+      "note": "Price x liquidity matrix uses GEL offer price bands crossed with heuristic status signals."
+    },
+    "entity_id": "heuristic-price_liquidity_matrix-latest",
+    "updated_at_utc": "2026-03-12T10:53:12.915850+00:00",
+    "created_at_utc": "2026-03-12T10:53:12.915850+00:00"
+  }
+]
