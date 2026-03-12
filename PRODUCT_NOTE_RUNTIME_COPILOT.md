@@ -32,6 +32,35 @@ What they usually do not have is one operational interface that can answer:
 
 `Runtime Copilot` is that interface.
 
+## Why This Is More Than A Demo
+
+The underlying lab is still educational and local-first.
+
+But the product layer points to something larger:
+
+- AI-connected operational surfaces
+- self-describing runtime adapters
+- explainable release and regression control planes
+- operational memory systems for engineering teams
+
+The claim here should stay narrow:
+
+this repository already exposes the shape of a credible product surface.
+
+## MVP In This Repository
+
+The MVP here is not "solve all DevOps".
+
+The MVP is:
+
+- package the MCP runtime cleanly,
+- expose a self-discoverable tool catalog,
+- expose defaults and state roots,
+- keep explainability and regression entrypoints stable,
+- make the system understandable enough that another MCP client can operate it with confidence.
+
+That is already a credible v1.
+
 ## Why It Exists
 
 Operational work is usually fragmented:
@@ -82,7 +111,7 @@ It sits above the runtime and below the user-facing AI interaction.
 
 ## Why MCP
 
-MCP is the right transport for this product because it makes the operational surface:
+MCP is a strong transport for this product because it makes the operational surface:
 
 - discoverable,
 - callable by agents,
@@ -90,7 +119,7 @@ MCP is the right transport for this product because it makes the operational sur
 - portable across MCP clients,
 - and easy to connect without inventing a custom UI first.
 
-The MCP server becomes the product interface.
+The MCP server becomes the first product interface.
 
 ## What The Current Surface Already Supports
 
@@ -141,39 +170,10 @@ That is the beginning of a product, not just a tool bundle.
 
 ## Product Positioning
 
-The strongest positioning for this repository is:
+One clean positioning for this repository is:
 
 `Runtime Copilot is an MCP-native operational brain for runtimes and internal data systems: self-describing, explainable, regression-aware, and ready to plug into your AI client.`
 
 Short version:
 
 `Connect Runtime Copilot to your AI client and turn runtime operations into a discoverable, explainable, and regression-aware interface instead of a pile of scripts, logs, and tribal knowledge.`
-
-## Why This Is Bigger Than A Demo
-
-The underlying lab is still educational and local-first.
-
-But the product layer is no longer just educational.
-
-It points to a real category:
-
-- AI-connected operational surfaces
-- self-describing runtime adapters
-- explainable release and regression control planes
-- operational memory systems for engineering teams
-
-That is why `Runtime Copilot` works as a product idea.
-
-## MVP Interpretation For This Repository
-
-For this repository, the MVP is not "solve all DevOps".
-
-The MVP is:
-
-- package the MCP runtime cleanly,
-- expose a self-discoverable tool catalog,
-- expose defaults and state roots,
-- keep explainability and regression entrypoints stable,
-- make the system understandable enough that another MCP client can operate it with confidence.
-
-That is already a credible v1.
