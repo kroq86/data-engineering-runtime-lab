@@ -1,0 +1,8 @@
+name = "Runtime Release Gate"
+description = "Example Codex automation for recurring regression and baseline checks."
+
+[automation]
+prompt = "Use the Runtime Copilot skill from /Users/ll/Documents/data-engineering-runtime-lab/codex/skills/runtime-copilot. Run project_run_regression, then project_compare_baseline. Summarize pass or fail, unexpected regressions, changed scope, and whether a human should review before release."
+rrule = "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;BYHOUR=10;BYMINUTE=0"
+cwds = ["/Users/ll/Documents/data-engineering-runtime-lab"]
+status = "ACTIVE"

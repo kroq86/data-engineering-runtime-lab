@@ -264,10 +264,16 @@ The MCP layer is an access interface, not the core product idea. The core of the
 
 Product note:
 - [`PRODUCT_NOTE_RUNTIME_EXPLAINABILITY.md`](/Users/ll/Documents/data-engineering-runtime-lab/PRODUCT_NOTE_RUNTIME_EXPLAINABILITY.md)
-- [`PRODUCT_NOTE_RUNTIME_COPILOT.md`](/Users/ll/Documents/data-engineering-runtime-lab/PRODUCT_NOTE_RUNTIME_COPILOT.md)
   Short note describing the runtime explainability use case, the required signals, and the `explain_run` MVP.
+- [`PRODUCT_NOTE_RUNTIME_COPILOT.md`](/Users/ll/Documents/data-engineering-runtime-lab/PRODUCT_NOTE_RUNTIME_COPILOT.md)
+  Product framing for `Runtime Copilot` as an MCP-native operational brain.
 - [`EXPLAIN_REGRESSION_SUITE_FEASIBILITY.md`](/Users/ll/Documents/data-engineering-runtime-lab/EXPLAIN_REGRESSION_SUITE_FEASIBILITY.md)
   Short article describing what this repository validated about explain-first regression suites and where the current denominator still stays narrow.
+
+Use in Codex:
+- skill package: [`codex/skills/runtime-copilot/SKILL.md`](/Users/ll/Documents/data-engineering-runtime-lab/codex/skills/runtime-copilot/SKILL.md)
+- automation examples: [`codex/automations`](/Users/ll/Documents/data-engineering-runtime-lab/codex/automations)
+- guide: [`docs/use-in-codex.md`](/Users/ll/Documents/data-engineering-runtime-lab/docs/use-in-codex.md)
 
 Run persistent engine CLI (productization path):
 

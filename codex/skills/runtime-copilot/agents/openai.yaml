@@ -1,0 +1,10 @@
+interface:
+  display_name: "Runtime Copilot"
+  short_description: "Operate and diagnose the Mini Data Engine MCP runtime from Codex"
+  default_prompt: "Use the Mini Data Engine MCP surface as a self-describing runtime copilot. Start with project_tool_catalog and project_get_defaults when discovery is needed, then prefer MCP diagnostics and regression tools over raw shell commands."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "mini-data-engine"
+      description: "Mini Data Engine MCP server"

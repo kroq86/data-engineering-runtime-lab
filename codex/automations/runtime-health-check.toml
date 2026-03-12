@@ -1,0 +1,8 @@
+name = "Runtime Health Check"
+description = "Example Codex automation for recurring MCP smoke checks."
+
+[automation]
+prompt = "Use the Runtime Copilot skill from /Users/ll/Documents/data-engineering-runtime-lab/codex/skills/runtime-copilot. Run project_get_defaults, then health_check, and return a short verdict with any failing step, the trace run id if present, and the next action."
+rrule = "FREQ=HOURLY;INTERVAL=6"
+cwds = ["/Users/ll/Documents/data-engineering-runtime-lab"]
+status = "ACTIVE"
