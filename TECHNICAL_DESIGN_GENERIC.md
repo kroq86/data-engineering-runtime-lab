@@ -1,7 +1,7 @@
 # Generic Technical Design (Reusable)
 
 Date: 2026-03-10  
-Status: Reusable baseline for any product/project
+Status: Reusable default baseline for many product/project types
 
 ## One-Liners (Quick Read First)
 
@@ -10,7 +10,7 @@ Status: Reusable baseline for any product/project
 - One write path only: all mutations go through core validation and deterministic state transition.
 - Event-first architecture: every command emits canonical start/success/error events with correlation IDs.
 - DAG-driven execution: dependencies must be acyclic, measurable, and safe for parallelism.
-- Adapter contract is fixed: `validate`, `dry_run`, `run`, `capabilities`.
+- Default adapter contract: `validate`, `dry_run`, `run`, `capabilities`.
 - Claims must be computable: every roadmap item uses `Problem -> Ownership -> Actions -> Measurable Impact`.
 - GO only with invariants + measurable KPIs + e2e critical flow pass.
 
@@ -81,7 +81,7 @@ R5. Deterministic State Transitions
 ## 4) Single-Write-Path Architecture Pattern
 
 Principle:
-- all write operations must pass through one core boundary.
+- by default, write operations should pass through one core boundary.
 
 Canonical flow:
 1. Source emits intent/command.
@@ -231,7 +231,7 @@ Automation quality metric:
 
 ## 14) Go/No-Go Technical Gate
 
-GO only if all pass:
+Default GO gate: proceed only if all pass:
 - reliability invariants R1-R5,
 - no write-path bypass,
 - mandatory event coverage for all writes,

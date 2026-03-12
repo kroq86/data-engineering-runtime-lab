@@ -118,7 +118,7 @@ This repo also includes a minimal MCP server that wraps the lab operations:
 - `mcp_engine_server.py`
 - Cursor config: `.cursor/mcp.json`
 
-Full MCP tool list currently exposed by the server (`41` tools total):
+Current MCP tool list for this release (`41` tools total):
 
 Engine state and runtime:
 - `init_engine`
@@ -174,6 +174,10 @@ Generic project state:
 Generic heuristics:
 - `project_list_heuristics`
 - `project_run_heuristic`
+
+For machine-readable discovery, prefer:
+- `project_tool_catalog`
+- `project_get_defaults`
 
 Current heuristic profiles available through `project_run_heuristic`:
 - `pain_structure`

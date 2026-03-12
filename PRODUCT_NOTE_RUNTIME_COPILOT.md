@@ -45,7 +45,7 @@ But the product layer points to something larger:
 
 The claim here should stay narrow:
 
-this repository already exposes the shape of a credible product surface.
+this repository already exposes the shape of a plausible product surface.
 
 ## MVP In This Repository
 

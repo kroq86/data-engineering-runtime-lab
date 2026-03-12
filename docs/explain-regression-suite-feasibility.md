@@ -10,7 +10,7 @@ permalink: /explain-regression-suite-feasibility/
 
 # Explain-First Regression Suites Are Feasible
 
-This repository validates a concrete engineering pattern in [Mini Data Engine Lab](https://github.com/kroq86/data-engineering-runtime-lab):
+This repository demonstrates a concrete engineering pattern in [Mini Data Engine Lab](https://github.com/kroq86/data-engineering-runtime-lab):
 
 an explain-first regression suite is possible.
 
@@ -18,7 +18,7 @@ Not as a vague AI promise, but as a real runnable flow where regression checks d
 
 ## What Was Confirmed In This Repository
 
-Using the current MCP runtime in this repo, we confirmed that a regression suite can:
+Using the current MCP runtime in this repo, we observed that a regression suite can:
 
 - execute multiple validation surfaces through one control interface,
 - attach traces and `run_id` identifiers to those checks,

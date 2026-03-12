@@ -54,7 +54,7 @@ cargo run --bin e2e_flow
 
 ## MCP Access Layer
 
-The project also exposes tools via `mcp_engine_server.py`:
+The project also exposes selected tools via `mcp_engine_server.py`:
 
 - `init_engine`
 - `insert_row`
@@ -77,6 +77,7 @@ The project also exposes tools via `mcp_engine_server.py`:
 - `decision_gate`
 
 This MCP layer is a programmable interface to the lab, not the primary identity of the project.
+For full runtime discovery, use `project_tool_catalog` and `project_get_defaults`.
 
 Quick MCP demo:
 - call `demo_explain_run`

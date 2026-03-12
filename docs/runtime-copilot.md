@@ -44,7 +44,7 @@ But the product layer points to something larger than a repo demo:
 The claim here is not that this repository already is a finished category leader.
 The claim is narrower and more defensible:
 
-this repository already exposes the shape of a credible product surface.
+this repository already exposes the shape of a plausible product surface.
 
 ## MVP In This Repository
 
