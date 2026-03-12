@@ -23,9 +23,7 @@ COPY --from=builder /app/target/release/engine_cli /app/bin/engine_cli
 COPY --from=builder /app/target/release/e2e_flow /app/bin/e2e_flow
 COPY --from=builder /app/target/release/mini_pg_like /app/bin/mini_pg_like
 COPY --from=builder /app/target/release/mini_databricks_clone /app/bin/mini_databricks_clone
-COPY mcp_*.py /app/
-COPY trace_observability.py /app/trace_observability.py
-COPY README.md /app/README.md
+COPY . /app
 
 ENV MINI_DATA_ENGINE_BIN_DIR=/app/bin
 ENV PYTHONUNBUFFERED=1
