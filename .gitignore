@@ -9,6 +9,7 @@ target/
 # Local editor/runtime artifacts
 .DS_Store
 .cursor-lisp/
+.tmp/
 
 # Runtime data artifacts (keep structure with .gitkeep files)
 tests/artifacts/**

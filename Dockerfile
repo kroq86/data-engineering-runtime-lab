@@ -11,6 +11,7 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
+    cargo \
     && rm -rf /var/lib/apt/lists/*
 
 RUN python -m pip install --no-cache-dir mcp duckdb
