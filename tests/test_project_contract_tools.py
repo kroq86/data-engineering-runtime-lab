@@ -10,8 +10,10 @@ from mcp_project_contract_tools import (
     project_capabilities,
     project_capture_baseline,
     project_compare_baseline,
+    project_get_defaults,
     project_manifest,
     project_run_regression,
+    project_tool_catalog,
 )
 
 
@@ -43,6 +45,39 @@ class ProjectContractToolsTests(unittest.TestCase):
             self.assertIn("project_run_regression", manifest["operations"]["regression"])
             self.assertTrue(capabilities["capabilities"]["stable_trace_schema"])
             self.assertEqual(capabilities["schemas"]["verdict"], "verdict.v1")
+
+    def test_project_tool_catalog_and_defaults_expose_self_discovery(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            configure_project_contract_tools(
+                workspace=root,
+                trace_db_default=root / "traces.jsonl",
+                baseline_snapshot_default=root / "baseline.json",
+                explain_regression_suite=lambda **_: {"ok": True, "traced_checks": [], "explain_demos": {}},
+                capture_roi_baseline=lambda **_: {"ok": True, "output_path": str(root / "baseline.json")},
+                benchmark_calls=lambda **_: {"ok": True, "insert_p95_ms": 1.0, "success_rate": 1.0},
+                scenario_load_test=lambda **_: {
+                    "ok": True,
+                    "success_rate": 1.0,
+                    "latency_ms": {"overall_p95": 1.0},
+                    "per_operation_stats": {"e2e": {"p95_ms": 1.0}},
+                },
+                explain_run=lambda **_: {"ok": True},
+            )
+
+            catalog = project_tool_catalog()
+            defaults = project_get_defaults()
+
+            self.assertTrue(catalog["ok"])
+            self.assertGreaterEqual(catalog["tool_count"], 41)
+            self.assertIn("project_tool_catalog", {tool["tool_name"] for tool in catalog["tools"]})
+            self.assertIn("project_get_defaults", {tool["tool_name"] for tool in catalog["tools"]})
+            self.assertIn("project_contract_regression", catalog["groups"])
+
+            self.assertTrue(defaults["ok"])
+            self.assertEqual(defaults["project"]["name"], "mini-data-engine")
+            self.assertEqual(defaults["defaults"]["engine_table"], "orders")
+            self.assertEqual(defaults["runtime"]["exec_mode_default"], "session")
 
     def test_project_run_regression_returns_pass_with_expected_failures(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

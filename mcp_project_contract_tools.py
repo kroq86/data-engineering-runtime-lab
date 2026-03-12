@@ -85,6 +85,83 @@ class ProjectContractContext:
 
 CONTEXT = ProjectContractContext()
 
+TOOL_GROUPS = {
+    "engine_state_runtime": [
+        "init_engine",
+        "insert_row",
+        "upsert_row",
+        "create_index",
+        "explain_customer",
+        "reindex_project",
+        "run_e2e_flow",
+    ],
+    "explainability_demos": [
+        "explain_run",
+        "demo_explain_run",
+        "demo_explain_run_failure",
+        "demo_explain_semantic_failure",
+        "demo_explain_idempotency_conflict",
+        "demo_explain_concurrency_failure_storm",
+        "explain_regression_suite",
+    ],
+    "trace_retrieval": [
+        "record_tool_trace",
+        "similar_incidents",
+        "refresh_trace_path",
+        "refresh_docs_path",
+    ],
+    "slo_roi": [
+        "health_check",
+        "benchmark_calls",
+        "scenario_load_test",
+        "capture_roi_baseline",
+        "report_drift_bug",
+        "decision_gate",
+    ],
+    "project_contract_regression": [
+        "project_manifest",
+        "project_capabilities",
+        "project_tool_catalog",
+        "project_get_defaults",
+        "project_run_regression",
+        "project_capture_baseline",
+        "project_compare_baseline",
+    ],
+    "generic_project_state": [
+        "project_list_entities",
+        "project_get_entity",
+        "project_upsert_entity",
+        "project_delete_entity",
+        "project_append_event",
+        "project_ingest_trace",
+        "project_explain_run",
+        "project_export_state",
+    ],
+    "generic_heuristics": [
+        "project_list_heuristics",
+        "project_run_heuristic",
+    ],
+}
+
+TOOL_DESCRIPTIONS = {
+    "project_manifest": "Describe project roots, schemas, and supported operation families.",
+    "project_capabilities": "Return declared runtime capabilities and contract coverage.",
+    "project_tool_catalog": "Return the full MCP tool catalog with groups and entrypoints.",
+    "project_get_defaults": "Return default workspace, paths, runtime mode, and project metadata.",
+    "project_run_regression": "Run the explain-first regression bundle and return a unified verdict.",
+    "project_capture_baseline": "Capture a baseline snapshot and wrap it in a verdict envelope.",
+    "project_compare_baseline": "Compare current benchmark and scenario metrics against a baseline snapshot.",
+}
+
+TOOL_PARAM_SUMMARY = {
+    "project_tool_catalog": {
+        "optional": ["group"],
+    },
+    "project_get_defaults": {
+        "optional": [],
+    },
+}
+
 
 def configure_project_contract_tools(
     *,
@@ -284,6 +361,87 @@ def project_capabilities() -> dict[str, Any]:
             "trace": TRACE_SCHEMA_V1["version"],
             "explain": EXPLAIN_SCHEMA_V1["version"],
             "verdict": VERDICT_SCHEMA_V1["version"],
+        },
+    }
+
+
+def project_tool_catalog(group: str = "") -> dict[str, Any]:
+    """Return the full MCP tool catalog with groups, entrypoints, and summaries."""
+    groups = {
+        name: list(tools)
+        for name, tools in TOOL_GROUPS.items()
+        if not group or name == group
+    }
+    if group and group not in TOOL_GROUPS:
+        raise ValueError(f"group '{group}' is not declared")
+
+    tools = []
+    for group_name, tool_names in groups.items():
+        for tool_name in tool_names:
+            tools.append(
+                {
+                    "tool_name": tool_name,
+                    "group": group_name,
+                    "description": TOOL_DESCRIPTIONS.get(tool_name, ""),
+                    "params": TOOL_PARAM_SUMMARY.get(tool_name, {}),
+                }
+            )
+
+    return {
+        "ok": True,
+        "project_name": "mini-data-engine",
+        "tool_count": len(tools),
+        "groups": groups,
+        "tools": tools,
+        "recommended_entrypoints": [
+            "project_manifest",
+            "project_capabilities",
+            "project_tool_catalog",
+            "project_get_defaults",
+            "health_check",
+            "project_run_regression",
+        ],
+    }
+
+
+def project_get_defaults() -> dict[str, Any]:
+    """Return default workspace, paths, runtime mode, and project metadata."""
+    workspace = _require("workspace", CONTEXT.workspace)
+    trace_db_default = _require("trace_db_default", CONTEXT.trace_db_default)
+    baseline_snapshot_default = _require(
+        "baseline_snapshot_default", CONTEXT.baseline_snapshot_default
+    )
+    return {
+        "ok": True,
+        "project": {
+            "name": "mini-data-engine",
+            "kind": "interactive_data_systems_lab",
+            "workspace": str(workspace),
+        },
+        "defaults": {
+            "trace_db_path": str(trace_db_default),
+            "baseline_snapshot_path": str(baseline_snapshot_default),
+            "artifacts_root": str(workspace / "tests" / "artifacts"),
+            "project_state_root": str(workspace / "tests" / "artifacts" / "mcp" / "project_state"),
+            "project_heuristics_root": str(
+                workspace / "tests" / "artifacts" / "mcp" / "project_heuristics"
+            ),
+            "engine_root_dir": str(workspace / "tests" / "artifacts" / "mcp" / "engine_data"),
+            "health_root_dir": str(workspace / "tests" / "artifacts" / "mcp" / "health"),
+            "benchmark_root_dir": str(workspace / "tests" / "artifacts" / "mcp" / "bench"),
+            "scenario_root_dir": str(workspace / "tests" / "artifacts" / "mcp" / "scenario"),
+            "baseline_runtime_root_dir": str(
+                workspace / "tests" / "artifacts" / "mcp" / "baseline_runtime"
+            ),
+            "baseline_candidate_root_dir": str(
+                workspace / "tests" / "artifacts" / "mcp" / "baseline_candidate"
+            ),
+            "engine_table": "orders",
+        },
+        "runtime": {
+            "exec_mode_env_var": "MINI_DATA_ENGINE_EXEC_MODE",
+            "exec_mode_default": "session",
+            "bin_dir_env_var": "MINI_DATA_ENGINE_BIN_DIR",
         },
     }
 
@@ -609,6 +767,8 @@ def project_compare_baseline(
 def register_project_contract_tools(mcp: FastMCP) -> None:
     mcp.tool()(project_manifest)
     mcp.tool()(project_capabilities)
+    mcp.tool()(project_tool_catalog)
+    mcp.tool()(project_get_defaults)
     mcp.tool()(project_run_regression)
     mcp.tool()(project_capture_baseline)
     mcp.tool()(project_compare_baseline)

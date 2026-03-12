@@ -118,7 +118,7 @@ This repo also includes a minimal MCP server that wraps the lab operations:
 - `mcp_engine_server.py`
 - Cursor config: `.cursor/mcp.json`
 
-Full MCP tool list currently exposed by the server (`39` tools total):
+Full MCP tool list currently exposed by the server (`41` tools total):
 
 Engine state and runtime:
 - `init_engine`
@@ -155,6 +155,8 @@ SLO and ROI:
 Project contract and regression:
 - `project_manifest`
 - `project_capabilities`
+- `project_tool_catalog`
+- `project_get_defaults`
 - `project_run_regression`
 - `project_capture_baseline`
 - `project_compare_baseline`
@@ -258,6 +260,7 @@ The MCP layer is an access interface, not the core product idea. The core of the
 
 Product note:
 - [`PRODUCT_NOTE_RUNTIME_EXPLAINABILITY.md`](/Users/ll/Documents/data-engineering-runtime-lab/PRODUCT_NOTE_RUNTIME_EXPLAINABILITY.md)
+- [`PRODUCT_NOTE_RUNTIME_COPILOT.md`](/Users/ll/Documents/data-engineering-runtime-lab/PRODUCT_NOTE_RUNTIME_COPILOT.md)
   Short note describing the runtime explainability use case, the required signals, and the `explain_run` MVP.
 - [`EXPLAIN_REGRESSION_SUITE_FEASIBILITY.md`](/Users/ll/Documents/data-engineering-runtime-lab/EXPLAIN_REGRESSION_SUITE_FEASIBILITY.md)
   Short article describing what this repository validated about explain-first regression suites and where the current denominator still stays narrow.
