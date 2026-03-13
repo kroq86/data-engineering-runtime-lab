@@ -9,6 +9,8 @@ RUN cargo build --release --bin engine_cli --bin e2e_flow --bin mini_pg_like --b
 FROM python:3.12-slim AS runtime
 WORKDIR /app
 
+LABEL io.modelcontextprotocol.server.name="io.github.kroq86/mini-data-engine"
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     cargo \

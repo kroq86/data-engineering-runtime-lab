@@ -12,6 +12,8 @@ from trace_observability import (
     load_run_records,
     refresh_docs_from_path,
     refresh_trace_from_path,
+    search_memory_entries,
+    upsert_memory_entry,
 )
 
 
@@ -334,6 +336,66 @@ class SemanticObservabilityTests(unittest.TestCase):
 
             rows = store.query(tool_name="refresh_docs")
             self.assertEqual(len(rows), 1)
+
+    def test_memory_upsert_and_search_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "traces.jsonl"
+            store = TraceStore(db_path)
+            record = upsert_memory_entry(
+                store=store,
+                run_id="run-memory-1",
+                summary="duckdb wrapper unavailable during regression run",
+                status="error",
+                tool_name="project_run_regression",
+                scenario_id="regression",
+                tags=["release", "duckdb"],
+                decision_reason="environment mismatch after dependency update",
+                actual_effects="release gate failed",
+            )
+
+            self.assertEqual(record["source_kind"], "memory_entry")
+            self.assertTrue(str(record["memory_id"]).startswith("mem-"))
+            self.assertIn("release", record["tags"])
+
+            results = search_memory_entries(
+                store=store,
+                query_text="duckdb regression failure",
+                status="error",
+                top_k=3,
+            )
+            self.assertEqual(len(results), 1)
+            self.assertEqual(results[0]["run_id"], "run-memory-1")
+            self.assertEqual(results[0]["tool_name"], "project_run_regression")
+            self.assertGreater(results[0]["score"], 0.0)
+            self.assertTrue(results[0]["memory_id"])
+
+    def test_memory_search_respects_tag_filters(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "traces.jsonl"
+            store = TraceStore(db_path)
+            upsert_memory_entry(
+                store=store,
+                run_id="run-tag-a",
+                summary="scenario load timeout",
+                status="error",
+                tags=["release", "latency"],
+            )
+            upsert_memory_entry(
+                store=store,
+                run_id="run-tag-b",
+                summary="benchmark success",
+                status="ok",
+                tags=["benchmark"],
+            )
+
+            filtered = search_memory_entries(
+                store=store,
+                query_text="timeout",
+                tags=["release"],
+                top_k=5,
+            )
+            self.assertEqual(len(filtered), 1)
+            self.assertEqual(filtered[0]["run_id"], "run-tag-a")
 
 
 if __name__ == "__main__":

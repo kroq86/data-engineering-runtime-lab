@@ -109,6 +109,8 @@ TOOL_GROUPS = {
         "similar_incidents",
         "refresh_trace_path",
         "refresh_docs_path",
+        "memory_upsert",
+        "memory_search",
     ],
     "slo_roi": [
         "health_check",
@@ -151,6 +153,8 @@ TOOL_DESCRIPTIONS = {
     "project_run_regression": "Run the explain-first regression bundle and return a unified verdict.",
     "project_capture_baseline": "Capture a baseline snapshot and wrap it in a verdict envelope.",
     "project_compare_baseline": "Compare current benchmark and scenario metrics against a baseline snapshot.",
+    "memory_upsert": "Upsert one operational memory entry for semantic recall.",
+    "memory_search": "Search memory entries by semantic similarity and metadata filters.",
 }
 
 TOOL_PARAM_SUMMARY = {
@@ -585,6 +589,9 @@ def project_capture_baseline(
     output_path: str = "",
 ) -> dict[str, Any]:
     """Capture a baseline snapshot and return a unified verdict envelope."""
+    baseline_snapshot_default = _require(
+        "baseline_snapshot_default", CONTEXT.baseline_snapshot_default
+    )
     capture_roi_baseline = _require(
         "capture_roi_baseline", CONTEXT.capture_roi_baseline
     )
@@ -597,9 +604,12 @@ def project_capture_baseline(
     )
     verdict = "pass" if result.get("ok", False) else "fail"
     severity = "info" if result.get("ok", False) else "high"
-    baseline_path = str(result.get("output_path", output_path))
+    baseline_path = str(
+        result.get("output_path") or output_path or baseline_snapshot_default
+    )
     return {
         "ok": True,
+        "output_path": baseline_path,
         "result": result,
         **_build_verdict(
             verdict=verdict,

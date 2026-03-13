@@ -118,7 +118,7 @@ This repo also includes a minimal MCP server that wraps the lab operations:
 - `mcp_engine_server.py`
 - Cursor config: `.cursor/mcp.json`
 
-Current MCP tool list for this release (`41` tools total):
+Current MCP tool list for this release (`43` tools total):
 
 Engine state and runtime:
 - `init_engine`
@@ -143,6 +143,8 @@ Trace and retrieval:
 - `similar_incidents`
 - `refresh_trace_path`
 - `refresh_docs_path`
+- `memory_upsert`
+- `memory_search`
 
 SLO and ROI:
 - `health_check`
@@ -192,6 +194,27 @@ Current heuristic profiles available through `project_run_heuristic`:
 
 If Cursor MCP auto-discovery is enabled, restart Cursor and connect `mini-data-engine`.
 Default MCP runtime data paths are under `tests/artifacts/mcp/*`.
+
+### Cursor approval setup (reduce repeated prompts)
+
+If Cursor keeps asking for MCP or command approval on every call, apply this once:
+
+1. Enable workspace trust in Cursor user settings:
+
+```json
+"security.workspace.trust.enabled": true
+```
+
+2. In Cursor, open `Settings -> Agents -> Auto-Run` and set:
+   - `Auto-run mode`: `Run in Sandbox`
+   - `MCP Allowlist`: add `mini-data-engine` tools you use often
+   - `Command Allowlist`: add frequently used safe commands
+
+3. Keep this repo opened as the same trusted workspace and reload the window once.
+
+Notes:
+- MCP server approval and per-tool allowlist behavior are enforced by Cursor security settings.
+- In some Cursor versions, allowlist behavior can be best-effort and still prompt in edge cases.
 
 Fastest way to see the new explainability use case in action through MCP:
 
@@ -356,4 +379,36 @@ Use in Cursor MCP config (example):
     }
   }
 }
+```
+
+## Cursor plugin discovery (MCP Registry)
+
+If you want this project to be discoverable from Cursor MCP/plugin discovery (not only local `.cursor/mcp.json`), use the included `server.json` metadata and publish flow:
+
+1. Build and publish the OCI image to GHCR.
+2. Keep `server.json` updated:
+   - `name`, `title`, `description`
+   - `repository.url`
+   - `version`
+   - `packages[].identifier` (published image tag)
+3. Submit this server metadata to an MCP registry/catalog used by your Cursor environment.
+4. After the registry entry is approved, users can discover and install it from the MCP/plugin UI instead of manual config copy.
+
+`server.json` in this repo already follows MCP server schema and can be used as the canonical publish manifest.
+
+### CI publish to MCP Registry
+
+This repository includes automated registry publishing on version tags via `.github/workflows/mcp-docker-publish.yml`:
+
+- `docker` job publishes OCI image tags to GHCR.
+- `publish_registry` job runs only for tags matching `v*` and publishes `server.json` to MCP Registry using `mcp-publisher`.
+- CI rewrites `server.json` in-run with:
+  - `version`: tag without `v` prefix (for example `v0.2.1` -> `0.2.1`)
+  - OCI identifier: `ghcr.io/<owner>/<repo>:<tag>`
+
+Release trigger:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
 ```

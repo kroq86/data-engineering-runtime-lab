@@ -9,6 +9,8 @@ from trace_observability import (
     find_similar_incidents,
     refresh_docs_from_path,
     refresh_trace_from_path,
+    search_memory_entries,
+    upsert_memory_entry,
 )
 
 TraceStoreFactory = Callable[[str | None], Any]
@@ -178,8 +180,98 @@ def refresh_docs_path(
     }
 
 
+def _parse_tags(value: str) -> list[str]:
+    return sorted({item.strip() for item in value.split(",") if item.strip()})
+
+
+def memory_upsert(
+    run_id: str,
+    summary: str,
+    status: str = "ok",
+    tool_name: str = "memory_entry",
+    error_text: str = "",
+    scenario_id: str = "memory",
+    tags: str = "",
+    memory_id: str = "",
+    metadata_json: str = "",
+    correlation_id: str = "",
+    decision_reason: str = "",
+    actual_effects: str = "",
+    trace_db_path: str = "",
+) -> dict[str, Any]:
+    """Upsert one operational memory entry for semantic recall."""
+    trace_store_factory = _require("trace_store_factory", _trace_store_factory)
+    store = trace_store_factory(trace_db_path or None)
+    metadata: dict[str, Any] = {}
+    if metadata_json.strip():
+        import json
+
+        parsed = json.loads(metadata_json)
+        if not isinstance(parsed, dict):
+            raise ValueError("metadata_json must decode to an object")
+        metadata = parsed
+    record = upsert_memory_entry(
+        store=store,
+        run_id=run_id,
+        summary=summary,
+        status=status,
+        tool_name=tool_name,
+        error_text=error_text,
+        scenario_id=scenario_id,
+        tags=_parse_tags(tags),
+        memory_id=memory_id,
+        metadata=metadata,
+        correlation_id=correlation_id,
+        decision_reason=decision_reason,
+        actual_effects=actual_effects,
+    )
+    return {
+        "ok": True,
+        "trace_path": str(store.path),
+        "memory_id": str(record.get("memory_id", "")),
+        "record": record,
+    }
+
+
+def memory_search(
+    query_text: str,
+    top_k: int = 5,
+    min_score: float = 0.0,
+    status: str = "",
+    tool_name: str = "",
+    scenario_id: str = "",
+    start_time_utc: str = "",
+    end_time_utc: str = "",
+    tags: str = "",
+    trace_db_path: str = "",
+) -> dict[str, Any]:
+    """Search memory entries by semantic similarity and metadata filters."""
+    trace_store_factory = _require("trace_store_factory", _trace_store_factory)
+    store = trace_store_factory(trace_db_path or None)
+    results = search_memory_entries(
+        store=store,
+        query_text=query_text,
+        top_k=top_k,
+        min_score=min_score,
+        status=status or None,
+        tool_name=tool_name or None,
+        scenario_id=scenario_id or None,
+        start_time_utc=start_time_utc or None,
+        end_time_utc=end_time_utc or None,
+        tags=_parse_tags(tags),
+    )
+    return {
+        "ok": True,
+        "query_text": query_text,
+        "count": len(results),
+        "results": results,
+    }
+
+
 def register_trace_tools(mcp: FastMCP) -> None:
     mcp.tool()(record_tool_trace)
     mcp.tool()(similar_incidents)
     mcp.tool()(refresh_trace_path)
     mcp.tool()(refresh_docs_path)
+    mcp.tool()(memory_upsert)
+    mcp.tool()(memory_search)

@@ -191,3 +191,4 @@ class ProjectContractToolsTests(unittest.TestCase):
 
             self.assertTrue(result["ok"])
             self.assertEqual(result["verdict"], "pass")
+            self.assertEqual(result["output_path"], str(output_path))

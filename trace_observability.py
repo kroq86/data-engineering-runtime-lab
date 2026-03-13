@@ -196,6 +196,115 @@ def find_similar_incidents(
     return scored[:top_k]
 
 
+def _memory_id_for_row(row: dict[str, Any]) -> str:
+    memory_id = str(row.get("memory_id", "")).strip()
+    if memory_id:
+        return memory_id
+    run_id = str(row.get("run_id", "run-unknown"))
+    timestamp = str(row.get("timestamp_utc", "")).replace(":", "-")
+    return f"mem-{run_id}-{timestamp}"
+
+
+def upsert_memory_entry(
+    store: TraceStore,
+    *,
+    run_id: str,
+    summary: str,
+    status: str = "ok",
+    tool_name: str = "memory_entry",
+    error_text: str = "",
+    scenario_id: str = "memory",
+    tags: list[str] | None = None,
+    memory_id: str = "",
+    metadata: dict[str, Any] | None = None,
+    correlation_id: str = "",
+    decision_reason: str = "",
+    actual_effects: str = "",
+) -> dict[str, Any]:
+    record = store.append(
+        {
+            "run_id": run_id,
+            "correlation_id": correlation_id or run_id,
+            "tool_name": tool_name,
+            "status": status,
+            "summary": summary,
+            "error_text": error_text,
+            "scenario_id": scenario_id,
+            "decision_reason": decision_reason,
+            "actual_effects": actual_effects,
+            "source_kind": "memory_entry",
+            "memory_id": memory_id.strip(),
+            "tags": sorted({tag.strip() for tag in (tags or []) if tag.strip()}),
+            "metadata": metadata or {},
+        }
+    )
+    if not str(record.get("memory_id", "")).strip():
+        record["memory_id"] = _memory_id_for_row(record)
+    return record
+
+
+def search_memory_entries(
+    store: TraceStore,
+    *,
+    query_text: str,
+    top_k: int = 5,
+    min_score: float = 0.0,
+    status: str | None = None,
+    tool_name: str | None = None,
+    scenario_id: str | None = None,
+    start_time_utc: str | None = None,
+    end_time_utc: str | None = None,
+    tags: list[str] | None = None,
+) -> list[dict[str, Any]]:
+    if top_k < 1:
+        top_k = 1
+    if min_score < 0.0:
+        min_score = 0.0
+    if min_score > 1.0:
+        min_score = 1.0
+
+    required_tags = {tag.strip() for tag in (tags or []) if tag.strip()}
+    rows = store.query(
+        status=status,
+        tool_name=tool_name,
+        scenario_id=scenario_id,
+        start_time_utc=start_time_utc,
+        end_time_utc=end_time_utc,
+    )
+    scored: list[dict[str, Any]] = []
+    for row in rows:
+        if str(row.get("source_kind", "")) != "memory_entry":
+            continue
+        row_tags = {
+            str(tag).strip()
+            for tag in (row.get("tags", []) if isinstance(row.get("tags", []), list) else [])
+            if str(tag).strip()
+        }
+        if required_tags and not required_tags.issubset(row_tags):
+            continue
+
+        summary = str(row.get("summary", ""))
+        error_text = str(row.get("error_text", ""))
+        decision_reason = str(row.get("decision_reason", ""))
+        actual_effects = str(row.get("actual_effects", ""))
+        candidate_text = (
+            f"{summary}\n{error_text}\n{decision_reason}\n{actual_effects}".strip()
+        )
+        score = _similarity_score(query_text=query_text, candidate_text=candidate_text)
+        if score < min_score:
+            continue
+        scored.append(
+            {
+                **row,
+                "memory_id": _memory_id_for_row(row),
+                "score": round(score, 4),
+            }
+        )
+
+    scored.sort(key=lambda x: x.get("score", 0.0), reverse=True)
+    return scored[:top_k]
+
+
 def load_run_records(
     store: TraceStore,
     run_id: str,
