@@ -8,7 +8,7 @@
         "-i",
         "-v",
         "${workspaceFolder}/tests/artifacts:/app/tests/artifacts",
-        "ghcr.io/kroq86/data-engineering-runtime-lab:latest"
+        "ghcr.io/kroq86/data-engineering-runtime-lab:0.1.10"
       ]
     }
   }
