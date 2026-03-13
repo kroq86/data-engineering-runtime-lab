@@ -7,11 +7,11 @@
     "url": "https://github.com/kroq86/data-engineering-runtime-lab",
     "source": "github"
   },
-  "version": "0.1.10",
+  "version": "0.1.11",
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/kroq86/data-engineering-runtime-lab:0.1.10",
+      "identifier": "ghcr.io/kroq86/data-engineering-runtime-lab:0.1.11",
       "transport": {
         "type": "stdio"
       }
