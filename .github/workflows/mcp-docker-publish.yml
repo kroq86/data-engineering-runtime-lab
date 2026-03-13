@@ -52,6 +52,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=tag
+            type=semver,pattern={{version}},value=${{ github.ref_name }}
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push
@@ -75,7 +76,7 @@ jobs:
       - name: Prepare tag-aware server.json
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          IMAGE="ghcr.io/${GITHUB_REPOSITORY}:${GITHUB_REF_NAME}"
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY}:${VERSION}"
           jq --arg version "$VERSION" --arg image "$IMAGE" \
             '.version = $version
              | .packages = (.packages | map(
@@ -95,4 +96,11 @@ jobs:
         run: ./mcp-publisher login github-oidc
 
       - name: Publish server to MCP Registry
-        run: ./mcp-publisher publish
+        run: |
+          for i in 1 2 3 4 5; do
+            ./mcp-publisher publish && exit 0
+            echo "mcp publish attempt ${i} failed, retrying in 20s..."
+            sleep 20
+          done
+          echo "mcp publish failed after retries"
+          exit 1

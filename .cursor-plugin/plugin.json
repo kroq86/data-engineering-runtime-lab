@@ -1,0 +1,21 @@
+{
+  "name": "mini-data-engine-runtime-copilot",
+  "version": "0.1.8",
+  "description": "Runtime Copilot plugin for Mini Data Engine with MCP diagnostics, regressions, explainability, and operational memory.",
+  "author": {
+    "name": "kroq86"
+  },
+  "repository": "https://github.com/kroq86/data-engineering-runtime-lab",
+  "homepage": "https://github.com/kroq86/data-engineering-runtime-lab",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "runtime-copilot",
+    "observability",
+    "regression",
+    "data-engineering"
+  ],
+  "mcpServers": ".mcp.json",
+  "skills": "codex/skills",
+  "rules": ".cursor/rules"
+}

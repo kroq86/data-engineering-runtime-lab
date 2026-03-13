@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "mini-data-engine": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-v",
+        "${workspaceFolder}/tests/artifacts:/app/tests/artifacts",
+        "ghcr.io/kroq86/data-engineering-runtime-lab:latest"
+      ]
+    }
+  }
+}
