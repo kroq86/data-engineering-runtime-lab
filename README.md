@@ -1,101 +1,47 @@
 # Interactive Data Systems Lab
 
-Runnable Python and Rust implementations of PostgreSQL-like and Databricks-like system internals.
+Runnable Python and Rust data-system internals with an MCP-native runtime copilot layer.
 
-This repository is a compact, local-first lab for exploring:
+This repository combines two things:
 
-- heap storage, B-tree indexes, and planner decisions,
-- WAL/checkpoint style persistence and replay,
-- Delta-style versioning and time-travel snapshots,
-- workflow DAG execution, event logs, idempotency, and single-write-path design,
-- programmatic access through an MCP adapter layer.
+- a local-first engineering lab for PostgreSQL-like and Databricks-like internals,
+- a Runtime Copilot MCP surface for diagnostics, explainability, regression checks, and operational memory.
 
-## Who This Is For
+## Core capabilities
 
-- Data engineers who want to understand what sits underneath warehouses and query engines.
-- Platform and infrastructure engineers teaching or learning storage and execution fundamentals.
-- Teams building onboarding, workshops, or demos around modern data system internals.
+- Storage and planner internals: heap tables, B-tree indexing, selectivity, and plan choice.
+- Persistence and replay: WAL/checkpoint style flows and deterministic state transitions.
+- Workflow and write-path modeling: event-first architecture, idempotency, retry semantics.
+- Explainable runtime operations: traced runs, failure summaries, regression verdicts, baseline compare.
+- MCP access: machine-usable operational interface instead of ad hoc shell scripts.
 
-## What This Project Actually Contains
+## Who this is for
 
-This folder contains educational Python and Rust demos:
+- Data engineers learning warehouse and query-engine internals.
+- Platform and infrastructure engineers teaching storage and execution fundamentals.
+- Teams building onboarding labs, workshops, and demo environments.
 
-- `mini_pg_like.py` - PostgreSQL-like toy engine (heap table, B-tree index, cost-based planner, EXPLAIN ANALYZE style output).
-- `mini_databricks_clone.py` - Databricks-like toy platform (Delta-style versioning, Spark-like partitions, workflow DAG, SQL warehouse, ML tracking, catalog, single write path with events/idempotency).
-- `src/bin/mini_pg_like.rs` - Rust/Cargo PostgreSQL-like demo.
-- `src/bin/mini_databricks_clone.rs` - Rust/Cargo Databricks-like demo.
-- `src/lib.rs` + `src/common.rs` + `src/pg.rs` - shared Rust core modules used by both binaries.
+## Quick start
 
-## Why It Exists
-
-Most explanations of data systems stop at diagrams. This lab is meant to be runnable:
-
-- inspect how heap storage and B-tree indexing affect plan choice,
-- see append/upsert/checkpoint flows rather than just reading about them,
-- trace a single-write-path architecture with canonical events and idempotency,
-- compare Python and Rust implementations of the same ideas,
-- automate the lab through MCP instead of only using ad hoc scripts.
-
-## Requirements
+Requirements:
 
 - Python 3.10+ (tested with Python 3.14)
 
-## Setup
-
-Create and activate a virtual environment:
+Setup:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-```
-
-Install dependency:
-
-```bash
 python -m pip install "psycopg[binary]"
 ```
 
-## Run
-
-Run the PostgreSQL-like demo:
-
-```bash
-.venv/bin/python mini_pg_like.py
-```
-
-Run the Databricks-like demo:
-
-```bash
-.venv/bin/python mini_databricks_clone.py
-```
-
-Run Rust/Cargo PostgreSQL-like demo:
-
-```bash
-cargo run --bin mini_pg_like
-```
-
-Run Rust/Cargo Databricks-like demo:
-
-```bash
-cargo run --bin mini_databricks_clone
-```
-
-Run full end-to-end flow (MiniPG + MiniDatabricks + DuckDB):
+Run end-to-end flow:
 
 ```bash
 cargo run --bin e2e_flow
 ```
 
-## Quick Start
-
-Run the full end-to-end flow:
-
-```bash
-cargo run --bin e2e_flow
-```
-
-Run the core demos:
+Run core demos:
 
 ```bash
 .venv/bin/python mini_pg_like.py
@@ -104,12 +50,23 @@ cargo run --bin mini_pg_like
 cargo run --bin mini_databricks_clone
 ```
 
-## Architecture Themes
+## What this repository contains
 
-- PostgreSQL-like internals: heap tables, B-tree indexes, selectivity, planner cost tradeoffs.
-- Databricks-like internals: Delta-style commits, workflow DAGs, catalog concepts, bronze-to-silver style transforms.
-- Reliability discipline: deterministic transitions, idempotency, replay, canonical event logs, one write path.
-- Productization path: persistent engine CLI, transaction demo, recovery commands, Docker packaging.
+- `mini_pg_like.py`: PostgreSQL-like toy engine with heap table, B-tree index, and planner output.
+- `mini_databricks_clone.py`: Databricks-like toy platform with versioning, partitions, DAGs, and events.
+- `src/bin/mini_pg_like.rs`: Rust PostgreSQL-like demo.
+- `src/bin/mini_databricks_clone.rs`: Rust Databricks-like demo.
+- `src/lib.rs`, `src/common.rs`, `src/pg.rs`: shared Rust core modules.
+- `mcp_engine_server.py`: MCP runtime adapter for diagnostics and regression workflows.
+
+## Why this exists
+
+Most internals content stops at diagrams. This project stays runnable and inspectable:
+
+- compare Python and Rust implementations of the same system ideas,
+- trace write-path behavior with concrete events and state transitions,
+- run explainable regression checks through MCP,
+- turn runtime operations into a discoverable control surface for AI clients.
 
 ## MCP Adapter Layer
 
@@ -379,36 +336,4 @@ Use in Cursor MCP config (example):
     }
   }
 }
-```
-
-## Cursor plugin discovery (MCP Registry)
-
-If you want this project to be discoverable from Cursor MCP/plugin discovery (not only local `.cursor/mcp.json`), use the included `server.json` metadata and publish flow:
-
-1. Build and publish the OCI image to GHCR.
-2. Keep `server.json` updated:
-   - `name`, `title`, `description`
-   - `repository.url`
-   - `version`
-   - `packages[].identifier` (published image tag)
-3. Submit this server metadata to an MCP registry/catalog used by your Cursor environment.
-4. After the registry entry is approved, users can discover and install it from the MCP/plugin UI instead of manual config copy.
-
-`server.json` in this repo already follows MCP server schema and can be used as the canonical publish manifest.
-
-### CI publish to MCP Registry
-
-This repository includes automated registry publishing on version tags via `.github/workflows/mcp-docker-publish.yml`:
-
-- `docker` job publishes OCI image tags to GHCR.
-- `publish_registry` job runs only for tags matching `v*` and publishes `server.json` to MCP Registry using `mcp-publisher`.
-- CI rewrites `server.json` in-run with:
-  - `version`: tag without `v` prefix (for example `v0.2.1` -> `0.2.1`)
-  - OCI identifier: `ghcr.io/<owner>/<repo>:<tag>`
-
-Release trigger:
-
-```bash
-git tag v0.1.0
-git push origin v0.1.0
 ```
