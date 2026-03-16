@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "mini-data-engine": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-e",
+        "WORKSPACE_ROOT=/workspace",
+        "-v",
+        "${workspaceFolder}:/workspace",
+        "-v",
+        "${workspaceFolder}/tests/artifacts:/app/tests/artifacts",
+        "mini-data-engine:local"
+      ]
+    }
+  }
+}

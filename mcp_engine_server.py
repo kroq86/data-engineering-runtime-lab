@@ -63,12 +63,19 @@ from mcp_trace_tools import (
     register_trace_tools,
     similar_incidents,
 )
+from mcp_schema_tools import (
+    configure_schema_tools,
+    register_schema_tools,
+)
 from trace_observability import (
     TraceStore,
 )
 
 
-WORKSPACE = Path(__file__).resolve().parent
+# When running in Docker with -e WORKSPACE_ROOT=/workspace and -v ${workspaceFolder}:/workspace,
+# schema_path and other workspace-relative paths resolve to the mounted project (e.g. threads).
+WORKSPACE_ROOT_ENV = os.getenv("WORKSPACE_ROOT")
+WORKSPACE = Path(WORKSPACE_ROOT_ENV).resolve() if WORKSPACE_ROOT_ENV else Path(__file__).resolve().parent
 TARGET_DIR = WORKSPACE / "target" / "debug"
 BIN_DIR_ENV = os.getenv("MINI_DATA_ENGINE_BIN_DIR")
 if BIN_DIR_ENV:
@@ -97,6 +104,7 @@ DRIFT_BUG_COUNTER_DEFAULT = Path(
 )
 PROJECT_STATE_ROOT_DEFAULT = Path("./tests/artifacts/mcp/project_state")
 PROJECT_HEURISTICS_ROOT_DEFAULT = Path("./tests/artifacts/mcp/project_heuristics")
+SCHEMA_VALIDATION_ARTIFACTS_DEFAULT = Path("./tests/artifacts/mcp/schema_validation")
 
 
 OPS: EngineOps = EngineService(
@@ -177,12 +185,19 @@ configure_project_heuristic_tools(
     workspace=WORKSPACE,
     analysis_root_default=PROJECT_HEURISTICS_ROOT_DEFAULT,
 )
+configure_schema_tools(
+    workspace=WORKSPACE,
+    state_root_default=PROJECT_STATE_ROOT_DEFAULT,
+    artifacts_dir_default=SCHEMA_VALIDATION_ARTIFACTS_DEFAULT,
+    schema_tools_bin=BIN_DIR / "schema_tools",
+)
 register_explainability_tools(mcp)
 register_trace_tools(mcp)
 register_slo_tools(mcp)
 register_project_contract_tools(mcp)
 register_generic_project_state_tools(mcp)
 register_project_heuristic_tools(mcp)
+register_schema_tools(mcp)
 
 
 if __name__ == "__main__":

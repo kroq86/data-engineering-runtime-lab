@@ -4,7 +4,7 @@ WORKDIR /app
 COPY Cargo.toml Cargo.lock ./
 COPY src ./src
 
-RUN cargo build --release --bin engine_cli --bin e2e_flow --bin mini_pg_like --bin mini_databricks_clone
+RUN cargo build --release --bin engine_cli --bin e2e_flow --bin mini_pg_like --bin mini_databricks_clone --bin schema_tools
 
 FROM python:3.12-slim AS runtime
 WORKDIR /app
@@ -26,6 +26,7 @@ COPY --from=builder /app/target/release/engine_cli /app/bin/engine_cli
 COPY --from=builder /app/target/release/e2e_flow /app/bin/e2e_flow
 COPY --from=builder /app/target/release/mini_pg_like /app/bin/mini_pg_like
 COPY --from=builder /app/target/release/mini_databricks_clone /app/bin/mini_databricks_clone
+COPY --from=builder /app/target/release/schema_tools /app/bin/schema_tools
 COPY . /app
 
 ENV MINI_DATA_ENGINE_BIN_DIR=/app/bin

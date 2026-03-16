@@ -75,7 +75,7 @@ This repo also includes a minimal MCP server that wraps the lab operations:
 - `mcp_engine_server.py`
 - Cursor config: `.cursor/mcp.json`
 
-Current MCP tool list for this release (`43` tools total):
+Current MCP tool list for this release (`47` tools total):
 
 Engine state and runtime:
 - `init_engine`
@@ -110,6 +110,12 @@ SLO and ROI:
 - `capture_roi_baseline`
 - `report_drift_bug`
 - `decision_gate`
+
+Schema evaluation (verdict + report via MCP, no external Postgres):
+- `schema_load_tool`
+- `schema_explain_tool`
+- `schema_evaluate_tool`
+- `schema_evaluate_full_tool`
 
 Project contract and regression:
 - `project_manifest`
@@ -306,7 +312,41 @@ cargo run --bin engine_cli -- tx-recovery-rollback ./tests/artifacts/engine/data
 
 It is not a separate product claim. It is the review and implementation spine used across the lab.
 
-## Docker package (pull and run on another Mac)
+## Docker package
+
+### Use the **local** build (recommended for development)
+
+Build the image from this repo so MCP uses your local code (including schema tools) instead of the GitHub image:
+
+```bash
+./scripts/docker-build-local.sh
+```
+
+This builds `mini-data-engine:local`. To drive **another project** (e.g. threads) with this MCP, set Cursor MCP to use the local image and mount that project as workspace:
+
+- Copy [.cursor/mcp.docker.local.json](.cursor/mcp.docker.local.json) into your **project’s** `.cursor/mcp.json` (or merge the `mcpServers` entry into your Cursor user config).
+- Open the project you want to drive (e.g. threads). `${workspaceFolder}` will be that project; the container gets `WORKSPACE_ROOT=/workspace` and your project mounted at `/workspace`, so e.g. `schema_path="schema.sql"` resolves to that project’s file.
+
+Example local config (uses `mini-data-engine:local` and mounts current workspace as `/workspace`):
+
+```json
+{
+  "mcpServers": {
+    "mini-data-engine": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i",
+        "-e", "WORKSPACE_ROOT=/workspace",
+        "-v", "${workspaceFolder}:/workspace",
+        "-v", "${workspaceFolder}/tests/artifacts:/app/tests/artifacts",
+        "mini-data-engine:local"
+      ]
+    }
+  }
+}
+```
+
+### Use the published image (GHCR)
 
 Image is published to GHCR:
 
