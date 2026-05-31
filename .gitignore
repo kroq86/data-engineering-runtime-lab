@@ -1,4 +1,6 @@
 # Python
+dist/
+*.egg-info/
 .venv/
 __pycache__/
 *.pyc

@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ops-runtime-mcp"
+version = "0.1.12"
+description = "MCP runtime copilot for health checks, regressions, explainability, and ops memory (Mini Data Engine lab)."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "kroq86" }]
+keywords = ["mcp", "ops", "regression", "explainability", "loom", "runtime"]
+dependencies = [
+    "mcp>=1.2.0",
+]
+
+[project.scripts]
+ops-runtime-mcp = "mcp_engine_server:main"
+
+[project.urls]
+Homepage = "https://github.com/kroq86/data-engineering-runtime-lab"
+Repository = "https://github.com/kroq86/data-engineering-runtime-lab"
+"Loom stack" = "https://kroq86.github.io/loom-stack/"
+"loom-ops" = "https://github.com/kroq86/loom-ops"
+
+[tool.setuptools]
+py-modules = [
+    "mcp_engine_runtime",
+    "mcp_engine_server",
+    "mcp_engine_tools",
+    "mcp_explainability",
+    "mcp_explainability_demos",
+    "mcp_explainability_shared",
+    "mcp_explainability_suite",
+    "mcp_generic_project_state_tools",
+    "mcp_project_contract_tools",
+    "mcp_project_heuristic_profiles",
+    "mcp_project_heuristic_tools",
+    "mcp_schema_tools",
+    "mcp_slo",
+    "mcp_slo_tools",
+    "mcp_trace_tools",
+    "mini_databricks_clone",
+    "mini_pg_like",
+    "schema_config",
+    "schema_ddl",
+    "schema_evaluate",
+    "schema_explain",
+    "schema_load",
+    "sql_interview_queries",
+    "trace_observability",
+]

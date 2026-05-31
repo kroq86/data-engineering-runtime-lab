@@ -377,3 +377,12 @@ Use in Cursor MCP config (example):
   }
 }
 ```
+
+## Loom stack
+
+MCP surface for **[loom-ops](https://github.com/kroq86/loom-ops)** and ops runbooks. Ecosystem: [ECOSYSTEM.md](https://github.com/kroq86/loom-stack/blob/main/docs/ECOSYSTEM.md)
+
+```bash
+pip install ops-runtime-mcp
+ops-runtime-mcp   # stdio MCP; see docs/use-in-codex.md
+```
